@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import StyledButton from "../common/StyledButton";
-import { Avatar, Button, Dropdown, Form, Input, Tabs, Tag } from "antd";
+import { Avatar, Dropdown, Form, Input, Tabs, Tag } from "antd";
 import { createWorkOrder } from "../../assets/images";
 import TextArea from "antd/es/input/TextArea";
 import Dragger from "antd/es/upload/Dragger";
 import classNames from "classnames";
 import { formatWords } from "../../helpers";
+import { useDispatch, useSelector } from "react-redux";
+import { decrementWorkOrderCount, incrementWorkOrderCount, resetAllExpectWo, toggleShowCreateWorkOrder, toggleWorkOrder } from "../../redux/userActionSlice";
 
 let filterBtns = [
   {
@@ -73,15 +75,40 @@ let workOrderStatus = [
 ];
 
 const WorkOrder = () => {
-  let workOrderCount = 1;
   let level = "high";
   const [woStatus, setWOStatus] = useState("done");
+  const user_action = useSelector((state) => state.user_action);
+  let {workOrderCount} = user_action;
+  const dispatch = useDispatch();
 
   const tagClass = classNames({
     "low-priority": level === "low",
     "medium-priority": level === "medium",
     "high-priority": level === "high",
   });
+
+  function handleWOClick(){
+    dispatch(toggleShowCreateWorkOrder());
+    dispatch(toggleWorkOrder());
+  }
+
+  function handleCreateWorkOrder() {
+    dispatch(toggleShowCreateWorkOrder());
+    console.log(user_action , "user_action")
+  }
+
+  function handleWorkOrderCreation(){
+    dispatch(incrementWorkOrderCount())
+  }
+
+  function deleteWorkOrder(){
+    dispatch(decrementWorkOrderCount())
+  }
+
+  function createWO(){
+    dispatch(toggleShowCreateWorkOrder());
+    dispatch(resetAllExpectWo())
+  }
 
   return (
     <section className="work-order-container">
@@ -102,6 +129,7 @@ const WorkOrder = () => {
             icon={<i class="fi fi-br-plus"></i>}
             text={"Create Work Order"}
             btnClassName={"create-wo-btn"}
+            onClick={createWO}
           />
           <Dropdown
             overlay={
@@ -142,12 +170,16 @@ const WorkOrder = () => {
                           icon={<i class="fi fi-rr-plus"></i>}
                           text={"Create Work Order"}
                           btnClassName={"new-wo-btn"}
+                          onClick={handleCreateWorkOrder}
                         />
                       </div>
                     ) : (
                       <div className="work-order-flat-list">
                         {[1, 2, 3, 4].map((card) => (
-                          <div className="work-order-card">
+                          <div
+                            className="work-order-card"
+                            onClick={handleWOClick}
+                          >
                             <div className="wo-details">
                               <h4>Monthly HVAC System Inspection</h4>
                               <p>Requested by Jimmy</p>
@@ -191,6 +223,7 @@ const WorkOrder = () => {
                         />
                         <p>You don't have any work orders</p>
                         <StyledButton
+                          onClick={handleCreateWorkOrder}
                           icon={<i class="fi fi-rr-plus"></i>}
                           text={"Create Work Order"}
                           btnClassName={"new-wo-btn"}
@@ -206,84 +239,88 @@ const WorkOrder = () => {
           />
         </div>
         <div className="create-view-work-order">
-          <div className="view-wo">
-            <div className="wo-intro">
-              <h2>Monthly HVAC System Inspection</h2>
-              <div className="view-wo-action-btns">
-                <i class="fi fi-rr-pencil"></i>
-                <i class="fi fi-rr-share"></i>
-                <i class="fi fi-bs-menu-dots-vertical"></i>
+          {user_action.showCreateWorkOrder ? (
+            <div className="create-wo">
+              <h2>New Work Order</h2>
+              <Form layout="vertical" className="work-order-form">
+                <Form.Item rules={[{}]} label="What needs to be done ?">
+                  <Input />
+                </Form.Item>
+                <Form.Item rules={[{}]} label="Description">
+                  <TextArea rows={4} />
+                </Form.Item>
+                <Form.Item label="Images">
+                  <Dragger customRequest={() => {}}>
+                    <p className="ant-upload-drag-icon">
+                      <i class="fi fi-ts-camera-viewfinder"></i>
+                    </p>
+                    <p className="ant-upload-text">Add or Drag Pictures</p>
+                  </Dragger>
+                </Form.Item>
+              </Form>
+              <StyledButton
+                icon={<i class="fi fi-rr-plus"></i>}
+                text={"Create Work Order"}
+                btnClassName={"create-wo-finish-btn"}
+                onClick={handleWorkOrderCreation}
+              />
+            </div>
+          ) : user_action.showWorkOrder ? (
+            <div className="view-wo">
+              <div className="wo-intro">
+                <h2>Monthly HVAC System Inspection</h2>
+                <div className="view-wo-action-btns">
+                  <i class="fi fi-rr-pencil"></i>
+                  <i class="fi fi-rr-share"></i>
+                  <i class="fi fi-bs-menu-dots-vertical"></i>
+                </div>
+              </div>
+              <div className="wo-status-desc">
+                <h4>Work Order Status</h4>
+                <div className="wo-status-container">
+                  {workOrderStatus.map((status) => (
+                    <StyledButton
+                      onClick={() => {
+                        setWOStatus(status.key);
+                      }}
+                      icon={status.icon}
+                      text={formatWords(status.key)}
+                      btnClassName={
+                        woStatus === status.key ? status.activeClass : ""
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
+              <div className="wo-info">
+                <div>
+                  <p>Work Order ID</p>
+                  <p>#123465</p>
+                </div>
+                <div>
+                  <p>Work Order ID</p>
+                  <p>#123465</p>
+                </div>
+                <div>
+                  <p>Work Order ID</p>
+                  <p>#123465</p>
+                </div>
+                <div>
+                  <p>Work Order ID</p>
+                  <p>#123465</p>
+                </div>
+              </div>
+              <div className="wo-description">
+                <h3>Description</h3>
+                <p>
+                  Conduct a comprehensive inspection of the HVAC system to
+                  ensure optimal performance and prevent potential issues. This
+                  task includes checking filters, monitoring refrigerant levels,
+                  inspecting electrical connections, and cleaning coils.
+                </p>
               </div>
             </div>
-            <div className="wo-status-desc">
-              <h4>Work Order Status</h4>
-              <div className="wo-status-container">
-                {workOrderStatus.map((status) => (
-                  <StyledButton
-                    onClick={() => {
-                      setWOStatus(status.key);
-                    }}
-                    icon={status.icon}
-                    text={formatWords(status.key)}
-                    btnClassName={
-                      woStatus === status.key ? status.activeClass : ""
-                    }
-                  />
-                ))}
-              </div>
-            </div>
-            <div className="wo-info">
-              <div>
-                <p>Work Order ID</p>
-                <p>#123465</p>
-              </div>
-              <div>
-                <p>Work Order ID</p>
-                <p>#123465</p>
-              </div>
-              <div>
-                <p>Work Order ID</p>
-                <p>#123465</p>
-              </div>
-              <div>
-                <p>Work Order ID</p>
-                <p>#123465</p>
-              </div>
-            </div>
-            <div className="wo-description">
-              <h3>Description</h3>
-              <p>
-                Conduct a comprehensive inspection of the HVAC system to ensure
-                optimal performance and prevent potential issues. This task
-                includes checking filters, monitoring refrigerant levels,
-                inspecting electrical connections, and cleaning coils.
-              </p>
-            </div>
-          </div>
-          {/* <div className="create-wo">
-            <h2>New Work Order</h2>
-            <Form layout="vertical" className="work-order-form">
-              <Form.Item rules={[{}]} label="What needs to be done ?">
-                <Input />
-              </Form.Item>
-              <Form.Item rules={[{}]} label="Description">
-                <TextArea rows={4} />
-              </Form.Item>
-              <Form.Item label="Images">
-                <Dragger customRequest={() => {}}>
-                  <p className="ant-upload-drag-icon">
-                    <i class="fi fi-ts-camera-viewfinder"></i>
-                  </p>
-                  <p className="ant-upload-text">Add or Drag Pictures</p>
-                </Dragger>
-              </Form.Item>
-            </Form>
-            <StyledButton
-              icon={<i class="fi fi-rr-plus"></i>}
-              text={"Create Work Order"}
-              btnClassName={"create-wo-finish-btn"}
-            />
-          </div> */}
+          ) : null}
         </div>
       </div>
     </section>
