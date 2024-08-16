@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import StyledButton from "../common/StyledButton";
-import { Avatar, Dropdown, Form, Input, Tabs, Tag } from "antd";
+import { Avatar, Button, DatePicker, Divider, Dropdown, Form, Input, InputNumber, Select, Space, Tabs, Tag } from "antd";
 import { createWorkOrder } from "../../assets/images";
 import TextArea from "antd/es/input/TextArea";
 import Dragger from "antd/es/upload/Dragger";
@@ -36,6 +36,21 @@ let filterBtns = [
     label: "Add Filter",
   },
 ];
+
+let priorityBtn = [
+  {
+    key : "none"
+  },
+  {
+    key : "low"
+  },
+  {
+    key : "medium"
+  },
+  {
+    key : "high"
+  }
+]
 
 const quickActions = (
   <div className="quick-actions-container">
@@ -80,6 +95,8 @@ const WorkOrder = () => {
   const user_action = useSelector((state) => state.user_action);
   let {workOrderCount} = user_action;
   const dispatch = useDispatch();
+  const [items, setItems] = useState([]);
+  const [enteredLocation, setEnteredLocation] = useState(undefined)
 
   const tagClass = classNames({
     "low-priority": level === "low",
@@ -109,6 +126,17 @@ const WorkOrder = () => {
     dispatch(toggleShowCreateWorkOrder());
     dispatch(resetAllExpectWo())
   }
+
+  function handleLocationAddition(e) {
+    e.preventDefault();
+    setItems((prev) => [
+      ...prev,
+      enteredLocation
+    ]);
+  }
+
+  console.log(items , "items")
+
 
   return (
     <section className="work-order-container">
@@ -243,7 +271,7 @@ const WorkOrder = () => {
             <div className="create-wo">
               <h2>New Work Order</h2>
               <Form layout="vertical" className="work-order-form">
-                <Form.Item rules={[{}]} label="What needs to be done ?">
+                {/* <Form.Item rules={[{}]} label="What needs to be done ?">
                   <Input />
                 </Form.Item>
                 <Form.Item rules={[{}]} label="Description">
@@ -256,6 +284,71 @@ const WorkOrder = () => {
                     </p>
                     <p className="ant-upload-text">Add or Drag Pictures</p>
                   </Dragger>
+                </Form.Item>
+                <Form.Item label="Priority">
+                  <div className="wo-priority-container">
+                    {priorityBtn.map((type) => (
+                      <StyledButton
+                        key={type.key}
+                        icon={null}
+                        text={formatWords(type.key)}
+                      />
+                    ))}
+                  </div>
+                </Form.Item>
+                <Space size={[8, 16]} wrap className="start-end-date-container">
+                  <Form.Item label={"Start Date"}>
+                    <DatePicker className="wo-date-picker" />
+                  </Form.Item>
+                  <Form.Item label={"Due Date"}>
+                    <DatePicker className="wo-date-picker" />
+                  </Form.Item>
+                </Space>
+                <Form.Item label="Estimated Time" className="estimated-time-container">
+                  <Space>
+                    <Form.Item label={"Hours"}>
+                      <InputNumber min={1} max={24} />
+                    </Form.Item>
+                    <Form.Item label={"Minutes"}>
+                      <InputNumber min={0} max={59} />
+                    </Form.Item>
+                  </Space>
+                </Form.Item>
+                <Form.Item label="Procedure" className="procedure-form-item">
+                  <p>Create Or Attach New Form, Procedure Or Checklist</p>
+                  <StyledButton
+                    icon={<i class="fi fi-br-plus"></i>}
+                    text={"Add Procedure"}
+                    btnClassName={"add-procedure-btn"}
+                  />
+                </Form.Item> */}
+                <Form.Item label="Location" className="location">
+                  <Select
+                    mode="multiple"
+                    placeholder=""
+                    dropdownRender={(menu) => (
+                      <>
+                        <div className="menu-dropdown">{menu}</div>
+                        <Space className="enter-location-input">
+                          <Input
+                            placeholder="Please Enter Location"
+                            onChange={(e) => setEnteredLocation(e.target.value)}
+                            onKeyDown={(e) => e.stopPropagation()}
+                          />
+                          <StyledButton
+                            icon={<i class="fi fi-ts-land-layer-location"></i>}
+                            text={"Add Location"}
+                            onClick={handleLocationAddition}
+                          />
+                        </Space>
+                      </>
+                    )}
+                    options={items.map((item) => ({
+                      label: item,
+                      value: item,
+                    }))}
+                    notFoundContent={<></>}
+                  />
                 </Form.Item>
               </Form>
               <StyledButton

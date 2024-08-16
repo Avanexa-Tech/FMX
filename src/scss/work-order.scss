@@ -82,6 +82,48 @@
             .create-wo {
                 padding: 20px;
                 box-sizing: border-box;
+                .wo-priority-container{
+                    display: flex;
+                    gap: 20px;
+                }
+                .start-end-date-container{
+                    display : flex;
+                    width : 100%;
+                    justify-content: space-between;
+                    flex-wrap: wrap;
+                    .ant-space-item{
+                        width: 45%;
+                    }
+                }
+                .estimated-time-container{
+                    display: flex;
+                    width: 100% !important;
+                    .ant-row{
+                        width: 100%;
+                    }
+                    .ant-space{
+                        width: 100%;
+                        .ant-space-item,
+                        .ant-input-number{
+                            width: 100%;
+                        }
+                    }
+                }
+                .ant-picker{
+                    width: 100%;
+                }
+                .add-procedure-btn{
+                    width: 50%;
+                    border: 1px solid $theme-color;
+                    color: $theme-color;
+                }
+                .procedure-form-item{
+                    p {
+                        margin: 0px;
+                        margin-bottom: 4px;
+                        font-size: 14px;
+                    }
+                }
             }
 
             .work-order-form {
@@ -106,7 +148,7 @@
                 left: 25px;
                 display: flex;
                 margin: 0 auto;
-                // display: none;
+                display: none;
 
                 &:hover {
                     background: #fff;
@@ -404,4 +446,19 @@
 
 .create-view-work-order::-webkit-scrollbar{
     width: 0px;
+}
+
+.enter-location-input{
+    width: 100% !important;
+    padding: 0 8px 4px;
+    .ant-space-item:nth-child(1){
+        width: 65%;
+    }
+    .ant-space-item:nth-child(2){
+        width: 25%;
+    }
+}
+.menu-dropdown{
+    margin-bottom: 10px;
+    width: 100%;
 }

@@ -2,10 +2,13 @@
 
 @font-face {
     font-family: 'Helvetica';
-    src: url('../assets/Helvetica-Font/HelveticaNeueRoman.otf');
-    font-style: normal;
+    src: url('../assets/Helvetica-Font/Helvetica.ttf');
 }
 
+@font-face {
+    font-family: 'HelveticaNeue';
+    src: url('../assets/Helvetica-Font/HelveticaNeueMedium.otf');
+}
 
 $theme-color : #4085F6;
 $secondary-border-color: #DADFE3;
@@ -26,7 +29,11 @@ $done-status : #28A745;
 
 
 .ant-input,
-.ant-btn-default {
+.ant-btn-default,
+.ant-input-number,
+.ant-picker,
+.ant-select,
+.ant-select-selector {
     height: 40px;
     border-radius: 5px;
 }
