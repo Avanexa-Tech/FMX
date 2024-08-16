@@ -27,7 +27,7 @@ function FMXHeader() {
           <Dropdown
             overlay={
               <div>
-                <a href="/">Logout</a>
+                <a href="/login">Logout</a>
               </div>
             }
           >

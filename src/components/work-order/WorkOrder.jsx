@@ -16,7 +16,7 @@ import {
   Tabs,
   Tag,
 } from "antd";
-import { createWorkOrder } from "../../assets/images";
+import { createWorkOrderImg } from "../../assets/images";
 import TextArea from "antd/es/input/TextArea";
 import Dragger from "antd/es/upload/Dragger";
 import classNames from "classnames";
@@ -28,7 +28,8 @@ import {
   resetAllExpectWo,
   toggleShowCreateWorkOrder,
   toggleWorkOrder,
-} from "../../redux/userActionSlice";
+} from "../../redux/slice/userActionSlice";
+import {createWorkOrder} from '../../redux/slice/workOrderSlice'
 import CustomSelect from "../common/CustomSelect";
 
 let filterBtns = [
@@ -158,41 +159,67 @@ function woReducer(state, action) {
 }
 
 const WorkOrder = () => {
-  let level = "high";
   const [woStatus, setWOStatus] = useState("done");
   const [container, setContainer] = React.useState(null);
   const user_action = useSelector((state) => state.user_action);
+  const work_order = useSelector((state) => state.work_order);
   let { workOrderCount } = user_action;
-  const userActionDispatch = useDispatch();
+  let { workOrders } = work_order;
+  const actionDispatch = useDispatch();
   const [state, dispatch] = useReducer(woReducer,initialState);
+  const [selectWO, setSelectWO] = useState()
 
-  const tagClass = classNames({
+  const [workOrderFormData, setWorkOrderFormData] = useState({
+    index : workOrders.length + 1,
+    wo_title : "Testing",
+    wo_description : "Testing",
+    wo_attachment : "",
+    priority : "low",
+    start_date : "17-11-2024",
+    due_date : "20-11-2024",
+    estimated_hours : 5,
+    estimated_minutes : 30,
+    location : "Coimbatore",
+    asset : "Air Conditioner",
+    category : "",
+    vendor : "LG",
+    assignee : {
+      "name" : "Jeswin",
+      "email" : "jeswin2711@gmail.com"
+    },
+    requester : {
+      "name" : "Joy"
+    }
+  })
+
+
+  const tagClass = (level) => classNames({
     "low-priority": level === "low",
     "medium-priority": level === "medium",
     "high-priority": level === "high",
   });
 
   function handleWOClick() {
-    userActionDispatch(toggleShowCreateWorkOrder());
-    userActionDispatch(toggleWorkOrder());
+    actionDispatch(toggleShowCreateWorkOrder());
+    actionDispatch(toggleWorkOrder());
   }
 
   function handleCreateWorkOrder() {
-    userActionDispatch(toggleShowCreateWorkOrder());
-    console.log(user_action, "user_action");
+    actionDispatch(toggleShowCreateWorkOrder());
   }
 
   function handleWorkOrderCreation() {
-    userActionDispatch(incrementWorkOrderCount());
+    actionDispatch(incrementWorkOrderCount());
   }
 
   function deleteWorkOrder() {
-    userActionDispatch(decrementWorkOrderCount());
+    actionDispatch(decrementWorkOrderCount());
   }
 
-  function createWO() {
-    userActionDispatch(toggleShowCreateWorkOrder());
-    userActionDispatch(resetAllExpectWo());
+  function handleCreateWO() {
+    actionDispatch(createWorkOrder(workOrderFormData));
+    // actionDispatch(toggleShowCreateWorkOrder());
+    // actionDispatch(resetAllExpectWo());
   }
 
   function handleAddition(field, enteredField) {
@@ -245,7 +272,7 @@ const WorkOrder = () => {
             icon={<i class="fi fi-br-plus"></i>}
             text={"Create Work Order"}
             btnClassName={"create-wo-btn"}
-            onClick={createWO}
+            onClick={handleCreateWorkOrder}
           />
           <Dropdown
             overlay={
@@ -275,10 +302,43 @@ const WorkOrder = () => {
                 children: (
                   <>
                     {quickActions}
-                    {workOrderCount === 0 ? (
+                    {workOrders.length ? (
+                      <div className="work-order-flat-list">
+                      {workOrders.map((wo) => (
+                        <div
+                          className="work-order-card"
+                          onClick={handleWOClick}
+                        >
+                          <div className="wo-details">
+                            <h4>{wo.wo_title}</h4>
+                            <p>Requested by {wo.requester.name}</p>
+                            <p>Work ID : #{wo.index}</p>
+                            <div className="assignee-name">
+                              <Avatar
+                                size={"small"}
+                                icon={<i class="fi fi-ts-circle-user"></i>}
+                              />
+                              <p>
+                                Assigned To <span>{wo.assignee.name}</span>
+                              </p>
+                            </div>
+                          </div>
+                          <div className="wo-status">
+                            <Avatar
+                              shape="circle"
+                              size={"large"}
+                              icon={<i class="fi fi-ss-user-headset"></i>}
+                            />
+                            <Tag className={tagClass(wo.priority)}>{formatWords(wo.priority)}</Tag>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                      
+                    ) : (
                       <div className="create-new-wo">
                         <img
-                          src={createWorkOrder}
+                          src={createWorkOrderImg}
                           alt="Create New Work Order"
                         />
                         <p>You don't have any work orders</p>
@@ -288,38 +348,6 @@ const WorkOrder = () => {
                           btnClassName={"new-wo-btn"}
                           onClick={handleCreateWorkOrder}
                         />
-                      </div>
-                    ) : (
-                      <div className="work-order-flat-list">
-                        {[1, 2, 3, 4].map((card) => (
-                          <div
-                            className="work-order-card"
-                            onClick={handleWOClick}
-                          >
-                            <div className="wo-details">
-                              <h4>Monthly HVAC System Inspection</h4>
-                              <p>Requested by Jimmy</p>
-                              <p>Work ID : 12345</p>
-                              <div className="assignee-name">
-                                <Avatar
-                                  size={"small"}
-                                  icon={<i class="fi fi-ts-circle-user"></i>}
-                                />
-                                <p>
-                                  Assigned To <span>Jeswin</span>
-                                </p>
-                              </div>
-                            </div>
-                            <div className="wo-status">
-                              <Avatar
-                                shape="circle"
-                                size={"large"}
-                                icon={<i class="fi fi-ss-user-headset"></i>}
-                              />
-                              <Tag className={tagClass}>Low</Tag>
-                            </div>
-                          </div>
-                        ))}
                       </div>
                     )}
                   </>
@@ -584,7 +612,7 @@ const WorkOrder = () => {
                   icon={<i class="fi fi-rr-plus"></i>}
                   text={"Create Work Order"}
                   btnClassName={"create-wo-finish-btn"}
-                  onClick={handleWorkOrderCreation}
+                  onClick={handleCreateWO}
                 />
               </Affix>
             </div>

@@ -84,43 +84,61 @@
                 box-sizing: border-box;
                 height: 90%;
                 overflow: scroll;
-                .wo-priority-container{
+                .ant-input,
+    .ant-btn-default,
+    .ant-input-number,
+    .ant-picker,
+    .ant-select,
+    .ant-select-selector {
+        width: 100%;
+    }
+
+                .wo-priority-container {
                     display: flex;
                     gap: 20px;
                     position: relative;
                 }
-                .start-end-date-container{
-                    display : flex;
-                    width : 100%;
+
+                .start-end-date-container {
+                    display: flex;
+                    width: 100%;
                     justify-content: space-between;
                     flex-wrap: wrap;
-                    .ant-space-item{
+
+                    .ant-space-item {
                         width: 45%;
                     }
                 }
-                .estimated-time-container{
+
+                .estimated-time-container {
                     display: flex;
                     width: 100% !important;
-                    .ant-row{
+
+                    .ant-row {
                         width: 100%;
                     }
-                    .ant-space{
+
+                    .ant-space {
                         width: 100%;
+
                         .ant-space-item,
-                        .ant-input-number{
+                        .ant-input-number {
                             width: 100%;
                         }
                     }
                 }
-                .ant-picker{
+
+                .ant-picker {
                     width: 100%;
                 }
-                .add-procedure-btn{
+
+                .add-procedure-btn {
                     width: 50%;
                     border: 1px solid $theme-color;
                     color: $theme-color;
                 }
-                .procedure-form-item{
+
+                .procedure-form-item {
                     p {
                         margin: 0px;
                         margin-bottom: 4px;
@@ -131,6 +149,7 @@
 
             .work-order-form {
                 position: relative;
+
                 .ant-upload-drag-container {
                     display: flex !important;
                     flex-direction: column !important;
@@ -144,13 +163,13 @@
             }
 
             .create-wo-finish-btn {
-                width: 90%;
+                width: 90% !important;
                 background: $theme-color;
                 color: #fff;
                 position: absolute;
-                bottom: 0px;
+                bottom: 10px;
                 left: 0px;
-                right: 25px;
+                right: 20px;
                 display: flex;
                 margin-left: auto;
                 margin-bottom: 10px;
@@ -164,7 +183,7 @@
             .view-wo {
                 width: 100%;
                 box-sizing: border-box;
-                
+
 
                 .wo-intro {
                     display: flex;
@@ -182,9 +201,11 @@
                         display: flex;
                         align-items: center;
                         gap: 10px;
-                        i{
+
+                        i {
                             transition: transform ease-in .2s;
-                            &:hover{
+
+                            &:hover {
                                 transform: translateY(-5px);
                             }
                         }
@@ -210,7 +231,7 @@
                     }
                 }
 
-                .wo-info{
+                .wo-info {
                     background: #F4F4F4;
                     box-sizing: border-box;
                     padding: 10px;
@@ -218,24 +239,27 @@
                     width: 90%;
                     margin: 0 auto;
                     display: grid;
-                    grid-template-columns: repeat(2 , 150px);
+                    grid-template-columns: repeat(2, 150px);
                     grid-gap: 15px;
                     align-self: center;
                     justify-self: center;
                     justify-content: center;
                 }
-                .wo-description{
+
+                .wo-description {
                     display: flex;
                     flex-direction: column;
                     gap: 10px;
                     margin-top: 50px;
                     padding: 25px;
                     border-top: 1px solid $secondary-border-color;
-                    & > h3,
-                    & > p{
+
+                    &>h3,
+                    &>p {
                         margin: 0px;
                     }
-                    & > p {
+
+                    &>p {
                         font-size: 14px;
                         line-height: 25px;
                         color: $secondary-text-color;
@@ -300,8 +324,8 @@
                     transition: all ease-in .2s;
 
                     &:hover {
-                            box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
-                        }
+                        box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+                    }
 
                     .wo-details {
                         width: 70%;
@@ -450,21 +474,24 @@
 }
 
 .create-view-work-order::-webkit-scrollbar,
-.create-wo::-webkit-scrollbar{
+.create-wo::-webkit-scrollbar {
     width: 0px;
 }
 
-.dynamic-input-container{
+.dynamic-input-container {
     width: 100% !important;
     padding: 0 8px 4px;
-    .ant-space-item:nth-child(1){
+
+    .ant-space-item:nth-child(1) {
         width: 65%;
     }
-    .ant-space-item:nth-child(2){
+
+    .ant-space-item:nth-child(2) {
         width: 25%;
     }
 }
-.menu-dropdown{
+
+.menu-dropdown {
     margin-bottom: 10px;
     width: 100%;
 }
