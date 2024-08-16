@@ -1,0 +1,63 @@
+@import '../../node_modules/@flaticon/flaticon-uicons/css/all/all.css';
+
+@font-face {
+    font-family: 'Helvetica';
+    src: url('../assets/Helvetica-Font/HelveticaNeueRoman.otf');
+    font-style: normal;
+}
+
+
+$theme-color : #4085F6;
+$secondary-border-color: #DADFE3;
+$light-bg-color : #F6F6F6;
+$active-bg-color : #4085F61A;
+$secondary-text-color : #999999;
+$secondary-icon-color : #666666;
+$light-text-color :#B3B3B3;
+
+$low-priority-color : #0DBF98;
+$medium-priority-color: #FFA500;
+$high-priority-color: #FF4136;
+
+$open-status : #007BFF;
+$onhold-status : #FFC107;
+$inprogress-status : #17A2B8 ;
+$done-status : #28A745;
+
+
+.ant-input,
+.ant-btn-default {
+    height: 40px;
+    border-radius: 5px;
+}
+
+.ant-btn-default:hover{
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+
+body {
+    font-family: 'Helvetica', Arial, sans-serif;
+    margin: 0px;
+}
+
+i{
+    display: flex;
+    cursor: pointer;
+}
+
+.fmx-product {
+    display: flex;
+}
+
+.fmx-page-container {
+    width: 80%;
+    display: flex;
+    margin-left: auto;
+    flex-direction: column;
+    min-height: 100vh
+}
+
+@import './sidebar.scss';
+@import './header.scss';
+@import './work-order.scss';
+@import './common.scss'
