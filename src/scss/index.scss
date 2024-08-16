@@ -2,7 +2,7 @@
 
 @font-face {
     font-family: 'Helvetica';
-    src: url('../assets/Helvetica-Font/Helvetica.ttf');
+    src: url('../assets/Helvetica-Font/HelveticaNeueLight.otf');
 }
 
 @font-face {
@@ -36,6 +36,15 @@ $done-status : #28A745;
 .ant-select-selector {
     height: 40px;
     border-radius: 5px;
+    cursor: pointer !important;
+    display: flex;
+    align-items: center;
+}
+
+.ant-col{
+    label{
+        font-weight: bolder;
+    }
 }
 
 .ant-btn-default:hover{
@@ -68,3 +77,4 @@ i{
 @import './header.scss';
 @import './work-order.scss';
 @import './common.scss'
+

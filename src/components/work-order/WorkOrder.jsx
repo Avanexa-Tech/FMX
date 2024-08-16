@@ -1,13 +1,35 @@
-import React, { useState } from "react";
+import React, { useReducer, useState } from "react";
 import StyledButton from "../common/StyledButton";
-import { Avatar, Button, DatePicker, Divider, Dropdown, Form, Input, InputNumber, Select, Space, Tabs, Tag } from "antd";
+import {
+  Affix,
+  Avatar,
+  Button,
+  DatePicker,
+  Divider,
+  Dropdown,
+  Form,
+  Input,
+  InputNumber,
+  message,
+  Select,
+  Space,
+  Tabs,
+  Tag,
+} from "antd";
 import { createWorkOrder } from "../../assets/images";
 import TextArea from "antd/es/input/TextArea";
 import Dragger from "antd/es/upload/Dragger";
 import classNames from "classnames";
 import { formatWords } from "../../helpers";
 import { useDispatch, useSelector } from "react-redux";
-import { decrementWorkOrderCount, incrementWorkOrderCount, resetAllExpectWo, toggleShowCreateWorkOrder, toggleWorkOrder } from "../../redux/userActionSlice";
+import {
+  decrementWorkOrderCount,
+  incrementWorkOrderCount,
+  resetAllExpectWo,
+  toggleShowCreateWorkOrder,
+  toggleWorkOrder,
+} from "../../redux/userActionSlice";
+import CustomSelect from "../common/CustomSelect";
 
 let filterBtns = [
   {
@@ -39,18 +61,18 @@ let filterBtns = [
 
 let priorityBtn = [
   {
-    key : "none"
+    key: "none",
   },
   {
-    key : "low"
+    key: "low",
   },
   {
-    key : "medium"
+    key: "medium",
   },
   {
-    key : "high"
-  }
-]
+    key: "high",
+  },
+];
 
 const quickActions = (
   <div className="quick-actions-container">
@@ -89,14 +111,60 @@ let workOrderStatus = [
   },
 ];
 
+const initialState = {
+  locations: ['erode'],
+  enteredLocation: undefined,
+  assets: ['ac'],
+  enteredAsset: undefined,
+  categories: ['machine'],
+  enteredCategory: undefined,
+  vendors: ['jj'],
+  enteredVendor: undefined,
+  assignees : [],
+  enteredAssignee : []
+};
+
+function woReducer(state, action) {
+  switch (action.type) {
+    case "SET_LOCATIONS":
+      return { ...state, locations: action.payload };
+    case "SET_ENTERED_LOCATION":
+      return { ...state, enteredLocation: action.payload };
+    case "SET_ASSETS":
+      return { ...state, assets: action.payload };
+    case "SET_ENTERED_ASSET":
+      return { ...state, enteredAsset: action.payload };
+    case "SET_CATEGORIES":
+      return { ...state, categories: action.payload };
+    case "SET_ENTERED_CATEGORY":
+      return { ...state, enteredCategory: action.payload };
+    case "SET_VENDORS":
+      return { ...state, vendors: action.payload };
+    case "SET_ENTERED_VENDOR":
+      return { ...state, enteredVendor: action.payload };
+    case "SET_ASSIGNEES":
+      return { ...state, assignees: action.payload };
+    case "SET_ENTERED_ASSIGNEE":
+      return { ...state, enteredAssignee: action.payload };
+    case "ADD_ITEM":
+      return {
+        ...state,
+        [action.field]: [...state[action.field], action.payload],
+        [action.enteredField]: undefined,
+      };
+    default:
+      return state;
+  }
+}
+
 const WorkOrder = () => {
   let level = "high";
   const [woStatus, setWOStatus] = useState("done");
+  const [container, setContainer] = React.useState(null);
   const user_action = useSelector((state) => state.user_action);
-  let {workOrderCount} = user_action;
-  const dispatch = useDispatch();
-  const [items, setItems] = useState([]);
-  const [enteredLocation, setEnteredLocation] = useState(undefined)
+  let { workOrderCount } = user_action;
+  const userActionDispatch = useDispatch();
+  const [state, dispatch] = useReducer(woReducer,initialState);
 
   const tagClass = classNames({
     "low-priority": level === "low",
@@ -104,39 +172,59 @@ const WorkOrder = () => {
     "high-priority": level === "high",
   });
 
-  function handleWOClick(){
-    dispatch(toggleShowCreateWorkOrder());
-    dispatch(toggleWorkOrder());
+  function handleWOClick() {
+    userActionDispatch(toggleShowCreateWorkOrder());
+    userActionDispatch(toggleWorkOrder());
   }
 
   function handleCreateWorkOrder() {
-    dispatch(toggleShowCreateWorkOrder());
-    console.log(user_action , "user_action")
+    userActionDispatch(toggleShowCreateWorkOrder());
+    console.log(user_action, "user_action");
   }
 
-  function handleWorkOrderCreation(){
-    dispatch(incrementWorkOrderCount())
+  function handleWorkOrderCreation() {
+    userActionDispatch(incrementWorkOrderCount());
   }
 
-  function deleteWorkOrder(){
-    dispatch(decrementWorkOrderCount())
+  function deleteWorkOrder() {
+    userActionDispatch(decrementWorkOrderCount());
   }
 
-  function createWO(){
-    dispatch(toggleShowCreateWorkOrder());
-    dispatch(resetAllExpectWo())
+  function createWO() {
+    userActionDispatch(toggleShowCreateWorkOrder());
+    userActionDispatch(resetAllExpectWo());
   }
 
-  function handleLocationAddition(e) {
-    e.preventDefault();
-    setItems((prev) => [
-      ...prev,
-      enteredLocation
-    ]);
+  function handleAddition(field, enteredField) {
+    if (
+      state[field].some(
+        (location) =>
+          location.toLowerCase() === state[enteredField].toLowerCase()
+      )
+    ) {
+      message.open({
+        type: "error",
+        content: `${state[
+          enteredField
+        ]?.toUpperCase()} already exists`,
+      });
+    } else {
+      dispatch({
+        type: "ADD_ITEM",
+        field: field,
+        payload: state[enteredField],
+        enteredField: enteredField,
+      });
+    }
   }
 
-  console.log(items , "items")
-
+  const handleLocationAddition = () =>
+    handleAddition("locations", "enteredLocation");
+  const handleAssetAddition = () => handleAddition("assets", "enteredAsset");
+  const handleCategoryAddition = () =>
+    handleAddition("categories", "enteredCategory");
+  const handleVendorAddition = () => handleAddition("vendors", "enteredVendor");
+  const handleAssigneeAddition = () => handleAddition("assignees", "enteredAssignee");
 
   return (
     <section className="work-order-container">
@@ -268,10 +356,10 @@ const WorkOrder = () => {
         </div>
         <div className="create-view-work-order">
           {user_action.showCreateWorkOrder ? (
-            <div className="create-wo">
+            <div className="create-wo" ref={setContainer}>
               <h2>New Work Order</h2>
               <Form layout="vertical" className="work-order-form">
-                {/* <Form.Item rules={[{}]} label="What needs to be done ?">
+                <Form.Item rules={[{}]} label="What needs to be done ?">
                   <Input />
                 </Form.Item>
                 <Form.Item rules={[{}]} label="Description">
@@ -304,7 +392,10 @@ const WorkOrder = () => {
                     <DatePicker className="wo-date-picker" />
                   </Form.Item>
                 </Space>
-                <Form.Item label="Estimated Time" className="estimated-time-container">
+                <Form.Item
+                  label="Estimated Time"
+                  className="estimated-time-container"
+                >
                   <Space>
                     <Form.Item label={"Hours"}>
                       <InputNumber min={1} max={24} />
@@ -321,18 +412,28 @@ const WorkOrder = () => {
                     text={"Add Procedure"}
                     btnClassName={"add-procedure-btn"}
                   />
-                </Form.Item> */}
+                </Form.Item>
                 <Form.Item label="Location" className="location">
-                  <Select
-                    mode="multiple"
-                    placeholder=""
+                  <CustomSelect
+                    mode={"multiple"}
+                    placeholder={"Start Typing"}
+                    options={state?.locations?.map((item) => ({
+                      label: item,
+                      value: item,
+                    }))}
                     dropdownRender={(menu) => (
                       <>
                         <div className="menu-dropdown">{menu}</div>
-                        <Space className="enter-location-input">
+                        <Space className="dynamic-input-container">
                           <Input
                             placeholder="Please Enter Location"
-                            onChange={(e) => setEnteredLocation(e.target.value)}
+                            onChange={(e) =>
+                              dispatch({
+                                type: "SET_ENTERED_LOCATION",
+                                payload: e.target.value,
+                              })
+                            }
+                            value={state?.enteredLocation}
                             onKeyDown={(e) => e.stopPropagation()}
                           />
                           <StyledButton
@@ -343,20 +444,149 @@ const WorkOrder = () => {
                         </Space>
                       </>
                     )}
-                    options={items.map((item) => ({
+                  />
+                </Form.Item>
+                <Form.Item label="Asset">
+                  <CustomSelect
+                    mode={"multiple"}
+                    placeholder="Start Typing"
+                    dropdownRender={(menu) => (
+                      <>
+                        <div className="menu-dropdown">{menu}</div>
+                        <Space className="dynamic-input-container">
+                          <Input
+                            placeholder="Please Enter Asset"
+                            onChange={(e) => {
+                              dispatch({
+                                type: "SET_ENTERED_ASSET",
+                                payload: e.target.value,
+                              });
+                            }}
+                            value={state?.enteredAsset}
+                            onKeyDown={(e) => e.stopPropagation()}
+                          />
+                          <StyledButton
+                            icon={<i class="fi fi-tr-boxes"></i>}
+                            text={"Add Asset"}
+                            onClick={handleAssetAddition}
+                          />
+                        </Space>
+                      </>
+                    )}
+                    options={state?.assets?.map((item) => ({
                       label: item,
                       value: item,
                     }))}
-                    notFoundContent={<></>}
+                  />
+                </Form.Item>
+                <Form.Item label="Categories">
+                  <CustomSelect
+                    mode={"multiple"}
+                    placeholder="Start Typing"
+                    dropdownRender={(menu) => (
+                      <>
+                        <div className="menu-dropdown">{menu}</div>
+                        <Space className="dynamic-input-container">
+                          <Input
+                            placeholder="Please Enter Category"
+                            onChange={(e) => {
+                              dispatch({
+                                type: "SET_ENTERED_CATEGORY",
+                                payload: e.target.value,
+                              });
+                            }}
+                            value={state?.enteredCategory}
+                            onKeyDown={(e) => e.stopPropagation()}
+                          />
+                          <StyledButton
+                            icon={<i class="fi fi-ts-category"></i>}
+                            text={"Add Category"}
+                            onClick={handleCategoryAddition}
+                          />
+                        </Space>
+                      </>
+                    )}
+                    options={state?.categories?.map((item) => ({
+                      label: item,
+                      value: item,
+                    }))}
+                  />
+                </Form.Item>
+                <Form.Item label="Vendors">
+                  <CustomSelect
+                    mode={"multiple"}
+                    placeholder="Start Typing"
+                    dropdownRender={(menu) => (
+                      <>
+                        <div className="menu-dropdown">{menu}</div>
+                        <Space className="dynamic-input-container">
+                          <Input
+                            placeholder="Please Enter Vendor"
+                            onChange={(e) => {
+                              dispatch({
+                                type: "SET_ENTERED_VENDOR",
+                                payload: e.target.value,
+                              });
+                            }}
+                            value={state?.enteredVendor}
+                            onKeyDown={(e) => e.stopPropagation()}
+                          />
+                          <StyledButton
+                            icon={<i class="fi fi-tr-seller"></i>}
+                            text={"Add Vendor"}
+                            onClick={handleVendorAddition}
+                          />
+                        </Space>
+                      </>
+                    )}
+                    options={state?.vendors?.map((item) => ({
+                      label: item,
+                      value: item,
+                    }))}
+                  />
+                </Form.Item>
+                <Form.Item label="Assign To">
+                  <CustomSelect
+                    mode={"multiple"}
+                    placeholder="Type Name, Email Or Phone Number"
+                    options={state?.assignees?.map((assignee) => ({
+                      label: assignee,
+                      value: assignee,
+                    }))}
+                    dropdownRender={(menu) => (
+                      <>
+                        <div className="menu-dropdown">{menu}</div>
+                        <Space className="dynamic-input-container">
+                          <Input
+                            placeholder="Please Enter Assignee"
+                            onChange={(e) => {
+                              dispatch({
+                                type: "SET_ENTERED_ASSIGNEE",
+                                payload: e.target.value,
+                              });
+                            }}
+                            value={state?.enteredAssignee}
+                            onKeyDown={(e) => e.stopPropagation()}
+                          />
+                          <StyledButton
+                            icon={<i class="fi fi-rs-user-add"></i>}
+                            text={"Invite Assignee"}
+                            onClick={handleAssigneeAddition}
+                          />
+                        </Space>
+                      </>
+                    )}
                   />
                 </Form.Item>
               </Form>
-              <StyledButton
-                icon={<i class="fi fi-rr-plus"></i>}
-                text={"Create Work Order"}
-                btnClassName={"create-wo-finish-btn"}
-                onClick={handleWorkOrderCreation}
-              />
+              <Affix target={() => container}>
+                <StyledButton
+                  icon={<i class="fi fi-rr-plus"></i>}
+                  text={"Create Work Order"}
+                  btnClassName={"create-wo-finish-btn"}
+                  onClick={handleWorkOrderCreation}
+                />
+              </Affix>
             </div>
           ) : user_action.showWorkOrder ? (
             <div className="view-wo">
