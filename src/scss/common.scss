@@ -1,0 +1,25 @@
+.styledInput {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .fmx-label {
+        font-family: Helvetica Neue;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 17.78px;
+        text-align: left;
+    }
+
+    .fmx-input-container {
+
+        .fmx-input {
+            width: 460px;
+            gap: 0px;
+            border-radius: 5px;
+            border: 1px solid;
+            opacity: 0px;
+            padding: 30px 25px;
+        }
+    }
+}
