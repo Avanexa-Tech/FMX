@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 let initialState = {
   showWorkOrder: false,
-  showCreateWorkOrder: false,
+  showCreateWorkOrder: true,
   workOrderCount : 0
 };
 

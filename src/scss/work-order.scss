@@ -75,16 +75,62 @@
             box-sizing: border-box;
             position: relative;
             overflow-y: scroll;
-            max-height: 500px;
+            height: 500px;
             position: sticky;
             top: 25px;
 
             .create-wo {
                 padding: 20px;
                 box-sizing: border-box;
+                height: 90%;
+                overflow: scroll;
+                .wo-priority-container{
+                    display: flex;
+                    gap: 20px;
+                    position: relative;
+                }
+                .start-end-date-container{
+                    display : flex;
+                    width : 100%;
+                    justify-content: space-between;
+                    flex-wrap: wrap;
+                    .ant-space-item{
+                        width: 45%;
+                    }
+                }
+                .estimated-time-container{
+                    display: flex;
+                    width: 100% !important;
+                    .ant-row{
+                        width: 100%;
+                    }
+                    .ant-space{
+                        width: 100%;
+                        .ant-space-item,
+                        .ant-input-number{
+                            width: 100%;
+                        }
+                    }
+                }
+                .ant-picker{
+                    width: 100%;
+                }
+                .add-procedure-btn{
+                    width: 50%;
+                    border: 1px solid $theme-color;
+                    color: $theme-color;
+                }
+                .procedure-form-item{
+                    p {
+                        margin: 0px;
+                        margin-bottom: 4px;
+                        font-size: 14px;
+                    }
+                }
             }
 
             .work-order-form {
+                position: relative;
                 .ant-upload-drag-container {
                     display: flex !important;
                     flex-direction: column !important;
@@ -102,11 +148,12 @@
                 background: $theme-color;
                 color: #fff;
                 position: absolute;
-                bottom: 10px;
-                left: 25px;
+                bottom: 0px;
+                left: 0px;
+                right: 25px;
                 display: flex;
-                margin: 0 auto;
-                // display: none;
+                margin-left: auto;
+                margin-bottom: 10px;
 
                 &:hover {
                     background: #fff;
@@ -402,6 +449,22 @@
     border: 1px solid $done-status;
 }
 
-.create-view-work-order::-webkit-scrollbar{
+.create-view-work-order::-webkit-scrollbar,
+.create-wo::-webkit-scrollbar{
     width: 0px;
+}
+
+.dynamic-input-container{
+    width: 100% !important;
+    padding: 0 8px 4px;
+    .ant-space-item:nth-child(1){
+        width: 65%;
+    }
+    .ant-space-item:nth-child(2){
+        width: 25%;
+    }
+}
+.menu-dropdown{
+    margin-bottom: 10px;
+    width: 100%;
 }

@@ -4,6 +4,9 @@
   font-family: "Helvetica";
   src: url("../assets/Helvetica-Font/HelveticaNeueRoman.otf");
   font-style: normal;
+
+    font-family: 'Helvetica';
+    src: url('../assets/Helvetica-Font/HelveticaNeueLight.otf');
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -22,15 +25,29 @@ $low-priority-color: #0dbf98;
 $medium-priority-color: #ffa500;
 $high-priority-color: #ff4136;
 
+
 $open-status: #007bff;
 $onhold-status: #ffc107;
 $inprogress-status: #17a2b8;
 $done-status: #28a745;
 
 .ant-input,
-.ant-btn-default {
-  height: 40px;
-  border-radius: 5px;
+.ant-btn-default,
+.ant-input-number,
+.ant-picker,
+.ant-select,
+.ant-select-selector {
+    height: 40px;
+    border-radius: 5px;
+    cursor: pointer !important;
+    display: flex;
+    align-items: center;
+}
+
+.ant-col{
+    label{
+        font-weight: bolder;
+    }
 }
 
 .ant-btn-default:hover {
