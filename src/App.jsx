@@ -6,6 +6,7 @@ import Login from "./components/authentication/Login";
 import BaseLayout from "./layouts/BaseLayout";
 import SignUp from "./components/auth/SignUp";
 import VerifyOtp from "./components/authentication/VerifyOtp";
+import Organization from "./components/auth/Organization";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="verify-otp" element={<VerifyOtp />} />
+          <Route path="organization" element={<Organization />} />
         </Route>
       </Routes>
     </BrowserRouter>
