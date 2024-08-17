@@ -1,21 +1,26 @@
-import './App.css';
-import Sidebar from './components/sidebar/Sidebar';
-import FMXHeader from './components/header/FMXHeader';
-import WorkOrder from './components/work-order/WorkOrder';
+import "./App.css";
+import Sidebar from "./components/sidebar/Sidebar";
+import FMXHeader from "./components/header/FMXHeader";
+import WorkOrder from "./components/work-order/WorkOrder";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import AuthLayout from "./layouts/AuthLayout";
+import Login from "./components/authentication/Login";
+import BaseLayout from "./layouts/BaseLayout";
 
 function App() {
-
   return (
-    <>
-      <div className='fmx-product'>
-        <Sidebar />
-        <div className='fmx-page-container'>
-          <FMXHeader/>
-          <WorkOrder/>
-        </div>
-      </div>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<BaseLayout />}>
+          <Route index element={<WorkOrder />} />
+        </Route>
+
+        <Route element={<AuthLayout />}>
+          <Route path="login" element={<Login />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
-export default App
+export default App;
