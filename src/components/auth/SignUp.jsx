@@ -14,7 +14,7 @@ const [signUp, setSignUp] = useState({});
                   <StyledInput label={"Phone Number"}/>
               </div>
               <Button className="submit" type='primary'>Next</Button>
-              <div className='foot'></div>
+              <div className='foot'>Already have an account? <a>Log in</a></div>
           </div>
       </div>
   )

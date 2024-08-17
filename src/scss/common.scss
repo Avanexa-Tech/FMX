@@ -12,13 +12,12 @@
     }
 
     .fmx-input-container {
-
         .fmx-input {
-            width: 460px;
+            max-width: 460px;
+            width: 100%;
             gap: 0px;
             border-radius: 5px;
             border: 1px solid;
-            opacity: 0px;
             padding: 30px 25px;
         }
     }
