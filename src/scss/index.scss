@@ -5,7 +5,11 @@
   src: url("../assets/Helvetica-Font/HelveticaNeueRoman.otf");
   font-style: normal;
 }
-
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 $theme-color: #4085f6;
 $secondary-border-color: #dadfe3;
 $light-bg-color: #f6f6f6;
@@ -56,8 +60,8 @@ i {
   min-height: 100vh;
 }
 
-@import './sidebar.scss';
-@import './header.scss';
-@import './work-order.scss';
-@import './common.scss';
-@import './auth.scss';
+@import "./sidebar.scss";
+@import "./header.scss";
+@import "./work-order.scss";
+@import "./common.scss";
+@import "./auth.scss";

@@ -1,24 +1,25 @@
 .styledInput {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 
-    .fmx-label {
-        font-family: Helvetica Neue;
-        font-size: 18px;
-        font-weight: 500;
-        line-height: 17.78px;
-        text-align: left;
-    }
+  .fmx-label {
+    font-family: Helvetica Neue;
+    font-size: 15px;
+    font-weight: 500;
+    // line-height: 17.78px;
+    text-align: left;
+    color: #666666;
+  }
 
-    .fmx-input-container {
-        .fmx-input {
-            max-width: 460px;
-            width: 100%;
-            gap: 0px;
-            border-radius: 5px;
-            border: 1px solid;
-            padding: 30px 25px;
-        }
+  .fmx-input-container {
+    .fmx-input {
+      max-width: 460px;
+      width: 100%;
+      gap: 0px;
+      border-radius: 5px;
+    //   border: 1px solid #666666;
+      padding: 0 15px;
     }
+  }
 }

@@ -9,7 +9,6 @@ const AuthLayout = () => {
         <div className="auth-asset"></div>
         <div className="auth-left-content">
           <img src={whiteLogo} alt="logo" />
-
           <div className="tagline">
             <h2>
               Streamline,
