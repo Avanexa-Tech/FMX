@@ -1,24 +1,20 @@
-import { Input } from "antd";
+import { Select } from "antd";
 import React from "react";
 
-const StyledInput = ({ value, placeholder, label, onChange, name,
-    addonBefore, addonAfter, suffix, prefix, style }) => {
-    
+const StyledSelect = ({ value, placeholder, options, label, onChange, name, style, containerStyle }) => {
+
     return (
-        <div className="styledInput">
+        <div className="styledInput" style={{ ...containerStyle }}>
             <label className="fmx-label">{label}</label>
             <div className="fmx-input-container">
-                <Input
+                <Select
                     className="fmx-input"
                     onChange={(e) => onChange(e.target.value, name)}
                     style={{ ...style }}
                     {...{
                         ...value,
                         placeholder,
-                        suffix,
-                        prefix,
-                        addonBefore,
-                        addonAfter
+                        options
                     }}
                 />
             </div>
@@ -26,4 +22,4 @@ const StyledInput = ({ value, placeholder, label, onChange, name,
     );
 };
 
-export default StyledInput;
+export default StyledSelect;

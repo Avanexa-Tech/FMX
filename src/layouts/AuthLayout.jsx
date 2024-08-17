@@ -26,10 +26,6 @@ const AuthLayout = () => {
       <div className="auth-right">
         <div className="auth-content">
           <Outlet />
-          <p className="common-acceptance">
-            By creating an account, you adhere to the <br />
-            <b>Terms Of Service</b> and <b>Privacy Policy</b>.
-          </p>
         </div>
       </div>
     </div>
