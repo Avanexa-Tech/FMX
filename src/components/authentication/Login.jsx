@@ -13,11 +13,11 @@ const Login = () => {
     {
       key: 1,
       text: "Email Address",
-      regex: /^[a-z\.-]+@[a-z\d\.-]+\.[a-z]{2,}$/,
+      regex: /^[a-z0-9.-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
       type: "text",
       icon: (
         <i
-          class="fi fi-rr-envelope"
+          className="fi fi-rr-envelope"
           style={{
             fontSize: "15px",
             fontWeight: "600",
@@ -33,7 +33,7 @@ const Login = () => {
       type: "number",
       icon: (
         <i
-          class="fi fi-rr-phone-flip"
+          className="fi fi-rr-phone-flip"
           style={{
             fontSize: "15px",
             fontWeight: "600",

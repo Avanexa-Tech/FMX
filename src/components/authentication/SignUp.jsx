@@ -6,9 +6,9 @@ import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [signUp, setSignUp] = useState({});
-  const [error, setError] = useState({});
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
+
   const onChange = (value, name) => {
     setSignUp((prevState) => ({ ...prevState, [name]: value }));
   };
@@ -26,8 +26,9 @@ const SignUp = () => {
     });
   };
 
-  console.log(/^[a-z\.-]+@[a-z\d\.-]+\.[a-z]{2,}$/.test(signUp?.email));
+  console.log(signUp);
   
+
   return (
     <>
       <div className="auth-container">
@@ -46,20 +47,22 @@ const SignUp = () => {
               value={signUp?.email}
               label={"Work Email"}
               name="email"
-              error={!/^[a-z\.-]+@[a-z\d\.-]+\.[a-z]{2,}$/.test(signUp?.email) && signUp?.email}
+              error={!/^[a-z0-9.-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(signUp?.email) && signUp?.email}
               errorMessage={"Enter Valid Email Address"}
               onChange={onChange}
               prefix={<i className="fi fi-rr-envelope input-icon"></i>}
             />
             <StyledSelectedInput
+              type={"number"}
               onChange={onChange}
               value={signUp?.phone_number}
               label={"Phone Number"}
               name={"phone_number"}
-              error={!/^\+?\d{10,15}$/.test(signUp?.phone_number)}
+              error={signUp?.phone_number && !/^\+?\d{10,15}$/.test(signUp?.phone_number)}
               errorMessage={"Enter Valid Phone Number"}
               selectPlaceholder={"select"}
               selectOptions={[{ value: 91, label: "India" }]}
+              onSelectChange={onChange}
               selectName={"code"}
               selectValue={91}
             />
@@ -68,17 +71,17 @@ const SignUp = () => {
             className="submit"
             type="primary"
             onClick={() => {
-              Object.keys(organization)?.length > 0 &&
-              Object.keys(organization).every((i) => organization[i] !== "")
+              Object.keys(signUp)?.length > 0 &&
+                Object.keys(signUp).every((i) => signUp[i] !== "")
                 ? () => {
-                    success("Otp Sended Successfully");
-                    setTimeout(
-                      navigate("/verify-otp", {
-                        state: { username: signUp?.email, newUser: true },
-                      }),
-                      500
-                    );
-                  }
+                  success("Otp Sended Successfully");
+                  setTimeout(
+                    navigate("/verify-otp", {
+                      state: { username: signUp?.email, newUser: true },
+                    }),
+                    500
+                  );
+                }
                 : errorNotification();
             }}
           >

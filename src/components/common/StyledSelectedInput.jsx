@@ -2,6 +2,7 @@ import { Input, Select } from "antd";
 import React from "react";
 
 const StyledSelectedInput = ({
+    type,
     value,
     placeholder,
     options,
@@ -10,6 +11,8 @@ const StyledSelectedInput = ({
     style,
     containerStyle,
     onChange,
+    error,
+    errorMessage,
     selectPlaceholder,
     selectName,
     selectStyle,
@@ -23,6 +26,7 @@ const StyledSelectedInput = ({
             <label className="fmx-label">{label}</label>
             <div className="fmx-input-container">
                 <Input
+                    type={type}
                     className="fmx-input"
                     onChange={(e) => onChange(e.target.value, name)}
                     {...{
@@ -35,12 +39,13 @@ const StyledSelectedInput = ({
                             className="fmx-select"
                             value={selectValue}
                             placeholder={selectPlaceholder}
-                            style={{ ...selectStyle }}
-                            options= {selectOptions}
+                            style={{ ...selectStyle, width: "auto" }}
+                            options={selectOptions}
                             onChange={(value) => onSelectChange(value, selectName)}
                         />
                     }
-                />
+                    />
+                    {error && <span className="input-error">{errorMessage}</span>}
             </div>
         </div>
     );

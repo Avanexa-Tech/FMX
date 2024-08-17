@@ -4,9 +4,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AuthLayout from "./layouts/AuthLayout";
 import Login from "./components/authentication/Login";
 import BaseLayout from "./layouts/BaseLayout";
-import SignUp from "./components/auth/SignUp";
 import VerifyOtp from "./components/authentication/VerifyOtp";
-import Organization from "./components/auth/Organization";
+import Organization from "./components/authentication/Organization";
+import SignUp from "./components/authentication/SignUp";
 
 function App() {
   return (
