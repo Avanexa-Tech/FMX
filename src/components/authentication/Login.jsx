@@ -13,11 +13,11 @@ const Login = () => {
     {
       key: 1,
       text: "Email Address",
-      regex: /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/,
+      regex: /^[a-z0-9.-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
       type: "text",
       icon: (
         <i
-          class="fi fi-rr-envelope"
+          className="fi fi-rr-envelope"
           style={{
             fontSize: "15px",
             fontWeight: "600",
@@ -33,7 +33,7 @@ const Login = () => {
       type: "number",
       icon: (
         <i
-          class="fi fi-rr-phone-flip"
+          className="fi fi-rr-phone-flip"
           style={{
             fontSize: "15px",
             fontWeight: "600",
@@ -68,6 +68,8 @@ const Login = () => {
           label={selectedOption.text}
           prefix={selectedOption.icon}
           type={selectedOption.type}
+          error={inputError !== ""}
+          errorMessage={`Enter valid ${selectedOption.text}*`}
           onChange={(value) => {
             setInput(value);
             value !== "" && !selectedOption.regex.test(value)
@@ -75,7 +77,7 @@ const Login = () => {
               : setInputError("");
           }}
         />
-        <span className="input-error">{inputError}</span>
+
         <StyledButton
           text={"Login"}
           btnClassName="login-btn"

@@ -10,7 +10,7 @@ const StyledSelect = ({ value, placeholder, options, label, onChange, name, styl
                 <Select
                     className="fmx-input"
                     onChange={(e) => onChange(e.target.value, name)}
-                    style={{ ...style }}
+                    style={{ ...style, width: "auto" }}
                     {...{
                         ...value,
                         placeholder,

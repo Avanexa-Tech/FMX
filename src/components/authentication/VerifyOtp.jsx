@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 const VerifyOtp = () => {
   const [otp, setOtp] = useState("");
   const location = useLocation();
-  const { username = "" } = location.state;
+  const { username = "", newUser = false } = location.state;
   const [messageApi, contextHolder] = message.useMessage();
   const success = (content) => {
     messageApi.open({
@@ -43,7 +43,7 @@ const VerifyOtp = () => {
               ? () => {
                   success("Otp Verified Successfully");
                   setTimeout(() => {
-                    navigate("/");
+                    newUser ? navigate("/organization") : navigate("/");
                   }, 500);
                 }
               : error
