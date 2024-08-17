@@ -4,8 +4,15 @@
   font-family: "Helvetica";
   src: url("../assets/Helvetica-Font/HelveticaNeueRoman.otf");
   font-style: normal;
-}
 
+    font-family: 'Helvetica';
+    src: url('../assets/Helvetica-Font/HelveticaNeueLight.otf');
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 $theme-color: #4085f6;
 $secondary-border-color: #dadfe3;
 $light-bg-color: #f6f6f6;
@@ -18,15 +25,29 @@ $low-priority-color: #0dbf98;
 $medium-priority-color: #ffa500;
 $high-priority-color: #ff4136;
 
+
 $open-status: #007bff;
 $onhold-status: #ffc107;
 $inprogress-status: #17a2b8;
 $done-status: #28a745;
 
 .ant-input,
-.ant-btn-default {
-  height: 40px;
-  border-radius: 5px;
+.ant-btn-default,
+.ant-input-number,
+.ant-picker,
+.ant-select,
+.ant-select-selector {
+    height: 40px;
+    border-radius: 5px;
+    cursor: pointer !important;
+    display: flex;
+    align-items: center;
+}
+
+.ant-col{
+    label{
+        font-weight: bolder;
+    }
 }
 
 .ant-btn-default:hover {
@@ -56,8 +77,8 @@ i {
   min-height: 100vh;
 }
 
-@import './sidebar.scss';
-@import './header.scss';
-@import './work-order.scss';
-@import './common.scss';
-@import './auth.scss';
+@import "./sidebar.scss";
+@import "./header.scss";
+@import "./work-order.scss";
+@import "./common.scss";
+@import "./auth.scss";
