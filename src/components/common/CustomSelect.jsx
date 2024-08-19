@@ -6,6 +6,7 @@ const CustomSelect = ({
   dropdownRender,
   options,
   placeholder = null,
+  onChange
 }) => {
   return (
     <Select
@@ -14,6 +15,7 @@ const CustomSelect = ({
       dropdownRender={dropdownRender}
       options={options}
       notFoundContent={<></>}
+      onChange={onChange}
     />
   );
 };

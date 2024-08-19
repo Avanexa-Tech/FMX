@@ -3,9 +3,7 @@ import StyledButton from "../common/StyledButton";
 import {
   Affix,
   Avatar,
-  Button,
   DatePicker,
-  Divider,
   Dropdown,
   Form,
   Input,
@@ -20,17 +18,18 @@ import { createWorkOrderImg } from "../../assets/images";
 import TextArea from "antd/es/input/TextArea";
 import Dragger from "antd/es/upload/Dragger";
 import classNames from "classnames";
-import { formatWords } from "../../helpers";
+import { formatWords, getOrdinalSuffix } from "../../helpers";
 import { useDispatch, useSelector } from "react-redux";
 import {
   decrementWorkOrderCount,
   incrementWorkOrderCount,
-  resetAllExpectWo,
   toggleShowCreateWorkOrder,
   toggleWorkOrder,
 } from "../../redux/slice/userActionSlice";
-import {createWorkOrder} from '../../redux/slice/workOrderSlice'
+import { createWorkOrder } from "../../redux/slice/workOrderSlice";
 import CustomSelect from "../common/CustomSelect";
+import ViewWorkOrder from "./ViewWorkOrder";
+import { DAY_OPTIONS, days } from "../../constant";
 
 let filterBtns = [
   {
@@ -85,44 +84,17 @@ const quickActions = (
   </div>
 );
 
-let workOrderStatus = [
-  {
-    key: "open",
-    icon: <i class="fi fi-rr-unlock"></i>,
-    activeClass: "openStatusActive",
-    inActiveClass: "",
-  },
-  {
-    key: "on_hold",
-    icon: <i class="fi fi-tr-pause-circle"></i>,
-    activeClass: "onHoldStatusActive",
-    inActiveClass: "",
-  },
-  {
-    key: "in_progress",
-    icon: <i class="fi fi-sr-rotate-right"></i>,
-    activeClass: "inProgressStatusActive",
-    inActiveClass: "",
-  },
-  {
-    key: "done",
-    icon: <i class="fi fi-tr-check-double"></i>,
-    activeClass: "doneStatusActive",
-    inActiveClass: "",
-  },
-];
-
 const initialState = {
-  locations: ['erode'],
+  locations: ["erode"],
   enteredLocation: undefined,
-  assets: ['ac'],
+  assets: ["ac"],
   enteredAsset: undefined,
-  categories: ['machine'],
+  categories: ["machine"],
   enteredCategory: undefined,
-  vendors: ['jj'],
+  vendors: ["jj"],
   enteredVendor: undefined,
-  assignees : [],
-  enteredAssignee : []
+  assignees: ["jeswin2711@gmail.com"],
+  enteredAssignee: [],
 };
 
 function woReducer(state, action) {
@@ -166,40 +138,50 @@ const WorkOrder = () => {
   let { workOrderCount } = user_action;
   let { workOrders } = work_order;
   const actionDispatch = useDispatch();
-  const [state, dispatch] = useReducer(woReducer,initialState);
-  const [selectWO, setSelectWO] = useState()
+  const [state, dispatch] = useReducer(woReducer, initialState);
+  const [selectWO, setSelectWO] = useState();
 
   const [workOrderFormData, setWorkOrderFormData] = useState({
-    index : workOrders.length + 1,
-    wo_title : "Testing",
-    wo_description : "Testing",
-    wo_attachment : "",
-    priority : "low",
-    start_date : "17-11-2024",
-    due_date : "20-11-2024",
-    estimated_hours : 5,
-    estimated_minutes : 30,
-    location : "Coimbatore",
-    asset : "Air Conditioner",
-    category : "",
-    vendor : "LG",
-    assignee : {
-      "name" : "Jeswin",
-      "email" : "jeswin2711@gmail.com"
+    index: workOrders.length + 1,
+    wo_title: "",
+    wo_description: "",
+    wo_attachment: "",
+    wo_status: "open",
+    priority: "none",
+    start_date: "",
+    due_date: "",
+    estimated_hours: 5,
+    estimated_minutes: 30,
+    location: "",
+    asset: "",
+    category: "",
+    vendor: "",
+    assignee: {
+      name: "Jeswin",
+      email: "jeswin2711@gmail.com",
     },
-    requester : {
-      "name" : "Joy"
-    }
-  })
-
-
-  const tagClass = (level) => classNames({
-    "low-priority": level === "low",
-    "medium-priority": level === "medium",
-    "high-priority": level === "high",
+    requester: {
+      name: "Joy",
+    },
+    createdAt: new Date().toLocaleDateString(),
+    updatedAt: new Date().toLocaleDateString(),
+    recurrence: {
+      frequency: "yearly",
+      days: [],
+    },
+    work_type: "preventive",
   });
 
-  function handleWOClick() {
+  const tagClass = (level) =>
+    classNames({
+      "none-priority": level === "none",
+      "low-priority": level === "low",
+      "medium-priority": level === "medium",
+      "high-priority": level === "high",
+    });
+
+  function handleWOClick(wo) {
+    setSelectWO(wo);
     actionDispatch(toggleShowCreateWorkOrder());
     actionDispatch(toggleWorkOrder());
   }
@@ -231,9 +213,7 @@ const WorkOrder = () => {
     ) {
       message.open({
         type: "error",
-        content: `${state[
-          enteredField
-        ]?.toUpperCase()} already exists`,
+        content: `${state[enteredField]?.toUpperCase()} already exists`,
       });
     } else {
       dispatch({
@@ -245,13 +225,206 @@ const WorkOrder = () => {
     }
   }
 
+  function handleDataChange(e) {
+    console.log(e, "e12");
+    setWorkOrderFormData({
+      ...workOrderFormData,
+      [e.target.name]: e.target.value,
+    });
+  }
+
+  function handleChange(name, value) {
+    setWorkOrderFormData({ ...workOrderFormData, [name]: value });
+  }
+
   const handleLocationAddition = () =>
     handleAddition("locations", "enteredLocation");
   const handleAssetAddition = () => handleAddition("assets", "enteredAsset");
   const handleCategoryAddition = () =>
     handleAddition("categories", "enteredCategory");
   const handleVendorAddition = () => handleAddition("vendors", "enteredVendor");
-  const handleAssigneeAddition = () => handleAddition("assignees", "enteredAssignee");
+  const handleAssigneeAddition = () =>
+    handleAddition("assignees", "enteredAssignee");
+
+  function handleWoPriority(woPriority) {
+    setWorkOrderFormData({ ...workOrderFormData, priority: woPriority });
+  }
+
+  function handleWoDate(dateKey, dateString) {
+    setWorkOrderFormData({ ...workOrderFormData, [dateKey]: dateString });
+  }
+
+  function recurrenceComponent() {
+    function handleFrequencyDays(e) {
+      let selectedDays = [...workOrderFormData.recurrence.days];
+      if (selectedDays.includes(e.target.id)) {
+        selectedDays = selectedDays.filter((d) => d !== e.target.id);
+      } else {
+        selectedDays.push(e.target.id);
+      }
+      setWorkOrderFormData({
+        ...workOrderFormData,
+        recurrence: { ...workOrderFormData.recurrence, days: selectedDays },
+      });
+    }
+
+    switch (workOrderFormData.recurrence.frequency) {
+      case "daily":
+        return (
+          <row>
+            {days.map((day) => (
+              <div>{formatWords(day)}</div>
+            ))}
+          </row>
+        );
+      case "weekly":
+        return (
+          <weeklyrow>
+            <p>
+              Every{" "}
+              <Select
+                defaultValue={1}
+                onChange={(value) =>
+                  setWorkOrderFormData({
+                    ...workOrderFormData,
+                    recurrence: {
+                      ...workOrderFormData.recurrence,
+                      week: value,
+                    },
+                  })
+                }
+              >
+                {Array.from({ length: 52 }, (_, index) => index + 1).map(
+                  (num) => (
+                    <Select.Option value={num}>{num}</Select.Option>
+                  )
+                )}
+              </Select>{" "}
+              weeks on
+            </p>
+            <dayrow>
+              {days.map((day) => (
+                <div
+                  onClick={handleFrequencyDays}
+                  id={day}
+                  style={{
+                    background: workOrderFormData.recurrence.days.includes(day)
+                      ? "#4085f6"
+                      : "",
+                    color: workOrderFormData.recurrence.days.includes(day)
+                      ? "white"
+                      : "",
+                  }}
+                >
+                  {formatWords(day)}
+                </div>
+              ))}
+            </dayrow>
+            <p>
+              Repeats every {workOrderFormData.recurrence.week ?? ""} week on{" "}
+              {workOrderFormData.recurrence.days.map(
+                (day, index) =>
+                  `${DAY_OPTIONS[day]}${
+                    workOrderFormData?.recurrence?.days.length - 1 !== index
+                      ? ","
+                      : ""
+                  } `
+              )}{" "}
+              after completion of this Work Order
+            </p>
+          </weeklyrow>
+        );
+      case "monthly":
+        return (
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <monthlyrow>
+              <p>Every</p>
+              <Select
+                onChange={(value) => {
+                  setWorkOrderFormData({
+                    ...workOrderFormData,
+                    recurrence: {
+                      ...workOrderFormData.recurrence,
+                      month_no: value,
+                    },
+                  });
+                }}
+              >
+                {Array.from({ length: 24 }, (_, index) => index + 1).map(
+                  (num) => (
+                    <Select.Option key={num} value={num}>
+                      {num}
+                    </Select.Option>
+                  )
+                )}
+              </Select>
+              month {workOrderFormData.recurrence.month > 1 ? "s" : ""} on the
+              <Select
+                onChange={(value) => {
+                  setWorkOrderFormData({
+                    ...workOrderFormData,
+                    recurrence: {
+                      ...workOrderFormData.recurrence,
+                      day_of_month: value,
+                    },
+                  });
+                }}
+              >
+                {Array.from({ length: 31 }, (_, index) => index + 1).map(
+                  (num) => (
+                    <Select.Option key={num} value={num}>
+                      {getOrdinalSuffix(num)}
+                    </Select.Option>
+                  )
+                )}
+              </Select>
+            </monthlyrow>
+            <p>
+              Repeats every {workOrderFormData?.recurrence?.month_no} month{workOrderFormData?.recurrence?.month_no ? `s` : ""} on
+              the{" "}
+              {getOrdinalSuffix(workOrderFormData?.recurrence?.day_of_month ?? undefined)}{" "}
+              day of the month after completion of this Work Order.
+            </p>
+          </div>
+        );
+      case "yearly":
+        return (
+          <yearly>
+            <div>
+              <p>Every</p>
+              <Select
+                onChange={(value) => {
+                  setWorkOrderFormData({
+                    ...workOrderFormData,
+                    recurrence: {
+                      ...workOrderFormData.recurrence,
+                      year: value,
+                    },
+                  });
+                }}
+              >
+                {Array.from({ length: 50 }, (_, index) => index + 1).map(
+                  (num) => (
+                    <Select.Option value={num}>{num}</Select.Option>
+                  )
+                )}
+              </Select>
+              <p>year{workOrderFormData.recurrence.year > 1 ? "s" : ""}</p>
+            </div>
+            <p>
+              Repeats every{" "}
+              {workOrderFormData.recurrence.year > 1
+                ? workOrderFormData.recurrence.year
+                : null}{" "}
+              year{workOrderFormData.recurrence.year > 1 ? "s" : ""} on 08/20
+              after completion of this Work Order.
+            </p>
+          </yearly>
+        );
+      default:
+        break;
+    }
+  }
 
   return (
     <section className="work-order-container">
@@ -304,37 +477,38 @@ const WorkOrder = () => {
                     {quickActions}
                     {workOrders.length ? (
                       <div className="work-order-flat-list">
-                      {workOrders.map((wo) => (
-                        <div
-                          className="work-order-card"
-                          onClick={handleWOClick}
-                        >
-                          <div className="wo-details">
-                            <h4>{wo.wo_title}</h4>
-                            <p>Requested by {wo.requester.name}</p>
-                            <p>Work ID : #{wo.index}</p>
-                            <div className="assignee-name">
+                        {workOrders.map((wo) => (
+                          <div
+                            className="work-order-card"
+                            onClick={() => handleWOClick(wo)}
+                          >
+                            <div className="wo-details">
+                              <h4>{wo.wo_title}</h4>
+                              <p>Requested by {wo.requester.name}</p>
+                              <p>Work ID : #{wo.index}</p>
+                              <div className="assignee-name">
+                                <Avatar
+                                  size={"small"}
+                                  icon={<i class="fi fi-ts-circle-user"></i>}
+                                />
+                                <p>
+                                  Assigned To <span>{wo.assignee.name}</span>
+                                </p>
+                              </div>
+                            </div>
+                            <div className="wo-status">
                               <Avatar
-                                size={"small"}
-                                icon={<i class="fi fi-ts-circle-user"></i>}
+                                shape="circle"
+                                size={"large"}
+                                icon={<i class="fi fi-ss-user-headset"></i>}
                               />
-                              <p>
-                                Assigned To <span>{wo.assignee.name}</span>
-                              </p>
+                              <Tag className={tagClass(wo.priority)}>
+                                {formatWords(wo.priority)}
+                              </Tag>
                             </div>
                           </div>
-                          <div className="wo-status">
-                            <Avatar
-                              shape="circle"
-                              size={"large"}
-                              icon={<i class="fi fi-ss-user-headset"></i>}
-                            />
-                            <Tag className={tagClass(wo.priority)}>{formatWords(wo.priority)}</Tag>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                      
+                        ))}
+                      </div>
                     ) : (
                       <div className="create-new-wo">
                         <img
@@ -386,12 +560,33 @@ const WorkOrder = () => {
           {user_action.showCreateWorkOrder ? (
             <div className="create-wo" ref={setContainer}>
               <h2>New Work Order</h2>
-              <Form layout="vertical" className="work-order-form">
-                <Form.Item rules={[{}]} label="What needs to be done ?">
-                  <Input />
+              <Form
+                layout="vertical"
+                className="work-order-form"
+                initialValues={workOrderFormData}
+              >
+                <Form.Item
+                  rules={[{}]}
+                  label="What needs to be done ?"
+                  name={"wo_title"}
+                >
+                  <Input
+                    name="wo_title"
+                    onChange={handleDataChange}
+                    value={workOrderFormData.wo_title}
+                  />
                 </Form.Item>
-                <Form.Item rules={[{}]} label="Description">
-                  <TextArea rows={4} />
+                <Form.Item
+                  rules={[{}]}
+                  label="Description"
+                  name="wo_description"
+                >
+                  <TextArea
+                    rows={4}
+                    name="wo_description"
+                    onChange={handleDataChange}
+                    value={workOrderFormData.wo_description}
+                  />
                 </Form.Item>
                 <Form.Item label="Images">
                   <Dragger customRequest={() => {}}>
@@ -405,19 +600,35 @@ const WorkOrder = () => {
                   <div className="wo-priority-container">
                     {priorityBtn.map((type) => (
                       <StyledButton
+                        onClick={() => handleWoPriority(type.key)}
                         key={type.key}
                         icon={null}
                         text={formatWords(type.key)}
+                        btnClassName={
+                          workOrderFormData.priority === type.key
+                            ? tagClass(workOrderFormData.priority)
+                            : ""
+                        }
                       />
                     ))}
                   </div>
                 </Form.Item>
                 <Space size={[8, 16]} wrap className="start-end-date-container">
                   <Form.Item label={"Start Date"}>
-                    <DatePicker className="wo-date-picker" />
+                    <DatePicker
+                      className="wo-date-picker"
+                      onChange={(date, dateString) =>
+                        handleWoDate("start_date", dateString)
+                      }
+                    />
                   </Form.Item>
                   <Form.Item label={"Due Date"}>
-                    <DatePicker className="wo-date-picker" />
+                    <DatePicker
+                      className="wo-date-picker"
+                      onChange={(date, dateString) =>
+                        handleWoDate("due_date", dateString)
+                      }
+                    />
                   </Form.Item>
                 </Space>
                 <Form.Item
@@ -425,11 +636,27 @@ const WorkOrder = () => {
                   className="estimated-time-container"
                 >
                   <Space>
-                    <Form.Item label={"Hours"}>
-                      <InputNumber min={1} max={24} />
+                    <Form.Item label={"Hours"} name={"estimated_hours"}>
+                      <InputNumber
+                        name={"estimated_hours"}
+                        min={1}
+                        max={24}
+                        value={workOrderFormData?.estimated_hours}
+                        onChange={(value) =>
+                          handleChange("estimated_hours", value)
+                        }
+                      />
                     </Form.Item>
-                    <Form.Item label={"Minutes"}>
-                      <InputNumber min={0} max={59} />
+                    <Form.Item label={"Minutes"} name={"estimated_minutes"}>
+                      <InputNumber
+                        name={"estimated_minutes"}
+                        min={0}
+                        max={59}
+                        value={workOrderFormData?.estimated_minutes}
+                        onChange={(value) =>
+                          handleChange("estimated_hours", value)
+                        }
+                      />
                     </Form.Item>
                   </Space>
                 </Form.Item>
@@ -441,141 +668,10 @@ const WorkOrder = () => {
                     btnClassName={"add-procedure-btn"}
                   />
                 </Form.Item>
-                <Form.Item label="Location" className="location">
+                <Form.Item label="Assign To" name={"assignee"}>
                   <CustomSelect
                     mode={"multiple"}
-                    placeholder={"Start Typing"}
-                    options={state?.locations?.map((item) => ({
-                      label: item,
-                      value: item,
-                    }))}
-                    dropdownRender={(menu) => (
-                      <>
-                        <div className="menu-dropdown">{menu}</div>
-                        <Space className="dynamic-input-container">
-                          <Input
-                            placeholder="Please Enter Location"
-                            onChange={(e) =>
-                              dispatch({
-                                type: "SET_ENTERED_LOCATION",
-                                payload: e.target.value,
-                              })
-                            }
-                            value={state?.enteredLocation}
-                            onKeyDown={(e) => e.stopPropagation()}
-                          />
-                          <StyledButton
-                            icon={<i class="fi fi-ts-land-layer-location"></i>}
-                            text={"Add Location"}
-                            onClick={handleLocationAddition}
-                          />
-                        </Space>
-                      </>
-                    )}
-                  />
-                </Form.Item>
-                <Form.Item label="Asset">
-                  <CustomSelect
-                    mode={"multiple"}
-                    placeholder="Start Typing"
-                    dropdownRender={(menu) => (
-                      <>
-                        <div className="menu-dropdown">{menu}</div>
-                        <Space className="dynamic-input-container">
-                          <Input
-                            placeholder="Please Enter Asset"
-                            onChange={(e) => {
-                              dispatch({
-                                type: "SET_ENTERED_ASSET",
-                                payload: e.target.value,
-                              });
-                            }}
-                            value={state?.enteredAsset}
-                            onKeyDown={(e) => e.stopPropagation()}
-                          />
-                          <StyledButton
-                            icon={<i class="fi fi-tr-boxes"></i>}
-                            text={"Add Asset"}
-                            onClick={handleAssetAddition}
-                          />
-                        </Space>
-                      </>
-                    )}
-                    options={state?.assets?.map((item) => ({
-                      label: item,
-                      value: item,
-                    }))}
-                  />
-                </Form.Item>
-                <Form.Item label="Categories">
-                  <CustomSelect
-                    mode={"multiple"}
-                    placeholder="Start Typing"
-                    dropdownRender={(menu) => (
-                      <>
-                        <div className="menu-dropdown">{menu}</div>
-                        <Space className="dynamic-input-container">
-                          <Input
-                            placeholder="Please Enter Category"
-                            onChange={(e) => {
-                              dispatch({
-                                type: "SET_ENTERED_CATEGORY",
-                                payload: e.target.value,
-                              });
-                            }}
-                            value={state?.enteredCategory}
-                            onKeyDown={(e) => e.stopPropagation()}
-                          />
-                          <StyledButton
-                            icon={<i class="fi fi-ts-category"></i>}
-                            text={"Add Category"}
-                            onClick={handleCategoryAddition}
-                          />
-                        </Space>
-                      </>
-                    )}
-                    options={state?.categories?.map((item) => ({
-                      label: item,
-                      value: item,
-                    }))}
-                  />
-                </Form.Item>
-                <Form.Item label="Vendors">
-                  <CustomSelect
-                    mode={"multiple"}
-                    placeholder="Start Typing"
-                    dropdownRender={(menu) => (
-                      <>
-                        <div className="menu-dropdown">{menu}</div>
-                        <Space className="dynamic-input-container">
-                          <Input
-                            placeholder="Please Enter Vendor"
-                            onChange={(e) => {
-                              dispatch({
-                                type: "SET_ENTERED_VENDOR",
-                                payload: e.target.value,
-                              });
-                            }}
-                            value={state?.enteredVendor}
-                            onKeyDown={(e) => e.stopPropagation()}
-                          />
-                          <StyledButton
-                            icon={<i class="fi fi-tr-seller"></i>}
-                            text={"Add Vendor"}
-                            onClick={handleVendorAddition}
-                          />
-                        </Space>
-                      </>
-                    )}
-                    options={state?.vendors?.map((item) => ({
-                      label: item,
-                      value: item,
-                    }))}
-                  />
-                </Form.Item>
-                <Form.Item label="Assign To">
-                  <CustomSelect
-                    mode={"multiple"}
+                    onChange={(value) => handleChange("assignee", value)}
                     placeholder="Type Name, Email Or Phone Number"
                     options={state?.assignees?.map((assignee) => ({
                       label: assignee,
@@ -606,6 +702,187 @@ const WorkOrder = () => {
                     )}
                   />
                 </Form.Item>
+                <Space className="pm-container">
+                  <Form.Item label={"Work Type"} name={"work_type"}>
+                    <Select>
+                      <Select.Option key={"task"} value={"task"}>
+                        Task
+                      </Select.Option>
+                      <Select.Option key={"preventive"} value={"preventive"}>
+                        Preventive
+                      </Select.Option>
+                      <Select.Option key={"reactive"} value={"reactive"}>
+                        Reactive
+                      </Select.Option>
+                    </Select>
+                  </Form.Item>
+                  <Form.Item label={"Recurrence"}>
+                    <Select
+                      value={workOrderFormData.recurrence.frequency}
+                      onChange={(value) =>
+                        setWorkOrderFormData({
+                          ...workOrderFormData,
+                          recurrence: {
+                            ...workOrderFormData.recurrence,
+                            frequency: value,
+                          },
+                        })
+                      }
+                    >
+                      <Select.Option
+                        key={"does_not_repeat"}
+                        value={"does_not_repeat"}
+                      >
+                        Does Not Repeat
+                      </Select.Option>
+                      <Select.Option key={"daily"} value={"daily"}>
+                        Daily
+                      </Select.Option>
+                      <Select.Option key={"weekly"} value={"weekly"}>
+                        Weekly
+                      </Select.Option>
+                      <Select.Option key={"monthly"} value={"monthly"}>
+                        Monthly
+                      </Select.Option>
+                      <Select.Option key={"yearly"} value={"yearly"}>
+                        Yearly
+                      </Select.Option>
+                    </Select>
+                  </Form.Item>
+                </Space>
+                {recurrenceComponent()}
+                <Form.Item label="Location" className="location">
+                  <CustomSelect
+                    placeholder={"Start Typing"}
+                    onChange={(value) => handleChange("location", value)}
+                    options={state?.locations?.map((item) => ({
+                      label: formatWords(item),
+                      value: item,
+                    }))}
+                    dropdownRender={(menu) => (
+                      <>
+                        <div className="menu-dropdown">{menu}</div>
+                        <Space className="dynamic-input-container">
+                          <Input
+                            placeholder="Please Enter Location"
+                            onChange={(e) =>
+                              dispatch({
+                                type: "SET_ENTERED_LOCATION",
+                                payload: e.target.value,
+                              })
+                            }
+                            value={state?.enteredLocation}
+                            onKeyDown={(e) => e.stopPropagation()}
+                          />
+                          <StyledButton
+                            icon={<i class="fi fi-ts-land-layer-location"></i>}
+                            text={"Add Location"}
+                            onClick={handleLocationAddition}
+                          />
+                        </Space>
+                      </>
+                    )}
+                  />
+                </Form.Item>
+                <Form.Item label="Asset">
+                  <CustomSelect
+                    placeholder="Start Typing"
+                    onChange={(value) => handleChange("asset", value)}
+                    dropdownRender={(menu) => (
+                      <>
+                        <div className="menu-dropdown">{menu}</div>
+                        <Space className="dynamic-input-container">
+                          <Input
+                            placeholder="Please Enter Asset"
+                            onChange={(e) => {
+                              dispatch({
+                                type: "SET_ENTERED_ASSET",
+                                payload: e.target.value,
+                              });
+                            }}
+                            value={state?.enteredAsset}
+                            onKeyDown={(e) => e.stopPropagation()}
+                          />
+                          <StyledButton
+                            icon={<i class="fi fi-tr-boxes"></i>}
+                            text={"Add Asset"}
+                            onClick={handleAssetAddition}
+                          />
+                        </Space>
+                      </>
+                    )}
+                    options={state?.assets?.map((item) => ({
+                      label: formatWords(item),
+                      value: item,
+                    }))}
+                  />
+                </Form.Item>
+                <Form.Item label="Categories" name={"category"}>
+                  <CustomSelect
+                    placeholder="Start Typing"
+                    onChange={(value) => handleChange("category", value)}
+                    dropdownRender={(menu) => (
+                      <>
+                        <div className="menu-dropdown">{menu}</div>
+                        <Space className="dynamic-input-container">
+                          <Input
+                            placeholder="Please Enter Category"
+                            onChange={(e) => {
+                              dispatch({
+                                type: "SET_ENTERED_CATEGORY",
+                                payload: e.target.value,
+                              });
+                            }}
+                            value={state?.enteredCategory}
+                            onKeyDown={(e) => e.stopPropagation()}
+                          />
+                          <StyledButton
+                            icon={<i class="fi fi-ts-category"></i>}
+                            text={"Add Category"}
+                            onClick={handleCategoryAddition}
+                          />
+                        </Space>
+                      </>
+                    )}
+                    options={state?.categories?.map((item) => ({
+                      label: formatWords(item),
+                      value: item,
+                    }))}
+                  />
+                </Form.Item>
+                <Form.Item label="Vendors" name={"vendors"}>
+                  <CustomSelect
+                    placeholder="Start Typing"
+                    onChange={(value) => handleChange("vendors", value)}
+                    dropdownRender={(menu) => (
+                      <>
+                        <div className="menu-dropdown">{menu}</div>
+                        <Space className="dynamic-input-container">
+                          <Input
+                            placeholder="Please Enter Vendor"
+                            onChange={(e) => {
+                              dispatch({
+                                type: "SET_ENTERED_VENDOR",
+                                payload: e.target.value,
+                              });
+                            }}
+                            value={state?.enteredVendor}
+                            onKeyDown={(e) => e.stopPropagation()}
+                          />
+                          <StyledButton
+                            icon={<i class="fi fi-tr-seller"></i>}
+                            text={"Add Vendor"}
+                            onClick={handleVendorAddition}
+                          />
+                        </Space>
+                      </>
+                    )}
+                    options={state?.vendors?.map((item) => ({
+                      label: item,
+                      value: item,
+                    }))}
+                  />
+                </Form.Item>
               </Form>
               <Affix target={() => container}>
                 <StyledButton
@@ -617,60 +894,7 @@ const WorkOrder = () => {
               </Affix>
             </div>
           ) : user_action.showWorkOrder ? (
-            <div className="view-wo">
-              <div className="wo-intro">
-                <h2>Monthly HVAC System Inspection</h2>
-                <div className="view-wo-action-btns">
-                  <i class="fi fi-rr-pencil"></i>
-                  <i class="fi fi-rr-share"></i>
-                  <i class="fi fi-bs-menu-dots-vertical"></i>
-                </div>
-              </div>
-              <div className="wo-status-desc">
-                <h4>Work Order Status</h4>
-                <div className="wo-status-container">
-                  {workOrderStatus.map((status) => (
-                    <StyledButton
-                      onClick={() => {
-                        setWOStatus(status.key);
-                      }}
-                      icon={status.icon}
-                      text={formatWords(status.key)}
-                      btnClassName={
-                        woStatus === status.key ? status.activeClass : ""
-                      }
-                    />
-                  ))}
-                </div>
-              </div>
-              <div className="wo-info">
-                <div>
-                  <p>Work Order ID</p>
-                  <p>#123465</p>
-                </div>
-                <div>
-                  <p>Work Order ID</p>
-                  <p>#123465</p>
-                </div>
-                <div>
-                  <p>Work Order ID</p>
-                  <p>#123465</p>
-                </div>
-                <div>
-                  <p>Work Order ID</p>
-                  <p>#123465</p>
-                </div>
-              </div>
-              <div className="wo-description">
-                <h3>Description</h3>
-                <p>
-                  Conduct a comprehensive inspection of the HVAC system to
-                  ensure optimal performance and prevent potential issues. This
-                  task includes checking filters, monitoring refrigerant levels,
-                  inspecting electrical connections, and cleaning coils.
-                </p>
-              </div>
-            </div>
+            <ViewWorkOrder wo={selectWO} />
           ) : null}
         </div>
       </div>
