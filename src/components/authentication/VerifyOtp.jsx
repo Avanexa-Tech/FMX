@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import StyledInput from "../common/StyledInput";
 import StyledButton from "../common/StyledButton";
-import { Input, message, notification } from "antd";
+import { Input, message } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { userData } from "../../redux/slice/userAuthSlice";
 
 const VerifyOtp = () => {
   const [otp, setOtp] = useState("");
   const location = useLocation();
-  const { username = "", newUser = false } = location.state;
+  const { data = {}, username = "", newUser = false } = location.state;
   const [messageApi, contextHolder] = message.useMessage();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const success = (content) => {
     messageApi.open({
       type: "success",
@@ -22,7 +25,6 @@ const VerifyOtp = () => {
       content: "Enter Valid Otp",
     });
   };
-  const navigate = useNavigate();
   return (
     <div className="verify-otp-card">
       {contextHolder}
@@ -38,15 +40,14 @@ const VerifyOtp = () => {
         <StyledButton
           text={"Verify Otp"}
           btnClassName="login-btn"
-          onClick={
-            otp === "123456"
-              ? () => {
-                  success("Otp Verified Successfully");
-                  setTimeout(() => {
-                    newUser ? navigate("/organization") : navigate("/");
-                  }, 500);
-                }
-              : error
+          onClick={() => {
+            if (otp === "123456") {
+              success("Otp Verified Successfully");
+              !newUser && dispatch((userData({ ...data, token: "available" })))
+              setTimeout(() => newUser ? navigate("/organization", { state: { data } }) : navigate("/"), 500);
+            }
+            else error();
+          }
           }
         />
 

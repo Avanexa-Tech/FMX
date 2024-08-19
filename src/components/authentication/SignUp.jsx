@@ -10,7 +10,9 @@ const SignUp = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const onChange = (value, name) => {
-    setSignUp((prevState) => ({ ...prevState, [name]: value }));
+    const copy = { ...signUp };
+    copy[name] = value;
+    setSignUp((prevState) => ({ ...prevState, ...copy }));
   };
   const success = (content) => {
     messageApi.open({
@@ -25,9 +27,6 @@ const SignUp = () => {
       content: "All Fields are mandatory",
     });
   };
-
-  console.log(signUp);
-  
 
   return (
     <>
@@ -71,18 +70,15 @@ const SignUp = () => {
             className="submit"
             type="primary"
             onClick={() => {
-              Object.keys(signUp)?.length > 0 &&
-                Object.keys(signUp).every((i) => signUp[i] !== "")
-                ? () => {
-                  success("Otp Sended Successfully");
-                  setTimeout(
-                    navigate("/verify-otp", {
-                      state: { username: signUp?.email, newUser: true },
-                    }),
-                    500
-                  );
-                }
-                : errorNotification();
+              if (Object.keys(signUp)?.length > 0 && Object.keys(signUp).every((i) => signUp[i] !== "")) {
+                success("Otp Sended Successfully");
+                setTimeout(
+                  navigate("/verify-otp", {
+                    state: { data: signUp, username: signUp?.email, newUser: true },
+                  }),
+                  500
+                );
+              } else errorNotification();
             }}
           >
             Next
