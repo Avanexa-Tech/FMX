@@ -14,7 +14,7 @@ const workOrderSlice = createSlice({
     deleteWorkOrder: (state, action) => {
       console.log(action.payload , "asdas")
       state.workOrders = state.workOrders.filter(
-        (wo) => wo.id !== action.payload
+        (wo) => wo.id !== action.payload.id
       );
     },
     updateWorkOrder: (state, action) => {

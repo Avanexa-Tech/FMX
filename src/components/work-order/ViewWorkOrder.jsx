@@ -6,6 +6,7 @@ import { colors, DAY_OPTIONS } from "../../constant";
 import TextArea from "antd/es/input/TextArea";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteWorkOrder, updateWorkOrder } from "../../redux/slice/workOrderSlice";
+import { toggleShowCreateWorkOrder } from "../../redux/slice/userActionSlice";
 
 let workOrderStatus = [
   {
@@ -35,7 +36,6 @@ let workOrderStatus = [
 ];
 
 const ViewWorkOrder = ({ wo }) => {
-  console.log(wo, "wo12")
   const dispatch = useDispatch()
   const [woStatus, setWoStatus] = useState(wo?.wo_status);
 
@@ -55,7 +55,9 @@ const ViewWorkOrder = ({ wo }) => {
     switch (wo.recurrence.frequency) {
       case "daily":
         return (
-          "Daily"
+          <p>
+            Repeats every day after completion of this Work Order.
+          </p>
         );
       case "weekly":
         return (
@@ -99,8 +101,12 @@ const ViewWorkOrder = ({ wo }) => {
   }
 
   function handleDeleteWo(){
-    console.log("Dispatching Delete Work Order Action..");
-    dispatch(deleteWorkOrder(wo?.id))
+    dispatch(
+      deleteWorkOrder({
+        id: wo?.id,
+      })
+    );
+    dispatch(toggleShowCreateWorkOrder(true))
   }
 
   return (

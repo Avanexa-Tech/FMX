@@ -1,13 +1,7 @@
 @import "../../node_modules/@flaticon/flaticon-uicons/css/all/all.css";
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap');
 
-@font-face {
-  font-family: "Helvetica";
-  src: url("../assets/Helvetica-Font/HelveticaNeueRoman.otf");
-  font-style: normal;
 
-    font-family: 'Helvetica';
-    src: url('../assets/Helvetica-Font/HelveticaNeueLight.otf');
-}
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -46,7 +40,7 @@ $done-status: #28a745;
 
 .ant-col{
     label{
-        font-weight: bolder;
+        font-weight: 500;
     }
 }
 
@@ -55,8 +49,8 @@ $done-status: #28a745;
     rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
 }
 
-body {
-  font-family: "Helvetica", Arial, sans-serif;
+body,span {
+  font-family: "Inter Tight", sans-serif;
   margin: 0px;
 }
 

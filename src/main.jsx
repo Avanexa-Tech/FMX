@@ -12,7 +12,7 @@ createRoot(document.getElementById("root")).render(
     <ConfigProvider
       theme={{
         token: {
-          fontFamily: "Helvetica",
+          fontFamily: "Inter Tight",
           colorPrimary: "#4085F6",
         },
       }}

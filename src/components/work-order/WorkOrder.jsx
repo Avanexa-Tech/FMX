@@ -133,16 +133,17 @@ const WorkOrder = () => {
   const [woStatus, setWOStatus] = useState("done");
   const [container, setContainer] = React.useState(null);
   const {showWorkOrderForm} = useSelector((state) => state.user_action);
-  const work_order = useSelector((state) => state.work_order);
-  let { workOrders } = work_order;
+  const {workOrders} = useSelector((state) => state.work_order);
   const actionDispatch = useDispatch();
   const [state, dispatch] = useReducer(woReducer, initialState);
   const [selectWO, setSelectWO] = useState();
   const [showWoCreationForm, setShowWoCreationForm] = useState(false);
-  const submitWoRef = useRef()
+  const submitWoRef = useRef();
+
+  console.log(workOrders ,"workOrders")
 
   const [workOrderFormData, setWorkOrderFormData] = useState({
-    index: workOrders.length + 1,
+    id: workOrders.length + 1,
     wo_title: "",
     wo_description: "",
     wo_attachment: "",
@@ -239,6 +240,7 @@ const WorkOrder = () => {
   }
 
   function recurrenceComponent() {
+    
     function handleFrequencyDays(e) {
       let selectedDays = [...workOrderFormData.recurrence.days];
       if (selectedDays.includes(e.target.id)) {
@@ -246,10 +248,17 @@ const WorkOrder = () => {
       } else {
         selectedDays.push(e.target.id);
       }
-      setWorkOrderFormData({
-        ...workOrderFormData,
-        recurrence: { ...workOrderFormData.recurrence, days: selectedDays },
-      });
+      setWorkOrderFormData((prev) => ({
+        ...prev,
+        recurrence: { ...workOrderFormData.recurrence, days: [...selectedDays] },
+      }));
+      console.log(selectedDays , "2323")
+      if(selectedDays.length === 7){
+        setWorkOrderFormData({
+          ...workOrderFormData,
+          recurrence: { ...workOrderFormData.recurrence, frequency: "daily" },
+        });
+      }
     }
 
     function handleChangeFrequencyToWeek(day){
@@ -263,9 +272,14 @@ const WorkOrder = () => {
       case "daily":
         return (
           <row>
+            <div>
             {days.map((day) => (
               <div onClick={() => handleChangeFrequencyToWeek(day)}>{formatWords(day)}</div>
             ))}
+            </div>
+            <p>
+            Repeats every day after completion of this Work Order.
+          </p>
           </row>
         );
       case "weekly":
@@ -426,10 +440,6 @@ const WorkOrder = () => {
     } });
   }
 
-  function handleShowWorkOrderForm(){
-    setShowWoCreationForm(!showWoCreationForm);
-  }
-
   return (
     <section className="work-order-container">
       <div className="work-order-header">
@@ -482,37 +492,39 @@ const WorkOrder = () => {
                     {workOrders.length ? (
                       <div className="work-order-flat-list">
                         {workOrders
-                          .filter((wo) => wo.status !== "done").map((wo) => (
-                          <div
-                            className="work-order-card"
-                            onClick={() => handleWOClick(wo)}
-                          >
-                            <div className="wo-details">
-                              <h4>{wo.wo_title}</h4>
-                              <p>Requested by {wo.requester.name}</p>
-                              <p>Work ID : #{wo.index}</p>
-                              <div className="assignee-name">
+                          .filter((wo) => wo.status !== "done")
+                          .map((wo) => (
+                            <div
+                              className="work-order-card"
+                              onClick={() => handleWOClick(wo)}
+                            >
+                              <div className="wo-details">
+                                <h4>{wo.wo_title}</h4>
+                                <p>Requested by {wo.requester.name}</p>
+                                <p>Work ID : #{wo.index}</p>
+                                <div className="assignee-name">
+                                  <Avatar
+                                    size={"small"}
+                                    icon={<i class="fi fi-ts-circle-user"></i>}
+                                  />
+                                  <p>
+                                    Assigned To{" "}
+                                    <span>{wo.assignees?.name}</span>
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="wo-status">
                                 <Avatar
-                                  size={"small"}
-                                  icon={<i class="fi fi-ts-circle-user"></i>}
+                                  shape="circle"
+                                  size={"large"}
+                                  icon={<i class="fi fi-ss-user-headset"></i>}
                                 />
-                                <p>
-                                  Assigned To <span>{wo.assignees?.name}</span>
-                                </p>
+                                <Tag className={tagClass(wo.priority)}>
+                                  {formatWords(wo.priority)}
+                                </Tag>
                               </div>
                             </div>
-                            <div className="wo-status">
-                              <Avatar
-                                shape="circle"
-                                size={"large"}
-                                icon={<i class="fi fi-ss-user-headset"></i>}
-                              />
-                              <Tag className={tagClass(wo.priority)}>
-                                {formatWords(wo.priority)}
-                              </Tag>
-                            </div>
-                          </div>
-                        ))}
+                          ))}
                       </div>
                     ) : (
                       <div className="create-new-wo">
@@ -525,7 +537,9 @@ const WorkOrder = () => {
                           icon={<i class="fi fi-rr-plus"></i>}
                           text={"Create Work Order"}
                           btnClassName={"new-wo-btn"}
-                          onClick={() => actionDispatch(toggleShowCreateWorkOrder(true))}
+                          onClick={() =>
+                            actionDispatch(toggleShowCreateWorkOrder(true))
+                          }
                         />
                       </div>
                     )}
@@ -585,7 +599,9 @@ const WorkOrder = () => {
                           icon={<i class="fi fi-rr-plus"></i>}
                           text={"Create Work Order"}
                           btnClassName={"new-wo-btn"}
-                          onClick={() => dispatch(toggleShowCreateWorkOrder(true))}
+                          onClick={() =>
+                            dispatch(toggleShowCreateWorkOrder(true))
+                          }
                         />
                       </div>
                     )}
@@ -596,7 +612,7 @@ const WorkOrder = () => {
           />
         </div>
         <div className="create-view-work-order">
-          {showWorkOrderForm? (
+          {showWorkOrderForm ? (
             <div className="create-wo" ref={setContainer}>
               <h2>New Work Order</h2>
               <Form
@@ -606,10 +622,12 @@ const WorkOrder = () => {
                 onFinish={handleCreateWO}
               >
                 <Form.Item
-                  rules={[{
-                    required : true,
-                    message: "Please input Work Order Title!",
-                  }]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input Work Order Title!",
+                    },
+                  ]}
                   label="What needs to be done?"
                   name={"wo_title"}
                 >
@@ -632,7 +650,10 @@ const WorkOrder = () => {
                   />
                 </Form.Item>
                 <Form.Item label="Images">
-                  <Dragger customRequest={() => {}} onChange={handleAttachmentUpload}>
+                  <Dragger
+                    customRequest={() => {}}
+                    onChange={handleAttachmentUpload}
+                  >
                     <p className="ant-upload-drag-icon">
                       <i class="fi fi-ts-camera-viewfinder"></i>
                     </p>
@@ -643,7 +664,6 @@ const WorkOrder = () => {
                   <div className="wo-priority-container">
                     {priorityBtn.map((type) => (
                       <StyledButton
-                        onClick={() => handleWoPriority(type.key)}
                         key={type.key}
                         icon={null}
                         text={formatWords(type.key)}
@@ -652,6 +672,7 @@ const WorkOrder = () => {
                             ? tagClass(workOrderFormData.priority)
                             : ""
                         }
+                        onClick={() => handleWoPriority(type.key)}
                       />
                     ))}
                   </div>
@@ -793,7 +814,7 @@ const WorkOrder = () => {
                     </Select>
                   </Form.Item>
                 </Space>
-                {recurrenceComponent()}
+                <div className="recurrent-area">{recurrenceComponent()}</div>
                 <Form.Item label="Location" className="location">
                   <CustomSelect
                     placeholder={"Start Typing"}
@@ -929,15 +950,16 @@ const WorkOrder = () => {
                 <Button
                   ref={submitWoRef}
                   htmlType="submit"
-                  style={{display : "none"}}
+                  style={{ display: "none" }}
                 />
               </Form>
               <StyledButton
-                  icon={<i class="fi fi-rr-plus"></i>}
-                  text={"Create Work Order"}
-                  btnClassName={"create-wo-finish-btn"}
-                  onClick={() => submitWoRef.current?.click()}
-                />
+                key="create-wo-btn"
+                icon={<i class="fi fi-rr-plus"></i>}
+                text={"Create Work Order"}
+                btnClassName={"create-wo-finish-btn"}
+                onClick={() => submitWoRef.current?.click()}
+              />
             </div>
           ) : selectWO ? (
             <ViewWorkOrder wo={selectWO} />
