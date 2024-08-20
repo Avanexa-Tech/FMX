@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import StyledButton from "../common/StyledButton";
 import { formatWords } from "../../helpers";
-import { Avatar, Button } from "antd";
+import { Avatar, Button, message } from "antd";
 import { colors } from "../../constant";
 import TextArea from "antd/es/input/TextArea";
 
@@ -38,6 +38,10 @@ const ViewWorkOrder = ({ wo }) => {
 
   function handleWoStatus(changedStatus) {
     setWoStatus(changedStatus);
+    message.open({
+      type: "success",
+      content: `Work Order status updated to ${formatWords(changedStatus)}`,
+    })
   }
 
   return (
@@ -130,6 +134,7 @@ const ViewWorkOrder = ({ wo }) => {
         text={"Mark As Done"}
         btnClassName={"markDoneBtn"}
         icon={<i class="fi fi-sr-checkbox"></i>}
+        onClick={() => handleWoStatus("done")}
       />
     </section>
   );

@@ -226,7 +226,6 @@ const WorkOrder = () => {
   }
 
   function handleDataChange(e) {
-    console.log(e, "e12");
     setWorkOrderFormData({
       ...workOrderFormData,
       [e.target.name]: e.target.value,
@@ -380,9 +379,11 @@ const WorkOrder = () => {
               </Select>
             </monthlyrow>
             <p>
-              Repeats every {workOrderFormData?.recurrence?.month_no} month{workOrderFormData?.recurrence?.month_no ? `s` : ""} on
-              the{" "}
-              {getOrdinalSuffix(workOrderFormData?.recurrence?.day_of_month ?? undefined)}{" "}
+              Repeats every {workOrderFormData?.recurrence?.month_no} month
+              {workOrderFormData?.recurrence?.month_no ? `s` : ""} on the{" "}
+              {getOrdinalSuffix(
+                workOrderFormData?.recurrence?.day_of_month ?? undefined
+              )}{" "}
               day of the month after completion of this Work Order.
             </p>
           </div>
@@ -424,6 +425,13 @@ const WorkOrder = () => {
       default:
         break;
     }
+  }
+
+  function handleAttachmentUpload({fileList : newFileList}) {
+    setWorkOrderFormData({...workOrderFormData, attachments: {
+      ...newFileList,
+      status: "done",
+    } });
   }
 
   return (
@@ -533,7 +541,43 @@ const WorkOrder = () => {
                 children: (
                   <>
                     {quickActions}
-                    {workOrderCount === 0 ? (
+                    {workOrders.length ? (
+                      <div className="work-order-flat-list">
+                        {workOrders
+                          .filter((wo) => wo.status === "done")
+                          .map((wo) => (
+                            <div
+                              className="work-order-card"
+                              onClick={() => handleWOClick(wo)}
+                            >
+                              <div className="wo-details">
+                                <h4>{wo.wo_title}</h4>
+                                <p>Requested by {wo.requester.name}</p>
+                                <p>Work ID : #{wo.index}</p>
+                                <div className="assignee-name">
+                                  <Avatar
+                                    size={"small"}
+                                    icon={<i class="fi fi-ts-circle-user"></i>}
+                                  />
+                                  <p>
+                                    Assigned To <span>{wo.assignee.name}</span>
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="wo-status">
+                                <Avatar
+                                  shape="circle"
+                                  size={"large"}
+                                  icon={<i class="fi fi-ss-user-headset"></i>}
+                                />
+                                <Tag className={tagClass(wo.priority)}>
+                                  {formatWords(wo.priority)}
+                                </Tag>
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    ) : (
                       <div className="create-new-wo">
                         <img
                           src={createWorkOrder}
@@ -547,8 +591,6 @@ const WorkOrder = () => {
                           btnClassName={"new-wo-btn"}
                         />
                       </div>
-                    ) : (
-                      <></>
                     )}
                   </>
                 ),
@@ -589,7 +631,7 @@ const WorkOrder = () => {
                   />
                 </Form.Item>
                 <Form.Item label="Images">
-                  <Dragger customRequest={() => {}}>
+                  <Dragger customRequest={() => {}} onChange={handleAttachmentUpload}>
                     <p className="ant-upload-drag-icon">
                       <i class="fi fi-ts-camera-viewfinder"></i>
                     </p>
