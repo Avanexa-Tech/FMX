@@ -69,11 +69,14 @@
             border-radius: 5px;
             background: #fff;
         }
-        .work-order-list{
+
+        .work-order-list {
             width: 45%;
         }
-        .create-view-work-order{
+
+        .create-view-work-order {
             width: 60%;
+            background: transparent;
         }
 
         .create-view-work-order {
@@ -89,14 +92,16 @@
                 box-sizing: border-box;
                 height: 90%;
                 overflow: scroll;
+                background: #fff;
+
                 .ant-input,
-    .ant-btn-default,
-    .ant-input-number,
-    .ant-picker,
-    .ant-select,
-    .ant-select-selector {
-        width: 100%;
-    }
+                .ant-btn-default,
+                .ant-input-number,
+                .ant-picker,
+                .ant-select,
+                .ant-select-selector {
+                    width: 100%;
+                }
 
                 .wo-priority-container {
                     display: flex;
@@ -133,9 +138,10 @@
                     }
                 }
 
-                .pm-container{
+                .pm-container {
                     width: 80% !important;
-                    .ant-space-item{
+
+                    .ant-space-item {
                         width: 50%;
                     }
                 }
@@ -162,13 +168,14 @@
             .work-order-form {
                 position: relative;
 
-                row{
+                row {
                     display: flex;
                     width: 70%;
                     justify-content: space-evenly;
-                    & > div{
+
+                    &>div {
                         height: 40px;
-                        width:  40px;
+                        width: 40px;
                         display: flex;
                         align-items: center;
                         justify-content: center;
@@ -177,38 +184,45 @@
                         color: #fff;
                         cursor: pointer;
                         transition: all ease-in 0.1s;
-                        &:hover{
+
+                        &:hover {
                             box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px;
                         }
                     }
                 }
 
-                weeklyrow{
+                weeklyrow {
                     display: flex;
                     flex-direction: column;
                     gap: 5px;
-                    & > p{
+
+                    &>p {
                         display: flex;
                         align-items: center;
                         gap: 5px;
-                        .ant-select{
+
+                        .ant-select {
                             height: 30px;
                             width: 12%;
                         }
-                        .ant-select-selector{
+
+                        .ant-select-selector {
                             border: none;
                             border-radius: 0px;
                             border-bottom: 1px solid #ccc;
-                            &:focus{
+
+                            &:focus {
                                 box-shadow: none;
                             }
                         }
                     }
-                    & > dayrow{
+
+                    &>dayrow {
                         display: flex;
                         width: 80%;
                         gap: 10px;
-                        & > div{
+
+                        &>div {
                             height: 40px;
                             width: 40px;
                             border-radius: 50px;
@@ -217,24 +231,27 @@
                             justify-content: center;
                             color: $theme-color;
                             border: 1px solid $theme-color;
-                            border-style:dashed;
+                            border-style: dashed;
                             cursor: pointer;
                         }
                     }
-                    & > p:nth-child(2){
+
+                    &>p:nth-child(2) {
                         font-size: 12px;
                         margin: 2px;
                     }
                 }
 
-                monthlyrow{
+                monthlyrow {
                     display: flex;
                     align-items: center;
                     gap: 10px;
-                    .ant-select{
+
+                    .ant-select {
                         height: 30px;
                         width: 14%;
-                        .ant-select-selector{
+
+                        .ant-select-selector {
                             border: none;
                             border-radius: 0px;
                             border-bottom: 1px solid $secondary-icon-color;
@@ -242,19 +259,22 @@
                     }
                 }
 
-                yearly{
+                yearly {
                     display: flex;
                     flex-direction: column;
                     gap: 5px;
-                    & > div{
+
+                    &>div {
                         display: flex;
                         gap: 5px;
                         align-items: center;
-                        .ant-select{
+
+                        .ant-select {
                             height: 30px;
                             width: 15%;
                             border: none;
-                            .ant-select-selector{
+
+                            .ant-select-selector {
                                 border: none;
                                 border-radius: 0px;
                                 box-shadow: none;
@@ -294,18 +314,20 @@
                 }
             }
 
-            .view-wo-container{
+            .view-wo-container {
                 display: flex;
                 flex-direction: column;
                 width: 100%;
                 height: 100%;
-                .markDoneBtn{
+
+                .markDoneBtn {
                     background: $theme-color;
                     color: #ffffff;
                     width: 80%;
                     display: flex;
                     margin: 0 auto;
-                    &:hover{
+
+                    &:hover {
                         color: $theme-color !important;
                         border: 1px solid $theme-color !important;
                         background: #fff !important;
@@ -318,8 +340,15 @@
                 box-sizing: border-box;
                 height: 90%;
                 overflow: scroll;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
 
-                &::-webkit-scrollbar{
+                & > div{
+                    background: #fff;
+                }
+
+                &::-webkit-scrollbar {
                     width: 1px;
                 }
 
@@ -327,9 +356,9 @@
                     display: flex;
                     width: 100%;
                     justify-content: space-between;
-                    border-bottom: 1px solid $secondary-border-color;
                     box-sizing: border-box;
-                    padding: 15px 25px;
+                    padding: 9px 25px;
+                    align-items: center;
 
                     &>h2 {
                         font-size: 20px;
@@ -342,6 +371,18 @@
 
                         i {
                             transition: transform ease-in .2s;
+                            height: 35px;
+                            width: 35px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border-radius: 50px;
+                            border: 1px solid $secondary-text-color;
+                            transition: all ease-in-out .1s;
+
+                            &:hover {
+                                box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+                            }
                         }
                     }
                 }
@@ -349,6 +390,9 @@
                 .wo-status-desc {
                     box-sizing: border-box;
                     padding: 25px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 15px;
 
                     &>h4 {
                         margin: 0px;
@@ -376,30 +420,33 @@
                     grid-template-columns: repeat(2, 150px);
                     justify-content: space-between;
                     grid-gap: 15px;
-                    p:nth-child(1){
+
+                    p:nth-child(1) {
                         font-size: 16px;
                         font-weight: 600;
                         margin: 0px;
-                        margin-bottom: 10px;
                     }
-                    p:nth-child(2){
+
+                    p:nth-child(2) {
                         font-size: 14px;
                         color: $secondary-text-color;
                     }
-                    .d-flex{
+
+                    .d-flex {
                         display: flex;
                         align-items: center;
                         gap: 5px;
                         font-size: 14px;
                         justify-content: flex-start;
                         color: $secondary-text-color;
+
                         .ant-avatar-sm {
                             height: 20px;
                             width: 20px;
                         }
                     }
-                    .status-color-group{
-                        border: 1px solid;
+
+                    .status-color-group {
                         height: 20px;
                         width: 20px;
                         border-radius: 50px;
@@ -407,23 +454,33 @@
                     }
                 }
 
-                .wo-type{
+                .wo-type {
                     display: flex;
                     flex-direction: column;
-                    gap: 10px;
-                    & > div{
+                    gap: 15px;
+                    box-sizing: border-box;
+                    padding: 25px;
+
+                    &>div {
                         display: flex;
                         flex-direction: column;
                         gap: 5px;
-                        & > p{
+
+                        &>p {
                             color: #000;
                             font-weight: 600;
-                            font-size: 14px;
+                            font-size: 16px;
                             margin: 2px;
                         }
-                        & > text{
+
+                        &>text,
+                        &>jeswin {
                             color: $secondary-text-color;
-                            font-size: 12px;
+                            font-size: 14px;
+
+                            &>p {
+                                margin: 0px;
+                            }
                         }
                     }
                 }
@@ -432,10 +489,7 @@
                     display: flex;
                     flex-direction: column;
                     gap: 10px;
-                    margin-top: 50px;
                     padding: 25px;
-                    border-top: 1px solid $secondary-border-color;
-                    border-bottom: 1px solid $secondary-border-color;
 
                     &>h3,
                     &>p {
@@ -448,16 +502,19 @@
                         color: $secondary-text-color;
                     }
                 }
-                .wo-comment-section{
+
+                .wo-comment-section {
                     box-sizing: border-box;
                     padding: 15px;
                     display: flex;
                     flex-direction: column;
                     gap: 10px;
-                    h4{
+
+                    h4 {
                         margin: 5px;
                     }
-                    p{
+
+                    p {
                         margin: 0px;
                         font-size: 12px;
                         color: $secondary-text-color;

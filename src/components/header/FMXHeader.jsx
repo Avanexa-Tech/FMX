@@ -1,4 +1,4 @@
-import { Avatar, Badge, Dropdown, Input, message } from "antd";
+import { Avatar, Badge, Dropdown, Input, Menu, message } from "antd";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/slice/userAuthSlice";
@@ -37,13 +37,23 @@ function FMXHeader() {
           </Badge>
         </div>
         <div className="user-avatar-container">
-          <Avatar size={"large"} shape="circle" icon={<i className="fi fi-tr-circle-user"></i>} />
+          <Avatar
+            size={"large"}
+            shape="circle"
+            icon={<i className="fi fi-tr-circle-user"></i>}
+          />
           <Dropdown
             overlay={
-              <a href="/login" onClick={() => {
-                success("Logged out successfully");
-                dispatch(logout())
-              }}> Logout </a>}>
+              <Menu
+                onClick={() => {
+                  success("Logged out successfully");
+                  dispatch(logout());
+                }}
+              >
+                <Menu.Item>Logout</Menu.Item>
+              </Menu>
+            }
+          >
             <div>{user?.full_name}</div>
           </Dropdown>
         </div>

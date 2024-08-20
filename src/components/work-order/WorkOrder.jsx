@@ -1,8 +1,9 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer, useRef, useState } from "react";
 import StyledButton from "../common/StyledButton";
 import {
   Affix,
   Avatar,
+  Button,
   DatePicker,
   Dropdown,
   Form,
@@ -86,7 +87,7 @@ const initialState = {
   enteredAsset: undefined,
   categories: ["machine"],
   enteredCategory: undefined,
-  vendors: ["jj"],
+  vendors: ["LG"],
   enteredVendor: undefined,
   assignees: [{
     name : "Jeswin",
@@ -137,7 +138,8 @@ const WorkOrder = () => {
   const actionDispatch = useDispatch();
   const [state, dispatch] = useReducer(woReducer, initialState);
   const [selectWO, setSelectWO] = useState();
-  const [showWoCreationForm, setShowWoCreationForm] = useState(false)
+  const [showWoCreationForm, setShowWoCreationForm] = useState(false);
+  const submitWoRef = useRef()
 
   const [workOrderFormData, setWorkOrderFormData] = useState({
     index: workOrders.length + 1,
@@ -326,7 +328,7 @@ const WorkOrder = () => {
       case "monthly":
         return (
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <monthlyrow>
+            <monthlyrow id="www">
               <p>Every</p>
               <Select
                 onChange={(value) => {
@@ -479,7 +481,8 @@ const WorkOrder = () => {
                     {quickActions}
                     {workOrders.length ? (
                       <div className="work-order-flat-list">
-                        {workOrders.map((wo) => (
+                        {workOrders
+                          .filter((wo) => wo.status !== "done").map((wo) => (
                           <div
                             className="work-order-card"
                             onClick={() => handleWOClick(wo)}
@@ -600,10 +603,14 @@ const WorkOrder = () => {
                 layout="vertical"
                 className="work-order-form"
                 initialValues={workOrderFormData}
+                onFinish={handleCreateWO}
               >
                 <Form.Item
-                  rules={[{}]}
-                  label="What needs to be done ?"
+                  rules={[{
+                    required : true,
+                    message: "Please input Work Order Title!",
+                  }]}
+                  label="What needs to be done?"
                   name={"wo_title"}
                 >
                   <Input
@@ -919,21 +926,25 @@ const WorkOrder = () => {
                     }))}
                   />
                 </Form.Item>
+                <Button
+                  ref={submitWoRef}
+                  htmlType="submit"
+                  style={{display : "none"}}
+                />
               </Form>
-              <Affix target={() => container}>
-                <StyledButton
+              <StyledButton
                   icon={<i class="fi fi-rr-plus"></i>}
                   text={"Create Work Order"}
                   btnClassName={"create-wo-finish-btn"}
-                  onClick={handleCreateWO}
+                  onClick={() => submitWoRef.current?.click()}
                 />
-              </Affix>
             </div>
           ) : selectWO ? (
             <ViewWorkOrder wo={selectWO} />
           ) : null}
         </div>
       </div>
+      <p id="" className=""></p>
     </section>
   );
 };

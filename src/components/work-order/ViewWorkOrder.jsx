@@ -139,8 +139,7 @@ const ViewWorkOrder = ({ wo }) => {
               />
             ))}
           </div>
-        </div>
-        <div className="wo-info">
+          <div className="wo-info">
           <div>
             <p>Work Order ID</p>
             <p>#{wo?.index}</p>
@@ -167,15 +166,6 @@ const ViewWorkOrder = ({ wo }) => {
             </div>
           </div>
         </div>
-        <div className="wo-type">
-          <div>
-            <p>Work Type</p>
-            <text>{formatWords(wo.work_type)}</text>
-          </div>
-          <div>
-            <p>Recurrence</p>
-            <text>{getRecurrenctText()}</text>
-          </div>
         </div>
         <div className="wo-description">
           <h3>Description</h3>
@@ -199,6 +189,16 @@ const ViewWorkOrder = ({ wo }) => {
               <p>Categories</p>
               <p>{formatWords(wo?.category)}</p>
             </div>
+          </div>
+        </div>
+        <div className="wo-type">
+          <div>
+            <p>Work Type</p>
+            <text>{formatWords(wo.work_type)}</text>
+          </div>
+          <div>
+            <p>Recurrence</p>
+            <text>{getRecurrenctText()}</text>
           </div>
         </div>
         <div className="wo-comment-section">
