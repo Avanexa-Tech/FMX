@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import StyledInput from "../common/StyledInput";
 import { Button, Divider, message } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { userData } from "../../redux/slice/userAuthSlice";
 
 const Organization = () => {
-  const navigate = useNavigate();
   const [organization, setOrganization] = useState({});
   const [messageApi, contextHolder] = message.useMessage();
+  const location = useLocation();
+  const { data = {} } = location.state;
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const orgList = [
     "Manufacturing",
     "hospitality",
@@ -32,12 +37,13 @@ const Organization = () => {
       type: "error",
       content: "All Fields are mandatory",
     });
-  };
+  };  
+  
   return (
     <div className="org-container">
       {contextHolder}
       <b className="title">Time to set up your organization</b>
-      <StyledInput label={"Organization Name"} onChange={onChange} />
+      <StyledInput label={"Organization Name"} name="organization_name" onChange={onChange} />
       <div className="list">
         <b className="title">Industry</b>
         <div className="container">
@@ -61,10 +67,11 @@ const Organization = () => {
         className="submit"
         type="primary"
         onClick={() => {
-          Object.keys(organization)?.length > 0 &&
-          Object.keys(organization).every((i) => organization[i] !== "")
-            ? navigate("/")
-            : error();
+          if (Object.keys(organization)?.length > 0 &&
+            Object.keys(organization).every((i) => organization[i] !== "")) {
+            dispatch(userData({ ...organization, ...data , token: "available" }));
+            navigate("/");
+          } else error();
         }}
       >
         {" "}

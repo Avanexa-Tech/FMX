@@ -13,8 +13,8 @@ const StyledInput = ({
   prefix,
   style,
   type,
-  error,
-  errorMessage,
+  error=false,
+  errorMessage="",
 }) => {
   return (
     <div className="styledInput">
@@ -22,8 +22,6 @@ const StyledInput = ({
       <div className="fmx-input-container">
         <Input
           className="fmx-input"
-          onChange={(e) => onChange(e.target.value, name)}
-          style={{ ...style, borderColor: error && "red" }}
           {...{
             ...value,
             placeholder,
@@ -33,8 +31,10 @@ const StyledInput = ({
             addonBefore,
             addonAfter,
           }}
+          style={{ ...style, borderColor: error && "red" }}
+          onChange={(e) => onChange(e.target.value, name)}
         />
-        {error && <span className="input-error">{errorMessage}</span>}
+        {error ? <span className="input-error">{errorMessage}</span> : <></>}
       </div>
     </div>
   );

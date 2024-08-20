@@ -4,17 +4,20 @@ import StyledButton from "../common/StyledButton";
 import { google } from "../../assets/images";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
+import { useSelector } from "react-redux";
 
 const Login = () => {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState({});
   const [messageApi, contextHolder] = message.useMessage();
   const [inputError, setInputError] = useState("");
+  const { signupMock } = useSelector(({ user_auth }) => user_auth);
   const loginButtons = [
     {
       key: 1,
       text: "Email Address",
       regex: /^[a-z0-9.-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
       type: "text",
+      name: "email",
       icon: (
         <i
           className="fi fi-rr-envelope"
@@ -31,6 +34,7 @@ const Login = () => {
       text: "Phone Number",
       regex: /^\+?\d{10,15}$/,
       type: "number",
+      name: "phone_number",
       icon: (
         <i
           className="fi fi-rr-phone-flip"
@@ -68,10 +72,10 @@ const Login = () => {
           label={selectedOption.text}
           prefix={selectedOption.icon}
           type={selectedOption.type}
-          error={inputError !== ""}
+          error={input[selectedOption.name] && !input[selectedOption.name] || inputError !== ""}
           errorMessage={`Enter valid ${selectedOption.text}*`}
           onChange={(value) => {
-            setInput(value);
+            setInput({ [selectedOption.name]: value });
             value !== "" && !selectedOption.regex.test(value)
               ? setInputError(`Enter valid ${selectedOption.text}*`)
               : setInputError("");
@@ -82,14 +86,14 @@ const Login = () => {
           text={"Login"}
           btnClassName="login-btn"
           onClick={() => {
-            if (input == "") {
+            if (!input[selectedOption.name]) {
               error("Enter Input");
-            } else if (inputError !== "") {
-              error(inputError);
+            } else if ((!signupMock?.[selectedOption.name]) || (signupMock?.[selectedOption.name] !== input[selectedOption.name])) {
+              error(`Invalid ${[selectedOption.text]}. User Not Found`);
             } else {
               success("Otp Sended Successfully");
               setTimeout(() => {
-                navigate("/verify-otp", { state: { username: input } });
+                navigate("/verify-otp", { state: { username: input[selectedOption.name], data: signupMock } });
               }, 500);
             }
           }}
@@ -101,10 +105,12 @@ const Login = () => {
               text={loginButtons.find((i) => i.key !== selectedOption.key).text}
               icon={loginButtons.find((i) => i.key !== selectedOption.key).icon}
               btnClassName="option-btn"
-              onClick={() =>
+              onClick={() => {
                 setSelectedOption(
                   loginButtons.find((i) => i.key !== selectedOption.key)
-                )
+                );
+                setInput({});
+              }
               }
             />
             <StyledButton
