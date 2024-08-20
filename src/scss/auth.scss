@@ -27,7 +27,6 @@
     .inputs {
       display: flex;
       flex-direction: column;
-      gap: 30px;
 
       .input-icon {
         font-size: 20px;
@@ -115,6 +114,7 @@
         border: 1px solid;
         border-radius: 35px;
         padding: 13px 18px;
+        cursor: pointer;
 
         &:hover {
           background-color: black;
@@ -179,7 +179,7 @@
         font-size: 13px;
         margin: 0;
         font-weight: 400;
-        font-family: Halvetica;
+        font-family: Helvetica;
         line-height: 1.8;
       }
     }
@@ -206,16 +206,14 @@
 
     .auth-content {
       margin: 0 auto;
-      //   width: 50%;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 15px;
       p {
         font-size: 12px;
-        letter-spacing: 1px;
         line-height: 1.3;
+        width: 100%;
       }
     }
   }

@@ -4,6 +4,7 @@ import { Button, Divider, message } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { userData } from "../../redux/slice/userAuthSlice";
+import {formatWords} from '../../helpers'
 
 const Organization = () => {
   const [organization, setOrganization] = useState({});
@@ -57,7 +58,7 @@ const Organization = () => {
                 setOrganization((prev) => ({ ...prev, industry: org }))
               }
             >
-              {org}
+              {formatWords(org)}
             </div>
           ))}
         </div>

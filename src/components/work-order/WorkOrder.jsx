@@ -20,16 +20,11 @@ import Dragger from "antd/es/upload/Dragger";
 import classNames from "classnames";
 import { formatWords, getOrdinalSuffix } from "../../helpers";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  decrementWorkOrderCount,
-  incrementWorkOrderCount,
-  toggleShowCreateWorkOrder,
-  toggleWorkOrder,
-} from "../../redux/slice/userActionSlice";
 import { createWorkOrder } from "../../redux/slice/workOrderSlice";
 import CustomSelect from "../common/CustomSelect";
 import ViewWorkOrder from "./ViewWorkOrder";
 import { DAY_OPTIONS, days } from "../../constant";
+import { toggleShowCreateWorkOrder } from "../../redux/slice/userActionSlice";
 
 let filterBtns = [
   {
@@ -93,7 +88,10 @@ const initialState = {
   enteredCategory: undefined,
   vendors: ["jj"],
   enteredVendor: undefined,
-  assignees: ["jeswin2711@gmail.com"],
+  assignees: [{
+    name : "Jeswin",
+    email : "jeswin2711@gmail.com"
+  }],
   enteredAssignee: [],
 };
 
@@ -133,13 +131,13 @@ function woReducer(state, action) {
 const WorkOrder = () => {
   const [woStatus, setWOStatus] = useState("done");
   const [container, setContainer] = React.useState(null);
-  const user_action = useSelector((state) => state.user_action);
+  const {showWorkOrderForm} = useSelector((state) => state.user_action);
   const work_order = useSelector((state) => state.work_order);
-  let { workOrderCount } = user_action;
   let { workOrders } = work_order;
   const actionDispatch = useDispatch();
   const [state, dispatch] = useReducer(woReducer, initialState);
   const [selectWO, setSelectWO] = useState();
+  const [showWoCreationForm, setShowWoCreationForm] = useState(false)
 
   const [workOrderFormData, setWorkOrderFormData] = useState({
     index: workOrders.length + 1,
@@ -156,7 +154,7 @@ const WorkOrder = () => {
     asset: "",
     category: "",
     vendor: "",
-    assignee: {
+    assignees: {
       name: "Jeswin",
       email: "jeswin2711@gmail.com",
     },
@@ -166,7 +164,7 @@ const WorkOrder = () => {
     createdAt: new Date().toLocaleDateString(),
     updatedAt: new Date().toLocaleDateString(),
     recurrence: {
-      frequency: "yearly",
+      frequency: "daily",
       days: [],
     },
     work_type: "preventive",
@@ -181,27 +179,12 @@ const WorkOrder = () => {
     });
 
   function handleWOClick(wo) {
+    actionDispatch(toggleShowCreateWorkOrder(false));
     setSelectWO(wo);
-    actionDispatch(toggleShowCreateWorkOrder());
-    actionDispatch(toggleWorkOrder());
-  }
-
-  function handleCreateWorkOrder() {
-    actionDispatch(toggleShowCreateWorkOrder());
-  }
-
-  function handleWorkOrderCreation() {
-    actionDispatch(incrementWorkOrderCount());
-  }
-
-  function deleteWorkOrder() {
-    actionDispatch(decrementWorkOrderCount());
   }
 
   function handleCreateWO() {
     actionDispatch(createWorkOrder(workOrderFormData));
-    // actionDispatch(toggleShowCreateWorkOrder());
-    // actionDispatch(resetAllExpectWo());
   }
 
   function handleAddition(field, enteredField) {
@@ -267,12 +250,19 @@ const WorkOrder = () => {
       });
     }
 
+    function handleChangeFrequencyToWeek(day){
+      setWorkOrderFormData({
+       ...workOrderFormData,
+        recurrence: {...workOrderFormData.recurrence, frequency: "weekly", week: 1 , days : days.filter((d) => d !== day)},
+      });
+    }
+
     switch (workOrderFormData.recurrence.frequency) {
       case "daily":
         return (
           <row>
             {days.map((day) => (
-              <div>{formatWords(day)}</div>
+              <div onClick={() => handleChangeFrequencyToWeek(day)}>{formatWords(day)}</div>
             ))}
           </row>
         );
@@ -320,7 +310,7 @@ const WorkOrder = () => {
               ))}
             </dayrow>
             <p>
-              Repeats every {workOrderFormData.recurrence.week ?? ""} week on{" "}
+              Repeats every {workOrderFormData.recurrence.week > 1 ? workOrderFormData.recurrence.week : ""} week on{" "}
               {workOrderFormData.recurrence.days.map(
                 (day, index) =>
                   `${DAY_OPTIONS[day]}${
@@ -434,6 +424,10 @@ const WorkOrder = () => {
     } });
   }
 
+  function handleShowWorkOrderForm(){
+    setShowWoCreationForm(!showWoCreationForm);
+  }
+
   return (
     <section className="work-order-container">
       <div className="work-order-header">
@@ -453,7 +447,7 @@ const WorkOrder = () => {
             icon={<i class="fi fi-br-plus"></i>}
             text={"Create Work Order"}
             btnClassName={"create-wo-btn"}
-            onClick={handleCreateWorkOrder}
+            onClick={() => actionDispatch(toggleShowCreateWorkOrder(true))}
           />
           <Dropdown
             overlay={
@@ -500,7 +494,7 @@ const WorkOrder = () => {
                                   icon={<i class="fi fi-ts-circle-user"></i>}
                                 />
                                 <p>
-                                  Assigned To <span>{wo.assignee.name}</span>
+                                  Assigned To <span>{wo.assignees?.name}</span>
                                 </p>
                               </div>
                             </div>
@@ -528,7 +522,7 @@ const WorkOrder = () => {
                           icon={<i class="fi fi-rr-plus"></i>}
                           text={"Create Work Order"}
                           btnClassName={"new-wo-btn"}
-                          onClick={handleCreateWorkOrder}
+                          onClick={() => actionDispatch(toggleShowCreateWorkOrder(true))}
                         />
                       </div>
                     )}
@@ -559,9 +553,9 @@ const WorkOrder = () => {
                                     size={"small"}
                                     icon={<i class="fi fi-ts-circle-user"></i>}
                                   />
-                                  <p>
-                                    Assigned To <span>{wo.assignee.name}</span>
-                                  </p>
+                                  {/* <p>
+                                    Assigned To <span>{wo?.assignees[0]?.name}</span>
+                                  </p> */}
                                 </div>
                               </div>
                               <div className="wo-status">
@@ -580,15 +574,15 @@ const WorkOrder = () => {
                     ) : (
                       <div className="create-new-wo">
                         <img
-                          src={createWorkOrder}
+                          src={createWorkOrderImg}
                           alt="Create New Work Order"
                         />
                         <p>You don't have any work orders</p>
                         <StyledButton
-                          onClick={handleCreateWorkOrder}
                           icon={<i class="fi fi-rr-plus"></i>}
                           text={"Create Work Order"}
                           btnClassName={"new-wo-btn"}
+                          onClick={() => dispatch(toggleShowCreateWorkOrder(true))}
                         />
                       </div>
                     )}
@@ -599,7 +593,7 @@ const WorkOrder = () => {
           />
         </div>
         <div className="create-view-work-order">
-          {user_action.showCreateWorkOrder ? (
+          {showWorkOrderForm? (
             <div className="create-wo" ref={setContainer}>
               <h2>New Work Order</h2>
               <Form
@@ -710,14 +704,14 @@ const WorkOrder = () => {
                     btnClassName={"add-procedure-btn"}
                   />
                 </Form.Item>
-                <Form.Item label="Assign To" name={"assignee"}>
+                <Form.Item label="Assign To" name={"assignees"}>
                   <CustomSelect
                     mode={"multiple"}
-                    onChange={(value) => handleChange("assignee", value)}
+                    onChange={(value) => handleChange("assignees", value)}
                     placeholder="Type Name, Email Or Phone Number"
-                    options={state?.assignees?.map((assignee) => ({
-                      label: assignee,
-                      value: assignee,
+                    options={state?.assignees?.map((assignees) => ({
+                      label: assignees.email,
+                      value: assignees.name,
                     }))}
                     dropdownRender={(menu) => (
                       <>
@@ -935,7 +929,7 @@ const WorkOrder = () => {
                 />
               </Affix>
             </div>
-          ) : user_action.showWorkOrder ? (
+          ) : selectWO ? (
             <ViewWorkOrder wo={selectWO} />
           ) : null}
         </div>

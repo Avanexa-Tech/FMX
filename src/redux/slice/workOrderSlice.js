@@ -12,12 +12,16 @@ const workOrderSlice = createSlice({
       state.workOrders.push(action.payload);
     },
     deleteWorkOrder: (state, action) => {
+      console.log(action.payload , "asdas")
       state.workOrders = state.workOrders.filter(
         (wo) => wo.id !== action.payload
       );
     },
+    updateWorkOrder: (state, action) => {
+      const workOrder = state.workOrders.find(wo => wo.id === action.payload.id).status = action.payload.status;
+    }
   },
 });
 
-export const { createWorkOrder, deleteWorkOrder } = workOrderSlice.actions;
+export const { createWorkOrder, deleteWorkOrder,updateWorkOrder } = workOrderSlice.actions;
 export default workOrderSlice.reducer;

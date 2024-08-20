@@ -1,4 +1,5 @@
 export function formatWords(text) {
+  if(text == undefined) return;
   return text
     .split("_")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
