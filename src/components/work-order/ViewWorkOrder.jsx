@@ -11,31 +11,31 @@ import { toggleShowCreateWorkOrder } from "../../redux/slice/userActionSlice";
 let workOrderStatus = [
   {
     key: "open",
-    icon: <i class="fi fi-rr-unlock"></i>,
+    icon: <i className="fi fi-rr-unlock"></i>,
     activeClass: "openStatusActive",
     inActiveClass: "",
   },
   {
     key: "on_hold",
-    icon: <i class="fi fi-tr-pause-circle"></i>,
+    icon: <i className="fi fi-tr-pause-circle"></i>,
     activeClass: "onHoldStatusActive",
     inActiveClass: "",
   },
   {
     key: "in_progress",
-    icon: <i class="fi fi-sr-rotate-right"></i>,
+    icon: <i className="fi fi-sr-rotate-right"></i>,
     activeClass: "inProgressStatusActive",
     inActiveClass: "",
   },
   {
     key: "done",
-    icon: <i class="fi fi-tr-check-double"></i>,
+    icon: <i className="fi fi-tr-check-double"></i>,
     activeClass: "doneStatusActive",
     inActiveClass: "",
   },
 ];
 
-const ViewWorkOrder = ({ wo }) => {
+const ViewWorkOrder = ({ wo, setWoEditForm }) => {
   const dispatch = useDispatch()
   const [woStatus, setWoStatus] = useState(wo?.wo_status);
 
@@ -115,8 +115,8 @@ const ViewWorkOrder = ({ wo }) => {
         <div className="wo-intro">
           <h2>{wo?.wo_title}</h2>
           <div className="view-wo-action-btns">
-            <i class="fi fi-rr-pencil"></i>
-            <i class="fi fi-rr-share"></i>
+            <i className="fi fi-rr-pencil" onClick={() => { setWoEditForm(wo); dispatch(toggleShowCreateWorkOrder(true)); }}></i>
+            <i className="fi fi-rr-share"></i>
             <Dropdown
               overlay={
                 <Menu>
@@ -126,7 +126,7 @@ const ViewWorkOrder = ({ wo }) => {
               trigger={["click"]}
             >
               <p>
-                <i class="fi fi-bs-menu-dots-vertical"></i>
+                <i className="fi fi-bs-menu-dots-vertical"></i>
               </p>
             </Dropdown>
           </div>
@@ -134,8 +134,9 @@ const ViewWorkOrder = ({ wo }) => {
         <div className="wo-status-desc">
           <h4>Work Order Status</h4>
           <div className="wo-status-container">
-            {workOrderStatus.map((status) => (
+            {workOrderStatus.map((status, ind) => (
               <StyledButton
+                key={ind}
                 onClick={() => {
                   handleWoStatus(status.key);
                 }}
@@ -219,7 +220,7 @@ const ViewWorkOrder = ({ wo }) => {
       <StyledButton
         text={"Mark As Done"}
         btnClassName={"markDoneBtn"}
-        icon={<i class="fi fi-sr-checkbox"></i>}
+        icon={<i className="fi fi-sr-checkbox"></i>}
         onClick={() => handleWoStatus("done")}
       />
     </section>
