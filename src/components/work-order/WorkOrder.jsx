@@ -191,7 +191,9 @@ const WorkOrder = () => {
                                 <div className="assignee-name">
                                   <Avatar
                                     size={"small"}
-                                    icon={<i className="fi fi-ts-circle-user"></i>}
+                                    icon={
+                                      <i className="fi fi-ts-circle-user"></i>
+                                    }
                                   />
                                   <p>
                                     Assigned To{" "}
@@ -203,7 +205,9 @@ const WorkOrder = () => {
                                 <Avatar
                                   shape="circle"
                                   size={"large"}
-                                  icon={<i className="fi fi-ss-user-headset"></i>}
+                                  icon={
+                                    <i className="fi fi-ss-user-headset"></i>
+                                  }
                                 />
                                 <Tag className={tagClass(wo.priority)}>
                                   {formatWords(wo.priority)}
@@ -255,7 +259,9 @@ const WorkOrder = () => {
                                 <div className="assignee-name">
                                   <Avatar
                                     size={"small"}
-                                    icon={<i className="fi fi-ts-circle-user"></i>}
+                                    icon={
+                                      <i className="fi fi-ts-circle-user"></i>
+                                    }
                                   />
                                   {/* <p>
                                     Assigned To <span>{wo?.assignees[0]?.name}</span>
@@ -266,7 +272,9 @@ const WorkOrder = () => {
                                 <Avatar
                                   shape="circle"
                                   size={"large"}
-                                  icon={<i className="fi fi-ss-user-headset"></i>}
+                                  icon={
+                                    <i className="fi fi-ss-user-headset"></i>
+                                  }
                                 />
                                 <Tag className={tagClass(wo.priority)}>
                                   {formatWords(wo.priority)}
@@ -301,25 +309,31 @@ const WorkOrder = () => {
         <div className="create-view-work-order">
           {showWorkOrderForm ? (
             <div className="create-wo" ref={setContainer}>
-              {woEditForm.id ? <h2>Update Work Order</h2> : <h2>New Work Order</h2>}
+              {woEditForm.id ? (
+                <h2>Update Work Order</h2>
+              ) : (
+                <h2>New Work Order</h2>
+              )}
+
               <CreateWorkOrder
-                {
-                ...{
-                  ...
-                  state,
-                  dispatch,
-                  submitWoRef,
-                  tagClass,
-                  woEditForm,
-                  setWoEditForm,
-                }
-                }
+                {...{
+                  ...{
+                    state,
+                    dispatch,
+                    submitWoRef,
+                    tagClass,
+                    woEditForm,
+                    setWoEditForm,
+                  },
+                }}
               />
 
               <StyledButton
                 key="create-wo-btn"
                 icon={<i className="fi fi-rr-plus"></i>}
-                text={woEditForm.id ? "Update Work Order " : "Create Work Order"}
+                text={
+                  woEditForm.id ? "Update Work Order " : "Create Work Order"
+                }
                 btnClassName={"create-wo-finish-btn"}
                 onClick={() => submitWoRef.current?.click()}
               />
