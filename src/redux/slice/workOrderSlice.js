@@ -12,13 +12,13 @@ const workOrderSlice = createSlice({
       state.workOrders.push(action.payload);
     },
     deleteWorkOrder: (state, action) => {
-      console.log(action.payload , "asdas")
       state.workOrders = state.workOrders.filter(
         (wo) => wo.id !== action.payload.id
       );
     },
     updateWorkOrder: (state, action) => {
-      const workOrder = state.workOrders.find(wo => wo.id === action.payload.id).status = action.payload.status;
+      const woIndex = state.workOrders.findIndex((wo) => wo.id === action.payload.id);
+      state.workOrders.splice(woIndex, 1, action.payload);
     }
   },
 });
