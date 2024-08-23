@@ -20,8 +20,7 @@ createRoot(document.getElementById("root")).render(
     >
       <Provider store={store}>
         <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
-          {/* <App /> */}
-          <CreateProcedure/>
+          <App />
         </PersistGate>
       </Provider>
     </ConfigProvider>

@@ -455,6 +455,7 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
             icon={<i className="fi fi-br-plus"></i>}
             text={"Add Procedure"}
             btnClassName={"add-procedure-btn"}
+            href="create-procedure"
           />
         </Form.Item>
         <Form.Item label="Assign To" name={"assignees"}>

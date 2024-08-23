@@ -1,23 +1,9 @@
 import { Button } from "antd";
 import React from "react";
 
-const StyledButton = ({
-  key,
-  icon,
-  text,
-  btnClassName = "",
-  onClick = null,
-  htmlType = "button",
-  ref = null,
-}) => {
+const StyledButton = ({ btnClassName, icon, text, ...rest }) => {
   return (
-    <Button
-      className={btnClassName}
-      key={key}
-      onClick={onClick}
-      htmlType={htmlType}
-      ref={ref}
-    >
+    <Button className={btnClassName} {...rest}>
       {icon && <>{icon}</>}
       {text && <span>{text}</span>}
     </Button>

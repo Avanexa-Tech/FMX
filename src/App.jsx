@@ -8,6 +8,7 @@ import VerifyOtp from "./components/authentication/VerifyOtp";
 import Organization from "./components/authentication/Organization";
 import SignUp from "./components/authentication/SignUp";
 import { useSelector } from "react-redux";
+import CreateProcedure from "./components/work-order/CreateProcedure";
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
         {user?.token ?
           <Route element={<BaseLayout />}>
             <Route index element={<WorkOrder />} />
+            <Route path="/create-procedure" element={<CreateProcedure/>} />
           </Route>
           :
           <Route element={<AuthLayout />}>

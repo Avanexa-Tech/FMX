@@ -3,75 +3,70 @@ import { Checkbox, Dropdown, Input, Menu, Select, Switch } from "antd";
 import StyledButton from "../../common/StyledButton";
 
 let fieldTypeOptions = [
-    {
-      key: "checkbox",
-      icon: <i class="fi fi-sr-checkbox"></i>,
-      colorCode: "#117864",
-      childern: (
-        <div className="field-type-input">
-          <p
-            style={{
-              background: "#11786450",
-            }}
-          >
-            <i class="fi fi-sr-checkbox" style={{ color: "#117864" }}></i>
-          </p>
-          <p>Checkbox</p>
-        </div>
-      ),
-    },
-    {
-      key: "text",
-      icon: <i class="fi fi-rr-text"></i>,
-      colorCode: "#9c640c",
-      childern: (
-        <div className="field-type-input">
-          <p
-            style={{
-              background: "#9c640c20",
-            }}
-          >
-            <i class="fi fi-rr-text" style={{ color: "#9c640c" }}></i>
-          </p>
-          <p>Text Field</p>
-        </div>
-      ),
-    },
-    {
-      key: "checklist",
-      icon: <i class="fi fi-rr-list"></i>,
-      colorCode: "#633974",
-      childern: (
-        <div className="field-type-input">
-          <p
-            style={{
-              background: "#63397420",
-            }}
-          >
-            <i class="fi fi-rr-list" style={{ color: "#633974" }}></i>
-          </p>
-          <p>Checklist</p>
-        </div>
-      ),
-    },
-  ];
-  
+  {
+    key: "checkbox",
+    icon: <i class="fi fi-sr-checkbox"></i>,
+    colorCode: "#117864",
+    childern: (
+      <div className="field-type-input">
+        <p
+          style={{
+            background: "#11786450",
+          }}
+        >
+          <i class="fi fi-sr-checkbox" style={{ color: "#117864" }}></i>
+        </p>
+        <p>Checkbox</p>
+      </div>
+    ),
+  },
+  {
+    key: "text",
+    icon: <i class="fi fi-rr-text"></i>,
+    colorCode: "#9c640c",
+    childern: (
+      <div className="field-type-input">
+        <p
+          style={{
+            background: "#9c640c20",
+          }}
+        >
+          <i class="fi fi-rr-text" style={{ color: "#9c640c" }}></i>
+        </p>
+        <p>Text Field</p>
+      </div>
+    ),
+  },
+  {
+    key: "checklist",
+    icon: <i class="fi fi-rr-list"></i>,
+    colorCode: "#633974",
+    childern: (
+      <div className="field-type-input">
+        <p
+          style={{
+            background: "#63397420",
+          }}
+        >
+          <i class="fi fi-rr-list" style={{ color: "#633974" }}></i>
+        </p>
+        <p>Checklist</p>
+      </div>
+    ),
+  },
+];
 
-const ProcedureField = ({
-    deleteItem,
-    procedureFieldIndex
-}) => {
-  const [selectedField, setSelectedField] = useState();
+const ProcedureField = ({ deleteItem, procedureFieldIndex, handleFieldNameChange, procedureForm }) => {
+  const [selectedField, setSelectedField] = useState("text");
   const [checkboxes, setCheckboxes] = useState([]);
 
   function addCheckbox() {
-    setCheckboxes([...checkboxes, { key: checkboxes.length}]);
+    setCheckboxes([...checkboxes, { key: checkboxes.length }]);
   }
   function removeCheckbox(index) {
-    console.log(index , checkboxes , "1121das")
-    setCheckboxes([...checkboxes.filter((item , checklistIndex) => {
-      console.log(checklistIndex ,index)
-    })]);
+    setCheckboxes([
+      ...checkboxes.filter((item, checklistIndex) => item.key !== index),
+    ]);
   }
 
   function renderField() {
@@ -84,14 +79,14 @@ const ProcedureField = ({
         return (
           <div className="checklist-inputs">
             {checkboxes.map((item, index) => (
-              <div key={index} className="checklist-single-input">
+              <div key={item.key} className="checklist-single-input">
                 <Input
                   placeholder={`Option ${index + 1}`}
                   className="checklist-input"
                 />
                 <i
                   class="fi fi-rr-cross"
-                  onClick={() => removeCheckbox(index)}
+                  onClick={() => removeCheckbox(item.key)}
                 ></i>
               </div>
             ))}
@@ -108,14 +103,15 @@ const ProcedureField = ({
     }
   }
   return (
-    <div className="procedure-single-card" key={procedureFieldIndex}>
+    <div className="procedure-single-card">
       <div className="pf-head">
-        <Input placeholder="Field Name" />
+        <Input placeholder="Field Name" onChange={(e) => handleFieldNameChange(procedureFieldIndex, e.target.value)}/>
         <Select
           style={{
             width: "250px",
           }}
           onChange={(value) => setSelectedField(value)}
+          defaultValue={selectedField}
         >
           {fieldTypeOptions.map((item, index) => (
             <Select.Option value={item.key} key={item.key + index}>
