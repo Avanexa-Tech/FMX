@@ -6,6 +6,7 @@ import { ConfigProvider } from "antd";
 import { Provider } from "react-redux";
 import { store, persistor } from "./redux/store.js";
 import { PersistGate } from "redux-persist/integration/react";
+import CreateProcedure from "./components/work-order/CreateProcedure.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -19,7 +20,8 @@ createRoot(document.getElementById("root")).render(
     >
       <Provider store={store}>
         <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
-          <App />
+          {/* <App /> */}
+          <CreateProcedure/>
         </PersistGate>
       </Provider>
     </ConfigProvider>

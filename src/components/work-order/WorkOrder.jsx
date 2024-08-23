@@ -327,7 +327,6 @@ const WorkOrder = () => {
                   },
                 }}
               />
-
               <StyledButton
                 key="create-wo-btn"
                 icon={<i className="fi fi-rr-plus"></i>}
