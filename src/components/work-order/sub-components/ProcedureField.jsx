@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Checkbox, Dropdown, Input, Menu, Select, Switch } from "antd";
+import React, { useEffect, useState } from "react";
+import { Dropdown, Input, Menu, Select, Switch } from "antd";
 import StyledButton from "../../common/StyledButton";
 
 let fieldTypeOptions = [
@@ -56,12 +56,18 @@ let fieldTypeOptions = [
   },
 ];
 
-const ProcedureField = ({ deleteItem, procedureFieldIndex, handleFieldNameChange, procedureForm }) => {
+const ProcedureField = ({ deleteItem, procedureFieldIndex, handleFieldEdit,data}) => {
   const [selectedField, setSelectedField] = useState("text");
   const [checkboxes, setCheckboxes] = useState([]);
 
+  useEffect(() => {
+    if(checkboxes.length > 0){
+      handleFieldEdit(procedureFieldIndex, "field_value", checkboxes);
+    }
+  }, [checkboxes])
+
   function addCheckbox() {
-    setCheckboxes([...checkboxes, { key: checkboxes.length }]);
+    setCheckboxes([...checkboxes, { key: checkboxes.length , value: []}]);
   }
   function removeCheckbox(index) {
     setCheckboxes([
@@ -74,15 +80,24 @@ const ProcedureField = ({ deleteItem, procedureFieldIndex, handleFieldNameChange
       case "checkbox":
         return null;
       case "text":
-        return <Input placeholder="Text will be entered here" />;
+        return <Input placeholder="Text will be entered here" readOnly/>;
       case "checklist":
         return (
           <div className="checklist-inputs">
-            {checkboxes.map((item, index) => (
+            {checkboxes.map((item, checkboxIndex) => (
               <div key={item.key} className="checklist-single-input">
                 <Input
-                  placeholder={`Option ${index + 1}`}
+                  placeholder={`Option ${checkboxIndex + 1}`}
                   className="checklist-input"
+                  onChange={(e) =>
+                    setCheckboxes((prev) => {
+                      return prev.map((checkboxItem , index) =>
+                        checkboxIndex === index
+                          ? { ...checkboxItem, value:  e.target.value }
+                          : checkboxItem
+                      )}
+                    )
+                  }
                 />
                 <i
                   class="fi fi-rr-cross"
@@ -105,12 +120,15 @@ const ProcedureField = ({ deleteItem, procedureFieldIndex, handleFieldNameChange
   return (
     <div className="procedure-single-card">
       <div className="pf-head">
-        <Input placeholder="Field Name" onChange={(e) => handleFieldNameChange(procedureFieldIndex, e.target.value)}/>
+        <Input placeholder="Field Name" onChange={(e) => handleFieldEdit(procedureFieldIndex, "field_name", e.target.value)}/>
         <Select
           style={{
             width: "250px",
           }}
-          onChange={(value) => setSelectedField(value)}
+          onChange={(value) => {
+            setSelectedField(value)
+            handleFieldEdit(procedureFieldIndex, "field_type", value)
+          }}
           defaultValue={selectedField}
         >
           {fieldTypeOptions.map((item, index) => (

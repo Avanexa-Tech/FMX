@@ -1,67 +1,82 @@
-import { Button, Input } from "antd";
+import { Input } from "antd";
 import React, { useState } from "react";
 import StyledButton from "../common/StyledButton";
 import TextArea from "antd/es/input/TextArea";
 import ProcedureField from "./sub-components/ProcedureField";
+import { useDispatch } from "react-redux";
+import { addProcedure } from "../../redux/slice/procedureSlice";
 
 const CreateProcedure = () => {
   const [showDescriptionInput, setShowDescriptionInput] = useState(false);
   const [newItemList, setNewItemList] = useState([]);
+  const dispatch = useDispatch();
   const [procedureForm, setProcedureForm] = useState({
     procedure_name: "",
     procedure_description: "",
     fields: [],
   });
-  
-  const handleFieldChange = () => {
-    setProcedureForm((prev) => ({
-      ...prev,
-      fields: [
-        ...prev.fields,
-        {
-          field_type: "text",
-          field_name: "",
-          field_value: null,
-        },
-      ],
-    }));
+
+  function handleAddProcedure() {
+    dispatch(addProcedure(procedureForm));
   }
 
+  const handleFieldChange = (selectedIndex = null) => {
+    if (selectedIndex == null) {
+      setProcedureForm((prev) => ({
+        ...prev,
+        fields: [
+          ...prev.fields,
+          {
+            field_type: "text",
+            field_name: "",
+            field_value: null,
+            required : false
+          },
+        ],
+      }));
+    } else {
+      setProcedureForm((prev) => {
+        const updatedFields = prev.fields.filter(
+          (field, index) => index !== selectedIndex
+        );
+        return { ...prev, fields: updatedFields };
+      });
+    }
+  };
 
-  const handleFieldNameChange = (selectedIndex, value) => {
-    const newData = {...procedureForm}
-    newData.fields[selectedIndex].field_name = value;
-    setProcedureForm(newData);
-  }
-
+  const handleFieldEdit = (selectedIndex, key, value) => {
+    setProcedureForm((prev) => {
+      const updatedFields = prev.fields.map((field, index) =>
+        index === selectedIndex ? { ...field, [key]: value } : field
+      );
+      return { ...prev, fields: updatedFields };
+    });
+  };
 
   const addNewItem = () => {
-    setNewItemList((prevList) => [
-      ...prevList,
-      {
-        id: prevList.length,
+    setProcedureForm((prev) => ({
+      ...prev,
+      fields : [...procedureForm.fields , {
+        id: procedureForm.fields.length,
         component: (
           <ProcedureField
             deleteItem={deleteItem}
-            procedureFieldIndex={prevList.length}
-            handleFieldNameChange={handleFieldNameChange}
+            procedureFieldIndex={procedureForm.fields}
+            handleFieldEdit={handleFieldEdit}
           />
         ),
-      },
-    ]);
-    handleFieldChange()
+      }]
+    }));
   };
 
   const deleteItem = (id) => {
-    setNewItemList(prevList => prevList.filter(item => item.id !== id));
+    setProcedureForm((prev) => prev.fields.filter((item) => item.id !== id));
   };
-
-  console.log("asdasdsd" , procedureForm)
 
   return (
     <section className="procedure-container">
       <StyledButton
-        // onClick={() => setShowDescriptionInput(true)}
+        onClick={handleAddProcedure}
         text={"Add Procedure"}
         icon={<i className="fi fi-br-plus"></i>}
         btnClassName="add-procedure-btn"
@@ -99,13 +114,19 @@ const CreateProcedure = () => {
       </div>
       <div className="procedure-fields-container">
         <div className="procedure-fields">
-          {newItemList.map((item) => (
+          {procedureForm.fields.map((item) => (
             <div key={item.id}>{item.component}</div>
           ))}
         </div>
         <div className="field-option">
           <h4>New Item</h4>
-          <div className="new-item-option" onClick={addNewItem}>
+          <div
+            className="new-item-option"
+            onClick={() => {
+              addNewItem();
+              // handleFieldChange();
+            }}
+          >
             <i className="fi fi-sr-plus-hexagon"></i>
             <p>Field</p>
           </div>
