@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createWorkOrder, updateWorkOrder } from '../../redux/slice/workOrderSlice';
 import { DAY_OPTIONS, days } from '../../constant';
 import { toggleShowCreateWorkOrder } from '../../redux/slice/userActionSlice';
+import { Link } from 'react-router-dom';
+import { deleteProcedure } from '../../redux/slice/procedureSlice';
 
 let priorityBtn = [
   {
@@ -25,7 +27,7 @@ let priorityBtn = [
   },
 ];
 
-const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, setWoEditForm = () => {} }) => {
+const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, setWoEditForm = () => { } }) => {
   const { workOrders } = useSelector((state) => state?.work_order);
   const { procedures } = useSelector((state) => state?.procedure);
   const initialState = {
@@ -63,8 +65,8 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
   const [workOrderFormData, setWorkOrderFormData] = useState(initialState);
 
   const [form] = Form.useForm();
-  
-  console.log(procedures,  "procedures")
+
+  console.log(procedures, "procedures");
 
   useEffect(() => {
     if (woEditForm && woEditForm.id) {
@@ -374,7 +376,7 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
           />
         </Form.Item>
         <Form.Item label="Images">
-          <Dragger customRequest={() => {}} onChange={handleAttachmentUpload}>
+          <Dragger customRequest={() => { }} onChange={handleAttachmentUpload}>
             <p className="ant-upload-drag-icon">
               <i className="fi fi-ts-camera-viewfinder"></i>
             </p>
@@ -439,10 +441,8 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
           </Space>
         </Form.Item>
         <Form.Item label="Procedure" className="procedure-form-item">
-          {procedures.length > 0 ? (
-            procedures[0].procedure_name
-          ) : (
-            <>
+          <div className='procedure-form-item'>
+            <div>
               <p>Create Or Attach New Form, Procedure Or Checklist</p>
               <StyledButton
                 icon={<i className="fi fi-br-plus"></i>}
@@ -450,8 +450,21 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
                 btnClassName={"add-procedure-btn"}
                 href="create-procedure"
               />
-            </>
-          )}
+            </div>
+            {procedures.length > 0 ? procedures.map((item, ind) => (
+              <div className='procedure-form-card' key={ind} >
+                  <div className='title'>
+                    <i className="fi fi-ts-guide-alt"></i>
+                    {item.procedure_name}
+                  </div>
+                  <div className='icons'>
+                  <Link to="create-procedure" state={item}><i className="fi fi-rr-pencil"></i></Link>
+                  <i className="fi fi-rs-trash" onClick={() => actionDispatch(deleteProcedure(item?.id))}></i>
+                  </div>
+                </div>
+          )) : <></>}
+          </div>
+
         </Form.Item>
         <Form.Item label="Assign To" name={"assignees"}>
           <CustomSelect

@@ -56,18 +56,30 @@ let fieldTypeOptions = [
   },
 ];
 
-const ProcedureField = ({ deleteItem, procedureFieldIndex, handleFieldEdit,data}) => {
+const ProcedureField = ({ procedureData, deleteItem, procedureFieldIndex, handleFieldEdit, data }) => {
   const [selectedField, setSelectedField] = useState("text");
   const [checkboxes, setCheckboxes] = useState([]);
 
+  const { id, field_type, field_value, field_name } = procedureData;
+
   useEffect(() => {
-    if(checkboxes.length > 0){
+    if (id) {
+      setSelectedField(field_type);
+      if (field_type === "checklist" && field_value !== null) {
+        setCheckboxes(field_value);
+      }
+    }
+  }, [procedureData]);
+
+
+  useEffect(() => {
+    if (checkboxes.length > 0) {
       handleFieldEdit(procedureFieldIndex, "field_value", checkboxes);
     }
-  }, [checkboxes])
+  }, [checkboxes]);
 
   function addCheckbox() {
-    setCheckboxes([...checkboxes, { key: checkboxes.length , value: []}]);
+    setCheckboxes([...checkboxes, { key: checkboxes.length, value: [] }]);
   }
   function removeCheckbox(index) {
     setCheckboxes([
@@ -80,22 +92,24 @@ const ProcedureField = ({ deleteItem, procedureFieldIndex, handleFieldEdit,data}
       case "checkbox":
         return null;
       case "text":
-        return <Input placeholder="Text will be entered here" readOnly/>;
+        return <Input placeholder="Text will be entered here" readOnly />;
       case "checklist":
         return (
           <div className="checklist-inputs">
             {checkboxes.map((item, checkboxIndex) => (
               <div key={item.key} className="checklist-single-input">
                 <Input
+                  value={item.value || ""}
                   placeholder={`Option ${checkboxIndex + 1}`}
                   className="checklist-input"
                   onChange={(e) =>
                     setCheckboxes((prev) => {
-                      return prev.map((checkboxItem , index) =>
+                      return prev.map((checkboxItem, index) =>
                         checkboxIndex === index
-                          ? { ...checkboxItem, value:  e.target.value }
+                          ? { ...checkboxItem, value: e.target.value }
                           : checkboxItem
-                      )}
+                      );
+                    }
                     )
                   }
                 />
@@ -120,16 +134,16 @@ const ProcedureField = ({ deleteItem, procedureFieldIndex, handleFieldEdit,data}
   return (
     <div className="procedure-single-card">
       <div className="pf-head">
-        <Input placeholder="Field Name" onChange={(e) => handleFieldEdit(procedureFieldIndex, "field_name", e.target.value)}/>
+        <Input value={field_name} placeholder="Field Name" onChange={(e) => handleFieldEdit(procedureFieldIndex, "field_name", e.target.value)} />
         <Select
+          value={selectedField}
           style={{
             width: "250px",
           }}
           onChange={(value) => {
-            setSelectedField(value)
-            handleFieldEdit(procedureFieldIndex, "field_type", value)
+            setSelectedField(value);
+            handleFieldEdit(procedureFieldIndex, "field_type", value);
           }}
-          defaultValue={selectedField}
         >
           {fieldTypeOptions.map((item, index) => (
             <Select.Option value={item.key} key={item.key + index}>
