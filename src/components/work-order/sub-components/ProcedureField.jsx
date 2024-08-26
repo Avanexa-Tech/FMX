@@ -79,8 +79,12 @@ const ProcedureField = ({ procedureData, deleteItem, procedureFieldIndex, handle
   }, [checkboxes]);
 
   function addCheckbox() {
-    setCheckboxes([...checkboxes, { key: checkboxes.length, value: [] }]);
+    setCheckboxes([
+      ...checkboxes,
+      { key: checkboxes.length, value: [], checked: false },
+    ]);
   }
+  
   function removeCheckbox(index) {
     setCheckboxes([
       ...checkboxes.filter((item, checklistIndex) => item.key !== index),

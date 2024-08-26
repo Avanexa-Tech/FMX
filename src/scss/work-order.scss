@@ -386,6 +386,33 @@
                 flex-direction: column;
                 gap: 10px;
 
+                .procedure-container{
+                    box-sizing: border-box;
+                    padding: 30px;
+                    .input-container{
+                        display: flex;
+                        flex-direction: column;
+                        margin-top: 10px;
+                        box-sizing: border-box;
+                        padding: 15px;
+                        & > h4{
+                            margin: 0px;
+                            margin-bottom: 10px;
+                        }
+                        & > ul{
+                            margin-left: 0px;
+                            padding: 0px;
+                            padding-left: 10px;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 10px;
+                        }
+                        &:not(:last-child){
+                            border-bottom: 1px solid $secondary-border-color;
+                        }
+                    }
+                }
+
                 &>div {
                     background: #fff;
                 }

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import StyledButton from "../common/StyledButton";
 import { formatWords, getOrdinalSuffix } from "../../helpers";
-import { Avatar, Button, Dropdown, Menu, message, Space } from "antd";
+import { Avatar, Button, Checkbox, Dropdown, Input, Menu, message, Space } from "antd";
 import { colors, DAY_OPTIONS } from "../../constant";
 import TextArea from "antd/es/input/TextArea";
 import { useDispatch, useSelector } from "react-redux";
@@ -38,6 +38,7 @@ let workOrderStatus = [
 const ViewWorkOrder = ({ wo, setWoEditForm }) => {
   const dispatch = useDispatch()
   const [woStatus, setWoStatus] = useState(wo?.wo_status);
+  const { procedures } = useSelector((state) => state.procedure);
 
   function handleWoStatus(changedStatus) {
     dispatch(updateWorkOrder({
@@ -109,13 +110,53 @@ const ViewWorkOrder = ({ wo, setWoEditForm }) => {
     dispatch(toggleShowCreateWorkOrder(true))
   }
 
+  function getField(procedure){
+
+    switch(procedure.field_type){
+      case "checklist":
+        return <div className="input-container">
+          <h4>{procedure.field_name}</h4>
+          <ul>
+            {procedure.field_value.map((option, index) => (
+              <Checkbox>
+                {formatWords(option.value)}
+              </Checkbox>
+            ))}
+          </ul>
+        </div>;
+      case "text":
+        return <div className="input-container">
+          <h4>{procedure.field_name}</h4>
+          <Input
+            className="procedure-description-input"
+          />
+        </div>
+      case "checkbox":
+        return (
+          <div className="input-container">
+            <Checkbox>{procedure.field_name}</Checkbox>
+          </div>
+        );
+      default:
+        break;
+    }
+  }
+
+  console.log(procedures[0].fields ,"asdas")
+
   return (
     <section className="view-wo-container">
       <div className="view-wo">
         <div className="wo-intro">
           <h2>{wo?.wo_title}</h2>
           <div className="view-wo-action-btns">
-            <i className="fi fi-rr-pencil" onClick={() => { setWoEditForm(wo); dispatch(toggleShowCreateWorkOrder(true)); }}></i>
+            <i
+              className="fi fi-rr-pencil"
+              onClick={() => {
+                setWoEditForm(wo);
+                dispatch(toggleShowCreateWorkOrder(true));
+              }}
+            ></i>
             <i className="fi fi-rr-share"></i>
             <Dropdown
               overlay={
@@ -147,32 +188,32 @@ const ViewWorkOrder = ({ wo, setWoEditForm }) => {
             ))}
           </div>
           <div className="wo-info">
-          <div>
-            <p>Work Order ID</p>
-            <p>#{wo?.index}</p>
-          </div>
-          <div>
-            <p>Assigned To</p>
-            <div className="d-flex">
-              <Avatar size={"small"} />
-              {wo?.assignee?.[0].name ?? "-"}
+            <div>
+              <p>Work Order ID</p>
+              <p>#{wo?.index}</p>
+            </div>
+            <div>
+              <p>Assigned To</p>
+              <div className="d-flex">
+                <Avatar size={"small"} />
+                {wo?.assignee?.[0].name ?? "-"}
+              </div>
+            </div>
+            <div>
+              <p>Due Date</p>
+              <p>{wo?.due_date}</p>
+            </div>
+            <div>
+              <p>Priority</p>
+              <div className="d-flex">
+                <div
+                  className="status-color-group"
+                  style={{ background: colors[wo?.priority] }}
+                />
+                {formatWords(wo?.priority)}
+              </div>
             </div>
           </div>
-          <div>
-            <p>Due Date</p>
-            <p>{wo?.due_date}</p>
-          </div>
-          <div>
-            <p>Priority</p>
-            <div className="d-flex">
-              <div
-                className="status-color-group"
-                style={{ background: colors[wo?.priority] }}
-              />
-              {formatWords(wo?.priority)}
-            </div>
-          </div>
-        </div>
         </div>
         <div className="wo-description">
           <h3>Description</h3>
@@ -196,6 +237,13 @@ const ViewWorkOrder = ({ wo, setWoEditForm }) => {
               <p>Categories</p>
               <p>{formatWords(wo?.category)}</p>
             </div>
+          </div>
+        </div>
+        <div className="procedure-container">
+          <h4>Procedure</h4>
+          <div>
+            {procedures &&
+              procedures.map((procedure, index) => procedure.fields.map((fieldObj) => getField(fieldObj)))}
           </div>
         </div>
         <div className="wo-type">

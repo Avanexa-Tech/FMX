@@ -102,7 +102,6 @@ function woReducer(state, action) {
 }
 
 const WorkOrder = () => {
-  const [woStatus, setWOStatus] = useState("done");
   const [container, setContainer] = React.useState(null);
   const { showWorkOrderForm } = useSelector((state) => state.user_action);
   const { workOrders } = useSelector((state) => state.work_order);
@@ -186,8 +185,8 @@ const WorkOrder = () => {
                             >
                               <div className="wo-details">
                                 <h4>{wo.wo_title}</h4>
-                                <p>Requested by {wo.requester?.name}</p>
-                                <p>Work ID : #{wo.index}</p>
+                                <p>Requested by {wo?.requester?.name}</p>
+                                <p>Work ID : #{wo?.index}</p>
                                 <div className="assignee-name">
                                   <Avatar
                                     size={"small"}
@@ -254,8 +253,8 @@ const WorkOrder = () => {
                             >
                               <div className="wo-details">
                                 <h4>{wo.wo_title}</h4>
-                                <p>Requested by {wo.requester.name}</p>
-                                <p>Work ID : #{wo.index}</p>
+                                <p>Requested by {wo?.requester?.name}</p>
+                                <p>Work ID : #{wo?.index}</p>
                                 <div className="assignee-name">
                                   <Avatar
                                     size={"small"}

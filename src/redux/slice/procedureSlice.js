@@ -9,7 +9,11 @@ const procedureSlice = createSlice({
   initialState,
   reducers: {
     addProcedure: (state, action) => {
-      state.procedures.push({ id: state.procedures.length + 1, ...action.payload });
+      state.procedures.push({
+        id: state.procedures.length + 1,
+        id: state.procedures[-1]?.id ? state.procedures[-1].id + 1 : 1,
+        ...action.payload,
+      });
     },
     updateProcedure: (state, action) => {
       const index = state.procedures.findIndex((item) => item?.id === action.payload.id);

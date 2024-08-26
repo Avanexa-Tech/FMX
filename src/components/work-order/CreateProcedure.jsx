@@ -43,7 +43,7 @@ const CreateProcedure = () => {
         fields: [
           ...prev.fields,
           {
-            id: procedureForm.fields.length + 1,
+            id: prev.fields.id ? prev.fields.id + 1 : 1,
             field_type: "text",
             field_name: "",
             field_value: null,

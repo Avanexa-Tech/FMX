@@ -350,6 +350,7 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
         className="work-order-form"
         initialValues={workOrderFormData}
         onFinish={handleCreateWO}
+        scrollToFirstError={true}
       >
         <Form.Item
           rules={[
