@@ -1,26 +1,39 @@
 import { Input } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import StyledButton from "../common/StyledButton";
 import TextArea from "antd/es/input/TextArea";
 import ProcedureField from "./sub-components/ProcedureField";
-import { useDispatch } from "react-redux";
-import { addProcedure } from "../../redux/slice/procedureSlice";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addProcedure, updateProcedure } from "../../redux/slice/procedureSlice";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const CreateProcedure = () => {
   const [showDescriptionInput, setShowDescriptionInput] = useState(false);
   const [newItemList, setNewItemList] = useState([]);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const procedureState = useSelector(({ procedure }) => procedure);
   const [procedureForm, setProcedureForm] = useState({
     procedure_name: "",
     procedure_description: "",
     fields: [],
   });
 
+  useEffect(() => {
+    if (location.state?.procedure_name) {
+      setProcedureForm(location.state);
+    }
+  }, [location.state]);
+
   function handleAddProcedure() {
-    dispatch(addProcedure(procedureForm));
-    navigate(-1)
+    if (procedureForm?.id) {
+      dispatch(updateProcedure(procedureForm));
+      navigate(-1);
+    } else {
+      dispatch(addProcedure(procedureForm));
+      navigate(-1);
+    }
   }
 
   const handleFieldChange = (selectedIndex = null) => {
@@ -30,10 +43,11 @@ const CreateProcedure = () => {
         fields: [
           ...prev.fields,
           {
+            id: procedureForm.fields.length + 1,
             field_type: "text",
             field_name: "",
             field_value: null,
-            required : false
+            required: false
           },
         ],
       }));
@@ -56,35 +70,21 @@ const CreateProcedure = () => {
     });
   };
 
-  const addNewItem = () => {
-    setProcedureForm((prev) => ({
-      ...prev,
-      fields : [...procedureForm.fields , {
-        id: procedureForm.fields.length,
-        component: (
-          <ProcedureField
-            deleteItem={deleteItem}
-            procedureFieldIndex={procedureForm.fields}
-            handleFieldEdit={handleFieldEdit}
-          />
-        ),
-      }]
-    }));
-  };
 
   const deleteItem = (id) => {
     setProcedureForm((prev) => prev.fields.filter((item) => item.id !== id));
-  };
+  };  
 
   return (
     <section className="procedure-container">
       <StyledButton
         onClick={handleAddProcedure}
-        text={"Add Procedure"}
-        icon={<i className="fi fi-br-plus"></i>}
+        text={procedureForm?.id ? "Update Procedure" : "Add Procedure"}
+        icon={!procedureForm?.id && <i className="fi fi-br-plus"></i>}
         btnClassName="add-procedure-btn"
       />
       <Input
+        value={procedureForm?.procedure_name}
         className="procedure-name-input"
         placeholder="Enter Procedure Name"
         onChange={(e) =>
@@ -97,6 +97,7 @@ const CreateProcedure = () => {
       <div>
         {showDescriptionInput ? (
           <TextArea
+            value={procedureForm?.procedure_description}
             className="procedure-description-input"
             placeholder="What is this procedure for?"
             onChange={(e) =>
@@ -117,18 +118,20 @@ const CreateProcedure = () => {
       </div>
       <div className="procedure-fields-container">
         <div className="procedure-fields">
-          {procedureForm.fields.map((item) => (
-            <div key={item.id}>{item.component}</div>
+          {procedureForm.fields.map((item, index) => (
+            <div key={item.id}><ProcedureField
+              procedureData={item}
+              deleteItem={deleteItem}
+              procedureFieldIndex={index}
+              handleFieldEdit={handleFieldEdit}
+            /></div>
           ))}
         </div>
         <div className="field-option">
           <h4>New Item</h4>
           <div
             className="new-item-option"
-            onClick={() => {
-              addNewItem();
-              // handleFieldChange();
-            }}
+            onClick={() => handleFieldChange()}
           >
             <i className="fi fi-sr-plus-hexagon"></i>
             <p>Field</p>
