@@ -27,6 +27,7 @@ let priorityBtn = [
 
 const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, setWoEditForm = () => {} }) => {
   const { workOrders } = useSelector((state) => state?.work_order);
+  const { procedures } = useSelector((state) => state?.procedure);
   const initialState = {
     id: workOrders.length + 1,
     wo_title: "",
@@ -62,6 +63,8 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
   const [workOrderFormData, setWorkOrderFormData] = useState(initialState);
 
   const [form] = Form.useForm();
+  
+  console.log(procedures,  "procedures")
 
   useEffect(() => {
     if (woEditForm && woEditForm.id) {
@@ -362,11 +365,7 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
             value={workOrderFormData.wo_title}
           />
         </Form.Item>
-        <Form.Item
-          rules={[{}]}
-          label="Description"
-          name="wo_description"
-        >
+        <Form.Item rules={[{}]} label="Description" name="wo_description">
           <TextArea
             rows={4}
             name="wo_description"
@@ -375,10 +374,7 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
           />
         </Form.Item>
         <Form.Item label="Images">
-          <Dragger
-            customRequest={() => { }}
-            onChange={handleAttachmentUpload}
-          >
+          <Dragger customRequest={() => {}} onChange={handleAttachmentUpload}>
             <p className="ant-upload-drag-icon">
               <i className="fi fi-ts-camera-viewfinder"></i>
             </p>
@@ -420,10 +416,7 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
             />
           </Form.Item>
         </Space>
-        <Form.Item
-          label="Estimated Time"
-          className="estimated-time-container"
-        >
+        <Form.Item label="Estimated Time" className="estimated-time-container">
           <Space>
             <Form.Item label={"Hours"} name={"estimated_hours"}>
               <InputNumber
@@ -431,9 +424,7 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
                 min={1}
                 max={24}
                 value={workOrderFormData?.estimated_hours}
-                onChange={(value) =>
-                  handleChange("estimated_hours", value)
-                }
+                onChange={(value) => handleChange("estimated_hours", value)}
               />
             </Form.Item>
             <Form.Item label={"Minutes"} name={"estimated_minutes"}>
@@ -442,21 +433,25 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
                 min={0}
                 max={59}
                 value={workOrderFormData?.estimated_minutes}
-                onChange={(value) =>
-                  handleChange("estimated_hours", value)
-                }
+                onChange={(value) => handleChange("estimated_hours", value)}
               />
             </Form.Item>
           </Space>
         </Form.Item>
         <Form.Item label="Procedure" className="procedure-form-item">
-          <p>Create Or Attach New Form, Procedure Or Checklist</p>
-          <StyledButton
-            icon={<i className="fi fi-br-plus"></i>}
-            text={"Add Procedure"}
-            btnClassName={"add-procedure-btn"}
-            href="create-procedure"
-          />
+          {procedures.length > 0 ? (
+            procedures[0].procedure_name
+          ) : (
+            <>
+              <p>Create Or Attach New Form, Procedure Or Checklist</p>
+              <StyledButton
+                icon={<i className="fi fi-br-plus"></i>}
+                text={"Add Procedure"}
+                btnClassName={"add-procedure-btn"}
+                href="create-procedure"
+              />
+            </>
+          )}
         </Form.Item>
         <Form.Item label="Assign To" name={"assignees"}>
           <CustomSelect
@@ -519,10 +514,7 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
                 })
               }
             >
-              <Select.Option
-                key={"does_not_repeat"}
-                value={"does_not_repeat"}
-              >
+              <Select.Option key={"does_not_repeat"} value={"does_not_repeat"}>
                 Does Not Repeat
               </Select.Option>
               <Select.Option key={"daily"} value={"daily"}>

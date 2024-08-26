@@ -5,10 +5,12 @@ import TextArea from "antd/es/input/TextArea";
 import ProcedureField from "./sub-components/ProcedureField";
 import { useDispatch } from "react-redux";
 import { addProcedure } from "../../redux/slice/procedureSlice";
+import { useNavigate } from "react-router-dom";
 
 const CreateProcedure = () => {
   const [showDescriptionInput, setShowDescriptionInput] = useState(false);
   const [newItemList, setNewItemList] = useState([]);
+  const navigate = useNavigate()
   const dispatch = useDispatch();
   const [procedureForm, setProcedureForm] = useState({
     procedure_name: "",
@@ -18,6 +20,7 @@ const CreateProcedure = () => {
 
   function handleAddProcedure() {
     dispatch(addProcedure(procedureForm));
+    navigate(-1)
   }
 
   const handleFieldChange = (selectedIndex = null) => {
