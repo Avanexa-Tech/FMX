@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import StyledButton from "../common/StyledButton";
-import { formatWords, getOrdinalSuffix } from "../../helpers";
+import { formatEmptyData, formatWords, getOrdinalSuffix } from "../../helpers";
 import { Avatar, Button, Checkbox, Dropdown, Input, Menu, message, Space } from "antd";
 import { colors, DAY_OPTIONS } from "../../constant";
 import TextArea from "antd/es/input/TextArea";
@@ -52,52 +52,57 @@ const ViewWorkOrder = ({ wo, setWoEditForm }) => {
     })
   }
 
-  function getRecurrenctText(){
-    switch (wo.recurrence.frequency) {
-      case "daily":
-        return (
-          <p>
-            Repeats every day after completion of this Work Order.
-          </p>
-        );
-      case "weekly":
-        return (
-          <p>
-              Repeats every {wo.recurrence.week ?? ""} {wo.recurrence.days.length === 7 ? "day" : "week"} on{" "}
-              {wo.recurrence.days.length === 7 ? "": wo.recurrence.days.map(
-                (day, index) =>
-                  `${DAY_OPTIONS[day]}${
-                    wo.recurrence.days.length - 1 !== index
-                      ? ","
-                      : ""
-                  } `
-              )}{" "}
-              after completion of this Work Order
+  function getRecurrenctText() {
+    if (wo?.recurrence?.frequency) {
+      switch (wo.recurrence.frequency) {
+        case "daily":
+          return (
+            <p>
+              Repeats every day after completion of this Work Order.
             </p>
-        );
-      case "monthly":
-        return (
-          <p>
-          Repeats every {wo?.recurrence?.month_no !== 1 ? `${wo?.recurrence?.month_no} ` : ""} 
-          month{wo?.recurrence?.month_no > 1 ? "s" : ""} on the{" "}
-          {getOrdinalSuffix(wo?.recurrence?.day_of_month)}{" "}
-          day of the month after completion of this Work Order.
-        </p>
-        
-        );
-      case "yearly":
-        return (
-          <p>
-            Repeats every{" "}
-            {wo.recurrence.year > 1
-              ? wo.recurrence.year
-              : null}{" "}
-            year{wo.recurrence.year > 1 ? "s" : ""} on 08/20
-            after completion of this Work Order.
+          );
+        case "weekly":
+          return (
+            <p>
+                Repeats every {wo.recurrence.week ?? ""} {wo.recurrence.days.length === 7 ? "day" : "week"} on{" "}
+                {wo.recurrence.days.length === 7 ? "": wo.recurrence.days.map(
+                  (day, index) =>
+                    `${DAY_OPTIONS[day]}${
+                      wo.recurrence.days.length - 1 !== index
+                        ? ","
+                        : ""
+                    } `
+                )}{" "}
+                after completion of this Work Order
+              </p>
+          );
+        case "monthly":
+          return (
+            <p>
+            Repeats every {wo?.recurrence?.month_no !== 1 ? `${wo?.recurrence?.month_no} ` : ""} 
+            month{wo?.recurrence?.month_no > 1 ? "s" : ""} on the{" "}
+            {getOrdinalSuffix(wo?.recurrence?.day_of_month)}{" "}
+            day of the month after completion of this Work Order.
           </p>
-        );
-      default:
-        break;
+          
+          );
+        case "yearly":
+          return (
+            <p>
+              Repeats every{" "}
+              {wo.recurrence.year > 1
+                ? wo.recurrence.year
+                : null}{" "}
+              year{wo.recurrence.year > 1 ? "s" : ""} on 08/20
+              after completion of this Work Order.
+            </p>
+          );
+        default:
+          break;
+      }
+    }
+    else {
+      return;
     }
   }
 
@@ -190,18 +195,18 @@ const ViewWorkOrder = ({ wo, setWoEditForm }) => {
           <div className="wo-info">
             <div>
               <p>Work Order ID</p>
-              <p>#{wo?.index}</p>
+              <p>#{wo?.id}</p>
             </div>
             <div>
               <p>Assigned To</p>
               <div className="d-flex">
                 <Avatar size={"small"} />
-                {wo?.assignee?.[0].name ?? "-"}
+                {formatEmptyData(wo?.assignee?.[0].name)}
               </div>
             </div>
             <div>
               <p>Due Date</p>
-              <p>{wo?.due_date}</p>
+              <p>{formatEmptyData(wo?.due_date)}</p>
             </div>
             <div>
               <p>Priority</p>
@@ -210,32 +215,32 @@ const ViewWorkOrder = ({ wo, setWoEditForm }) => {
                   className="status-color-group"
                   style={{ background: colors[wo?.priority] }}
                 />
-                {formatWords(wo?.priority)}
+                {formatEmptyData(formatWords(wo?.priority))}
               </div>
             </div>
           </div>
         </div>
         <div className="wo-description">
           <h3>Description</h3>
-          <p>{wo?.wo_description}</p>
+          <p>{formatEmptyData(wo?.wo_description)}</p>
           <div className="wo-info">
             <div>
               <p>Asset</p>
-              <p>{wo?.asset}</p>
+              <p>{formatEmptyData(wo?.asset)}</p>
             </div>
             <div>
               <p>Location</p>
-              <p>{formatWords(wo?.location)}</p>
+              <p>{formatEmptyData(formatWords(wo?.location))}</p>
             </div>
             <div>
               <p>Estimated Time</p>
               <p>
-                {wo?.estimated_hours}h {wo?.estimated_minutes}m
+                {formatEmptyData(wo?.estimated_hours)}h {formatEmptyData(wo?.estimated_minutes)}m
               </p>
             </div>
             <div>
               <p>Categories</p>
-              <p>{formatWords(wo?.category)}</p>
+              <p>{formatEmptyData(formatWords(wo?.category))}</p>
             </div>
           </div>
         </div>
@@ -246,23 +251,25 @@ const ViewWorkOrder = ({ wo, setWoEditForm }) => {
               procedures.map((procedure, index) => procedure.fields.map((fieldObj) => getField(fieldObj)))}
           </div>
         </div>
-        <div className="wo-type">
-          <div>
-            <p>Work Type</p>
-            <text>{formatWords(wo.work_type)}</text>
+        {
+          wo?.work_type && <div className="wo-type">
+            <div>
+              <p>Work Type</p>
+              <text>{formatWords(wo?.work_type)}</text>
+            </div>
+            <div>
+              <p>Recurrence</p>
+              <text>{getRecurrenctText()}</text>
+            </div>
           </div>
-          <div>
-            <p>Recurrence</p>
-            <text>{getRecurrenctText()}</text>
-          </div>
-        </div>
+        }        
         <div className="wo-comment-section">
           <h4>Comments</h4>
           <TextArea rows={4} placeholder="Write a comment..." />
           <p>
-            Created By {wo?.requester.name} on {wo?.createdAt}
+            Created By {formatEmptyData(wo?.requester?.name)} on {formatEmptyData(wo?.createdAt)}
           </p>
-          <p>Last Updated on {wo?.updatedAt}</p>
+          <p>Last Updated on {formatEmptyData(wo?.updatedAt)}</p>
         </div>
       </div>
       <StyledButton

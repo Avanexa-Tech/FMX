@@ -25,11 +25,34 @@ const VerifyOtp = () => {
       content: "Enter Valid Otp",
     });
   };
+  const handleSubmission = () => {
+    if (otp === "123456") {
+      success("Otp Verified Successfully");
+      !newUser && dispatch((userData({ ...data, token: "available" })));
+      setTimeout(() => newUser ? navigate("/organization", { state: { data } }) : navigate("/"), 500);
+    }
+    else error();
+  }
+
+  
+
+  const handleSubmit = (e) => {
+    if (e.key === "Enter") {
+      if (!otp) {
+        error();
+      }
+      else {
+        handleSubmission();
+      }
+    }
+  }
+
+
   return (
     <div className="verify-otp-card">
       {contextHolder}
       <h1>Verify Your Login</h1>
-      <div className="inputs">
+      <div className="inputs" onKeyDown={handleSubmit}>
         <p className="otp-send">
           OTP was sent to{" "}
           {username
@@ -40,15 +63,7 @@ const VerifyOtp = () => {
         <StyledButton
           text={"Verify Otp"}
           btnClassName="login-btn"
-          onClick={() => {
-            if (otp === "123456") {
-              success("Otp Verified Successfully");
-              !newUser && dispatch((userData({ ...data, token: "available" })))
-              setTimeout(() => newUser ? navigate("/organization", { state: { data } }) : navigate("/"), 500);
-            }
-            else error();
-          }
-          }
+          onClick={handleSubmission}
         />
 
         <p className="dont-have-account">

@@ -28,11 +28,34 @@ const SignUp = () => {
     });
   };
 
+  const handleSubmission = () => {
+    if (Object.keys(signUp)?.length > 0 && Object.keys(signUp).every((i) => signUp[i] !== "")) {
+      success("Otp Sended Successfully");
+      setTimeout(
+        navigate("/verify-otp", {
+          state: { data: signUp, username: signUp?.email, newUser: true },
+        }),
+        500
+      );
+    } else errorNotification();
+  }
+
+  const handleSubmit = (e) => { 
+    if (e.key === "Enter") {
+      if (!signUp.full_name || !signUp.email || !signUp.phone_number) {
+        errorNotification()
+      }
+      else {
+        handleSubmission()
+      }
+    }
+  }
+
   return (
     <>
       <div className="auth-container">
         {contextHolder}
-        <div className="content">
+        <div className="content" onKeyDown={handleSubmit}>
           <div className="title">Sign up for free</div>
           <div className="inputs">
             <StyledInput
@@ -69,17 +92,7 @@ const SignUp = () => {
           <Button
             className="submit"
             type="primary"
-            onClick={() => {
-              if (Object.keys(signUp)?.length > 0 && Object.keys(signUp).every((i) => signUp[i] !== "")) {
-                success("Otp Sended Successfully");
-                setTimeout(
-                  navigate("/verify-otp", {
-                    state: { data: signUp, username: signUp?.email, newUser: true },
-                  }),
-                  500
-                );
-              } else errorNotification();
-            }}
+            onClick={handleSubmission}
           >
             Next
           </Button>

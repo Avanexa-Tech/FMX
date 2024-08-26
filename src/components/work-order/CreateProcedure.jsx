@@ -8,12 +8,10 @@ import { addProcedure, updateProcedure } from "../../redux/slice/procedureSlice"
 import { useLocation, useNavigate } from "react-router-dom";
 
 const CreateProcedure = () => {
-  const [showDescriptionInput, setShowDescriptionInput] = useState(false);
-  const [newItemList, setNewItemList] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  const procedureState = useSelector(({ procedure }) => procedure);
+  const [showDescriptionInput, setShowDescriptionInput] = useState(false);
   const [procedureForm, setProcedureForm] = useState({
     procedure_name: "",
     procedure_description: "",
@@ -21,17 +19,27 @@ const CreateProcedure = () => {
   });
 
   useEffect(() => {
-    if (location.state?.procedure_name) {
+    if (location.state?.procedure_name)
       setProcedureForm(location.state);
-    }
+    if (location.state?.procedure_description)
+      setShowDescriptionInput(true);
   }, [location.state]);
 
   function handleAddProcedure() {
-    if (procedureForm?.id) {
-      dispatch(updateProcedure(procedureForm));
+    const copyFields = procedureForm;
+    console.log(copyFields, "copyFields")
+    copyFields.fields = copyFields.fields.map(item => (
+      {
+        ...item,
+        field_value: Array.isArray(item.field_value) && item.field_value.length !== 0 ?
+          [...item.field_value.filter(obj => obj.value.length != 0)] : item?.field_value
+      }));
+    
+    if (copyFields?.id) {
+      dispatch(updateProcedure(copyFields));
       navigate(-1);
     } else {
-      dispatch(addProcedure(procedureForm));
+      dispatch(addProcedure(copyFields));
       navigate(-1);
     }
   }
@@ -73,7 +81,7 @@ const CreateProcedure = () => {
 
   const deleteItem = (id) => {
     setProcedureForm((prev) => prev.fields.filter((item) => item.id !== id));
-  };  
+  };
 
   return (
     <section className="procedure-container">

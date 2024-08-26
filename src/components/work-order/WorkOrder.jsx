@@ -145,7 +145,7 @@ const WorkOrder = () => {
             btnClassName={"create-wo-btn"}
             onClick={() => actionDispatch(toggleShowCreateWorkOrder(true))}
           />
-          <Dropdown
+          {/* <Dropdown
             overlay={
               <div className="extra-options-dropdown">
                 <a href="#">Option 1</a>
@@ -157,7 +157,7 @@ const WorkOrder = () => {
             <div className="extra-options-icon">
               <i className="fi fi-bs-menu-dots-vertical"></i>
             </div>
-          </Dropdown>
+          </Dropdown> */}
         </div>
       </div>
       <div className="work-order-data-container">
@@ -186,7 +186,7 @@ const WorkOrder = () => {
                               <div className="wo-details">
                                 <h4>{wo.wo_title}</h4>
                                 <p>Requested by {wo?.requester?.name}</p>
-                                <p>Work ID : #{wo?.index}</p>
+                                <p>Work ID : #{wo?.id}</p>
                                 <div className="assignee-name">
                                   <Avatar
                                     size={"small"}
@@ -254,7 +254,7 @@ const WorkOrder = () => {
                               <div className="wo-details">
                                 <h4>{wo.wo_title}</h4>
                                 <p>Requested by {wo?.requester?.name}</p>
-                                <p>Work ID : #{wo?.index}</p>
+                                <p>Work ID : #{wo?.id}</p>
                                 <div className="assignee-name">
                                   <Avatar
                                     size={"small"}

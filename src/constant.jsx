@@ -7,21 +7,21 @@ export const PRIMARY_SIDEBAR_OPTIONS = [
     label: formatWords("work_orders"),
     link: "#",
   },
-  {
-    key: "requests",
-    icon: <i className="fi fi-rr-download"></i>,
-    label: formatWords("requests"),
-    link: "#",
-  },
+  // {
+  //   key: "requests",
+  //   icon: <i className="fi fi-rr-download"></i>,
+  //   label: formatWords("requests"),
+  //   link: "#",
+  // },
 ];
 
 export const SECONDARY_SIDEBAR_OPTIONS = [
-  {
-    key: "category",
-    icon: <i className="fi fi-tr-category"></i>,
-    label: formatWords("category"),
-    link: "#",
-  },
+  // {
+  //   key: "category",
+  //   icon: <i className="fi fi-tr-category"></i>,
+  //   label: formatWords("category"),
+  //   link: "#",
+  // },
 ];
 
 export const colors = {

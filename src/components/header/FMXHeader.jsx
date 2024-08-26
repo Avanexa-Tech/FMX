@@ -32,7 +32,7 @@ function FMXHeader() {
           <i className="fi fi-rr-settings-sliders"></i>
         </div>
         <div className="notifications-btn">
-          <Badge count="2">
+          <Badge count="0">
             <i className="fi fi-rr-bell-notification-social-media"></i>
           </Badge>
         </div>
