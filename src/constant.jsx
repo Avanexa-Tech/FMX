@@ -4,15 +4,13 @@ export const PRIMARY_SIDEBAR_OPTIONS = [
   {
     key: "work_order",
     icon: <i className="fi fi-rr-document"></i>,
-    label: formatWords("work_orders"),
     link: "/work_order_management",
   },
-  // {
-  //   key: "requests",
-  //   icon: <i className="fi fi-rr-download"></i>,
-  //   label: formatWords("requests"),
-  //   link: "#",
-  // },
+  {
+    key: "preventive_maintanence",
+    icon: <i class="fi fi-rs-time-quarter-past"></i>,
+    link: "/preventive_maintanence",
+  },
 ];
 
 export const SECONDARY_SIDEBAR_OPTIONS = [

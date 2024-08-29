@@ -71,7 +71,7 @@ const Organization = () => {
           if (Object.keys(organization)?.length > 0 &&
             Object.keys(organization).every((i) => organization[i] !== "")) {
             dispatch(userData({ ...organization, ...data , token: "available" }));
-            navigate("/");
+            navigate("/work_order_management");
           } else error();
         }}
       >

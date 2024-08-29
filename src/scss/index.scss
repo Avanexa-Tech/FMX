@@ -7,6 +7,7 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
 $theme-color: #4085f6;
 $secondary-border-color: #dadfe3;
 $light-bg-color: #f6f6f6;
@@ -33,17 +34,17 @@ $done-status: #28a745;
 .ant-picker,
 .ant-select,
 .ant-select-selector {
-    height: 40px;
-    border-radius: 5px;
-    cursor: pointer !important;
-    display: flex;
-    align-items: center;
+  height: 40px;
+  border-radius: 5px;
+  cursor: pointer !important;
+  display: flex;
+  align-items: center;
 }
 
-.ant-col{
-    label{
-        font-weight: 500;
-    }
+.ant-col {
+  label {
+    font-weight: 500;
+  }
 }
 
 .ant-btn-default:hover {
@@ -51,7 +52,8 @@ $done-status: #28a745;
     rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
 }
 
-body,span {
+body,
+span {
   font-family: "Inter Tight", sans-serif;
   margin: 0px;
 }
@@ -79,4 +81,5 @@ i {
 @import "./common.scss";
 @import "./auth.scss";
 @import './procedure.scss';
-@import './asset-management.scss'
+@import './asset-management.scss';
+@import './preventive-maintanence.scss';

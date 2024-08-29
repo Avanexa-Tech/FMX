@@ -53,13 +53,13 @@ const quickActions = (
 );
 
 const initialState = {
-  locations: ["erode"],
+  locations: [],
   enteredLocation: undefined,
-  assets: ["ac"],
+  assets: [],
   enteredAsset: undefined,
-  categories: ["machine"],
+  categories: [],
   enteredCategory: undefined,
-  vendors: ["LG"],
+  vendors: [],
   enteredVendor: undefined,
   assignees: [{
     name: "Jeswin",

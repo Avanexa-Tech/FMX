@@ -30,6 +30,7 @@ let priorityBtn = [
 const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, setWoEditForm = () => { } }) => {
   const { workOrders } = useSelector((state) => state?.work_order);
   const { procedures } = useSelector((state) => state?.procedure);
+  const { assets } = useSelector((state) => state?.assets);
   const initialState = {
     id: workOrders.length + 1,
     wo_title: "",
@@ -118,7 +119,9 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
 
   const handleLocationAddition = () =>
     handleAddition("locations", "enteredLocation");
-  const handleAssetAddition = () => handleAddition("assets", "enteredAsset");
+  const handleAssetAddition = () => {
+    handleAddition("assets", "enteredAsset")
+  };
   const handleCategoryAddition = () =>
     handleAddition("categories", "enteredCategory");
   const handleVendorAddition = () => handleAddition("vendors", "enteredVendor");
@@ -555,6 +558,7 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
             }))}
             dropdownRender={(menu) => (
               <>
+                {console.log(menu, 'menu1212')}
                 <div className="menu-dropdown">{menu}</div>
                 <Space className="dynamic-input-container">
                   <Input
@@ -601,13 +605,14 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
                     icon={<i className="fi fi-tr-boxes"></i>}
                     text={"Add Asset"}
                     onClick={handleAssetAddition}
+                    href="/assets_management"
                   />
                 </Space>
               </>
             )}
-            options={state?.assets?.map((item) => ({
-              label: formatWords(item),
-              value: item,
+            options={assets?.map((item) => ({
+              label: formatWords(item.asset_name),
+              value: item.id,
             }))}
           />
         </Form.Item>

@@ -4,6 +4,7 @@ import {
   PRIMARY_SIDEBAR_OPTIONS,
   SECONDARY_SIDEBAR_OPTIONS,
 } from "../../constant";
+import { formatWords } from "../../helpers";
 
 export default function Sidebar() {
   const [selectedTab, setSelectedTab] = useState("work_order");
@@ -32,7 +33,7 @@ export default function Sidebar() {
               href={option.link}
             >
               {option.icon}
-              <p>{option.label}</p>
+              <p>{formatWords(option.key)}</p>
               <div className="right-border" />
             </a>
           ))}

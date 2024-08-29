@@ -63,8 +63,6 @@ const AssetManagement = () => {
     dispatch(toggleShowAssetCreationForm(boolVal));
   }
 
-  console.log(assets ,"assets12***")
-
   const AssetCard = ({ asset,handleAssetCardClick }) => {
     return (
       <div className="asset-card" onClick={() => handleAssetCardClick(asset)}>

@@ -10,6 +10,7 @@ import SignUp from "./components/authentication/SignUp";
 import { useSelector } from "react-redux";
 import CreateProcedure from "./components/work-order/CreateProcedure";
 import AssetManagement from "./components/asset-management/AssetManagement";
+import PreventiveMaintanence from "./components/preventive-maintanence/PreventiveMaintanence";
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
             <Route index path="/work_order_management" element={<WorkOrder />} />
             <Route path="/create-procedure" element={<CreateProcedure/>} />
             <Route path="/assets_management" element={<AssetManagement/>} />
+            <Route path="/preventive_maintanence" element={<PreventiveMaintanence/>} />
           </Route>
           :
           <Route element={<AuthLayout />}>
