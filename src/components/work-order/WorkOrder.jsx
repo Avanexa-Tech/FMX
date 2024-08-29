@@ -145,19 +145,6 @@ const WorkOrder = () => {
             btnClassName={"create-wo-btn"}
             onClick={() => actionDispatch(toggleShowCreateWorkOrder(true))}
           />
-          {/* <Dropdown
-            overlay={
-              <div className="extra-options-dropdown">
-                <a href="#">Option 1</a>
-                <a href="#">Option 2</a>
-                <a href="#">Option 3</a>
-              </div>
-            }
-          >
-            <div className="extra-options-icon">
-              <i className="fi fi-bs-menu-dots-vertical"></i>
-            </div>
-          </Dropdown> */}
         </div>
       </div>
       <div className="work-order-data-container">
@@ -313,7 +300,6 @@ const WorkOrder = () => {
               ) : (
                 <h2>New Work Order</h2>
               )}
-
               <CreateWorkOrder
                 {...{
                   ...{

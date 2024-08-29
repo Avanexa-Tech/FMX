@@ -66,8 +66,6 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
 
   const [form] = Form.useForm();
 
-  console.log(procedures, "procedures");
-
   useEffect(() => {
     if (woEditForm && woEditForm.id) {
       form.setFieldsValue(woEditForm);

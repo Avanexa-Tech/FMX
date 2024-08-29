@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 let initialState = {
   showWorkOrderForm: false,
+  showAssetForm : false,
 };
 
 const userActionSlice = createSlice({
@@ -11,10 +12,14 @@ const userActionSlice = createSlice({
     toggleShowCreateWorkOrder(state , action) {
       state.showWorkOrderForm = action.payload;
     },
+    toggleShowAssetCreationForm(state, action){
+      state.showAssetForm = action.payload;
+    }
   },
 });
 
 export const {
   toggleShowCreateWorkOrder,
+  toggleShowAssetCreationForm
 } = userActionSlice.actions;
 export default userActionSlice.reducer;

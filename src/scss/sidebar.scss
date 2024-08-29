@@ -35,7 +35,7 @@
             width: 100%;
             gap: 10px;
             background: #fff;
-            & > div{
+            & > a{
                 display: flex;
                 align-items: center;
                 gap: 10px;
@@ -45,6 +45,8 @@
                 cursor: pointer;
                 box-sizing: border-box;
                 padding-left: 40px;
+                text-decoration: none;
+                color: #000;
                 & > p{
                     font-size: 14px;
                     font-weight: 400;

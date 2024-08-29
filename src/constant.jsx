@@ -5,7 +5,7 @@ export const PRIMARY_SIDEBAR_OPTIONS = [
     key: "work_order",
     icon: <i className="fi fi-rr-document"></i>,
     label: formatWords("work_orders"),
-    link: "#",
+    link: "/work_order_management",
   },
   // {
   //   key: "requests",
@@ -16,12 +16,12 @@ export const PRIMARY_SIDEBAR_OPTIONS = [
 ];
 
 export const SECONDARY_SIDEBAR_OPTIONS = [
-  // {
-  //   key: "category",
-  //   icon: <i className="fi fi-tr-category"></i>,
-  //   label: formatWords("category"),
-  //   link: "#",
-  // },
+  {
+    key: "asset_management",
+    icon: <i class="fi fi-tr-boxes"></i>,
+    label: formatWords("asset_management"),
+    link: "/assets_management",
+  },
 ];
 
 export const colors = {

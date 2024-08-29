@@ -13,6 +13,8 @@ export default function Sidebar() {
     console.log(selectedTab, option);
   }
 
+  console.log(selectedTab , "asdasd")
+
   return (
     <aside className="fmx-sidebar">
       <div className="fmx-logo">
@@ -21,32 +23,34 @@ export default function Sidebar() {
       <section className="fmx-sidebar-pages">
         <div className="primarylinks">
           {PRIMARY_SIDEBAR_OPTIONS.map((option) => (
-            <div
+            <a
               key={option.key}
               onClick={() => handleTabClick(option)}
               className={`${
                 selectedTab === option.key ? "active-tab" : "in-active-tab"
               }`}
+              href={option.link}
             >
               {option.icon}
               <p>{option.label}</p>
               <div className="right-border" />
-            </div>
+            </a>
           ))}
         </div>
         <div className="secondarylinks">
           {SECONDARY_SIDEBAR_OPTIONS.map((option) => (
-            <div
+            <a
               key={option.key}
               onClick={() => handleTabClick(option)}
               className={`${
                 selectedTab === option.key ? "active-tab" : "in-active-tab"
               }`}
+              href={option.link}
             >
               {option.icon}
               <p>{option.label}</p>
               <div className="right-border" />
-            </div>
+            </a>
           ))}
         </div>
       </section>

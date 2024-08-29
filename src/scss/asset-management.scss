@@ -1,0 +1,292 @@
+.asset-management-container {
+    box-sizing: border-box;
+    min-height: 85vh;
+    .create-asset-btn{
+        width: 90%;
+        height: 45px;
+        display: flex;
+        margin: auto auto;
+        background: $theme-color;
+        color: #fff;
+    }
+    .am-head{
+        background: #fff;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .asset-filters{
+            display: flex;
+            gap: 10px;
+        }
+        .asset-ctas{
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+    }
+    .asset-management-data-container{
+        display: flex;
+        box-sizing: border-box;
+        padding: 0px 50px;
+        gap: 10px;
+        height: 100%;
+        .assets-list{
+            width: 40%;
+            border: 1px solid $secondary-border-color;
+            border-radius: 4px;
+        }
+        .create-assets {
+            width: 60%;
+            border: 1px solid $secondary-border-color;
+            border-radius: 4px;
+            .create-asset-form{
+                box-sizing: border-box;
+                padding: 25px;
+                height: 480px;
+                overflow-y: scroll;
+                overflow-x: hidden;
+                &::-webkit-scrollbar{
+                    width: 1px;
+                }
+            }
+            .asset-row{
+                display: flex;
+                gap: 10px;
+                .active-cls{
+                    background: $low-priority-color;
+                    color: #fff;
+                }
+            }
+            .ant-upload-drag-container{
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                height: 120px;
+                justify-content: center;
+            }
+            .ant-space{
+                width: 100%;
+                .ant-space-item{
+                    width: 50%;
+                    .ant-col,label{
+                        max-width: 100% !important;
+                    }
+                }
+            }
+        }
+        .ant-tabs-nav {
+            margin-bottom: 0px;
+        }
+
+        .ant-tabs-nav-list {
+            width: 100%;
+
+            .ant-tabs-tab {
+                width: 50%;
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+
+        .create-new-asset{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 100%;
+            box-sizing: border-box;
+            padding: 50px;
+            & > p {
+                & > b{
+                    & > span{
+                        color: $theme-color;
+                    }
+                }
+            }
+        }
+
+        .view-asset-container{
+            box-sizing: border-box;
+            .view-asset-head{
+                padding: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border-bottom: 1px solid $secondary-border-color;
+                position: sticky;
+                top: 0px;
+                background: #fff;
+            }
+        }
+        .asset-description,
+        .asset-status-view,
+        .asset-details-box,
+        .team-in-charge{
+            box-sizing: border-box;
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: column;
+            label{
+                font-weight: 600;
+            }
+            p{
+                color: $secondary-icon-color;
+            }
+            div{
+                display: flex;
+                gap: 5px;
+                align-items: center;
+                justify-content: flex-start;
+
+                & > p{
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    & > a{
+                        display: flex;
+                        align-items: center;
+                        gap: 5px;
+                        text-decoration: none;
+                    }
+                }
+
+                & > img{
+                    width: 25px;
+                    height: 25px;
+                    margin-right: 5px;
+                }
+                & > p{
+                    font-size: 14px;
+                }
+                & > i{
+                    display: flex;
+                    align-items: center;
+                    color: $theme-color;
+                }
+            }
+        }
+        .asset-details-container{
+            width: 95%;
+            box-sizing: border-box;
+            margin: 0 auto;
+            background: #000;
+            padding: 30px;
+            border-radius: 4px;
+            background: $details-card-bg;
+            display: grid;
+            grid-template-columns: repeat(auto-fill , minmax(250px,1fr));
+            margin-bottom: 15px;
+        }
+        .asset-creation-details{
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            padding: 20px;
+            p{
+                margin: 2.5px;
+                color: $secondary-icon-color;
+                font-size: 14px;
+            }
+        }
+    }
+    .assets-flat-list{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        box-sizing: border-box;
+        padding: 15px;
+        .asset-card{
+            border: 1px solid $secondary-border-color;
+            box-sizing: border-box;
+            padding: 20px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all ease-in .2s;
+            &:hover {
+                box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+            }
+            .asset-details{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 5px;
+                width: 75%;
+                h3{
+                    margin: 0px;
+                    font-size: 18px;
+                }
+                p{
+                    margin: 0px;
+                }
+                & > p:nth-child(2){
+                    font-size: 14px;
+                    color: $secondary-icon-color;
+                }
+                & > p:nth-child(3){
+                    font-size: 12px;
+                    color: $secondary-text-color;
+                }
+                text{
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    i{
+                        display: flex;
+                        transform: scale(1.25);
+                        color: $theme-color;
+                    }
+                }
+            }
+            .asset-extra-details{
+                width: 20%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                // .asset-image{
+                //     border: 1px solid;
+                //     border-radius: 100px;
+                //     object-fit: contain;
+                //     width: 50%;
+                //     height: 50%;
+                // }
+                .asset-image{
+                    transform: scale(2);
+                    border: 1px solid $secondary-border-color;
+                    box-sizing: border-box;
+                    padding: 5px;
+                    border-radius: 50px;
+                }
+                .active-asset{
+                    background: $low-priority-color;
+                    border: none;
+                }
+                .asset-status{
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    box-sizing: border-box;
+                    padding: 5px;
+                    background: transparent;
+                    div{
+                        height: 15px;
+                        width: 15px;
+                        border-radius: 50px;
+                        cursor: pointer;
+                    }
+                    p{
+                        margin: 0px;
+                    }
+                }
+            }
+        }
+    }
+}

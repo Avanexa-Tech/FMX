@@ -20,6 +20,8 @@ $medium-priority-color: #ffa500;
 $high-priority-color: #ff4136;
 
 
+$details-card-bg : #F4F4F4;
+
 $open-status: #007bff;
 $onhold-status: #ffc107;
 $inprogress-status: #17a2b8;
@@ -76,4 +78,5 @@ i {
 @import "./work-order.scss";
 @import "./common.scss";
 @import "./auth.scss";
-@import './procedure.scss'
+@import './procedure.scss';
+@import './asset-management.scss'

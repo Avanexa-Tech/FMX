@@ -9,6 +9,7 @@ import Organization from "./components/authentication/Organization";
 import SignUp from "./components/authentication/SignUp";
 import { useSelector } from "react-redux";
 import CreateProcedure from "./components/work-order/CreateProcedure";
+import AssetManagement from "./components/asset-management/AssetManagement";
 
 function App() {
 
@@ -19,8 +20,9 @@ function App() {
       <Routes>
         {user?.token ?
           <Route element={<BaseLayout />}>
-            <Route index element={<WorkOrder />} />
+            <Route index path="/work_order_management" element={<WorkOrder />} />
             <Route path="/create-procedure" element={<CreateProcedure/>} />
+            <Route path="/assets_management" element={<AssetManagement/>} />
           </Route>
           :
           <Route element={<AuthLayout />}>
