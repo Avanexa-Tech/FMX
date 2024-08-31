@@ -37,6 +37,7 @@ let workOrderStatus = [
 ];
 
 const ViewWorkOrder = ({ wo, setWoEditForm }) => {
+  console.log(wo , "wo5491")
   const dispatch = useDispatch()
   const [woStatus, setWoStatus] = useState(wo?.wo_status);
   const { procedures } = useSelector((state) => state.procedure);
@@ -251,7 +252,8 @@ const ViewWorkOrder = ({ wo, setWoEditForm }) => {
             <div>
               <p>Estimated Time</p>
               <p>
-                {formatEmptyData(wo?.estimated_hours)}h {formatEmptyData(wo?.estimated_minutes)}m
+                {formatEmptyData(wo?.estimated_hours)}h{" "}
+                {formatEmptyData(wo?.estimated_minutes)}m
               </p>
             </div>
             <div>
@@ -264,11 +266,15 @@ const ViewWorkOrder = ({ wo, setWoEditForm }) => {
           <h4>Procedure</h4>
           <div>
             {procedures &&
-              procedures.map((procedure, index) => procedure.fields.map((fieldObj) => getField(fieldObj)))}
+              procedures
+                .filter((obj) => obj.id === wo.procedure_id)
+                .map((procedure, index) =>
+                  procedure.fields.map((fieldObj) => getField(fieldObj))
+                )}
           </div>
         </div>
-        {
-          wo?.work_type && <div className="wo-type">
+        {wo?.work_type && (
+          <div className="wo-type">
             <div>
               <p>Work Type</p>
               <text>{formatWords(wo?.work_type)}</text>
@@ -278,12 +284,13 @@ const ViewWorkOrder = ({ wo, setWoEditForm }) => {
               <text>{getRecurrenctText()}</text>
             </div>
           </div>
-        }        
+        )}
         <div className="wo-comment-section">
           <h4>Comments</h4>
           <TextArea rows={4} placeholder="Write a comment..." />
           <p>
-            Created By {formatEmptyData(wo?.requester?.name)} on {formatEmptyData(wo?.createdAt)}
+            Created By {formatEmptyData(wo?.requester?.name)} on{" "}
+            {formatEmptyData(wo?.createdAt)}
           </p>
           <p>Last Updated on {formatEmptyData(wo?.updatedAt)}</p>
         </div>

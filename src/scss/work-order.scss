@@ -170,6 +170,7 @@
                         border: 1px solid #dadfe3;
                         border-radius: 4px;
                         height: 40px;
+                        cursor: pointer;
                         
                         .title{
                             font-size: 15px;
@@ -818,4 +819,10 @@
 .menu-dropdown {
     margin-bottom: 10px;
     width: 100%;
+}
+
+
+.selected-procedure{
+    border: 1px solid $theme-color !important;
+    background: #4085f625;
 }

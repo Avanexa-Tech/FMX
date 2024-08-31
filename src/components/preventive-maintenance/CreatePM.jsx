@@ -31,6 +31,7 @@ let priorityBtn = [
 
 const CreatePreventiveMaintance = ({ submitWoRef, state, dispatch, tagClass, pmEditForm, setPmEditForm = () => { } }) => {
   const { preventiveMaintenance } = useSelector((state) => state?.preventive_maintenance);
+  const [selectedProcedure, setSelectedProcedure] = useState(null)
   const { procedures } = useSelector((state) => state?.procedure);
   const { assets } = useSelector((state) => state?.assets);
   const initialState = {
@@ -39,6 +40,7 @@ const CreatePreventiveMaintance = ({ submitWoRef, state, dispatch, tagClass, pmE
     wo_description: "",
     wo_attachment: "",
     wo_status: "open",
+    procedure_id : null,
     priority: "none",
     start_date: "",
     due_date: "",
@@ -130,6 +132,12 @@ const CreatePreventiveMaintance = ({ submitWoRef, state, dispatch, tagClass, pmE
 
   function handleChange(name, value) {
     setPMFormData({ ...pmFormData, [name]: value });
+  }
+
+  function handleFixProdcedure(item){
+    console.log(item,"12323434")
+    setSelectedProcedure(item.id)
+    setWorkOrderFormData({...workOrderFormData , procedure_id : item.id});
   }
 
   const handleLocationAddition = () =>
@@ -459,7 +467,7 @@ const CreatePreventiveMaintance = ({ submitWoRef, state, dispatch, tagClass, pmE
         <Form.Item label="Procedure" className="procedure-form-item">
           <div className='procedure-form-item'>
             <div>
-              <p>Create Or Attach New Form, Procedure Or Checklist</p>
+              <p>Create Or Attach New Form, Procedure Or Checklist, Select A Existing Procedure</p>
               <StyledButton
                 icon={<i className="fi fi-br-plus"></i>}
                 text={"Add Procedure"}
@@ -467,18 +475,33 @@ const CreatePreventiveMaintance = ({ submitWoRef, state, dispatch, tagClass, pmE
                 href="create-procedure"
               />
             </div>
-            {procedures.length > 0 ? procedures.map((item, ind) => (
-              <div className='procedure-form-card' key={ind} >
-                  <div className='title'>
+            {procedures.length > 0 ? (
+              procedures.map((item, ind) => (
+                <div
+                  className={`procedure-form-card ${
+                    item.id === selectedProcedure ? "selected-procedure" : ""
+                  }`}
+                  key={item.id}
+                  onClick={() => handleFixProdcedure(item)}
+                >
+                  <div className="title">
                     <i className="fi fi-ts-guide-alt"></i>
                     {item.procedure_name}
                   </div>
-                  <div className='icons'>
-                  <Link to="create-procedure" state={item}><i className="fi fi-rr-pencil"></i></Link>
-                  <i className="fi fi-rs-trash" onClick={() => actionDispatch(deleteProcedure(item?.id))}></i>
+                  <div className="icons">
+                    <Link to="create-procedure" state={item}>
+                      <i className="fi fi-rr-pencil"></i>
+                    </Link>
+                    <i
+                      className="fi fi-rs-trash"
+                      onClick={() => actionDispatch(deleteProcedure(item?.id))}
+                    ></i>
                   </div>
                 </div>
-          )) : <></>}
+              ))
+            ) : (
+              <></>
+            )}
           </div>
 
         </Form.Item>

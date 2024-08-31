@@ -10,7 +10,7 @@ const procedureSlice = createSlice({
   reducers: {
     addProcedure: (state, action) => {
       state.procedures.push({
-        id: state.procedures[-1]?.id ? state.procedures[-1].id + 1 : 1,
+        id: state.procedures.length + 1,
         ...action.payload,
       });
     },
