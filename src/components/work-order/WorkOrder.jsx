@@ -129,12 +129,7 @@ const WorkOrder = () => {
       <div className="work-order-header">
         <div className="wo-filters">
           {filterBtns.map((btn) => (
-            <StyledButton
-              key={btn.key}
-              icon={btn.icon}
-              text={btn.label}
-              btnClassName={"filter-btn"}
-            />
+            <StyledButton key={btn.key} icon={btn.icon} text={btn.label} btnClassName={"filter-btn"} />
           ))}
         </div>
         <div className="wo-main-option">
@@ -163,27 +158,17 @@ const WorkOrder = () => {
                     {workOrders.length ? (
                       <div className="work-order-flat-list">
                         {workOrders
-                          .filter((wo) => wo.status !== "done")
+                          .filter((wo) => wo.wo_status !== "done")
                           .map((wo, ind) => (
-                            <div
-                              key={ind}
-                              className="work-order-card"
-                              onClick={() => handleWOClick(wo)}
-                            >
+                            <div key={ind} className="work-order-card" onClick={() => handleWOClick(wo)}>
                               <div className="wo-details">
                                 <h4>{wo.wo_title}</h4>
                                 <p>Requested by {wo?.requester?.name}</p>
                                 <p>Work ID : #{wo?.id}</p>
                                 <div className="assignee-name">
-                                  <Avatar
-                                    size={"small"}
-                                    icon={
-                                      <i className="fi fi-ts-circle-user"></i>
-                                    }
-                                  />
+                                  <Avatar size={"small"} icon={<i className="fi fi-ts-circle-user"></i>} />
                                   <p>
-                                    Assigned To{" "}
-                                    <span>{wo.assignees?.name}</span>
+                                    Assigned To <span>{wo.assignees?.name}</span>
                                   </p>
                                 </div>
                               </div>
@@ -191,31 +176,22 @@ const WorkOrder = () => {
                                 <Avatar
                                   shape="circle"
                                   size={"large"}
-                                  icon={
-                                    <i className="fi fi-ss-user-headset"></i>
-                                  }
+                                  icon={<i className="fi fi-ss-user-headset"></i>}
                                 />
-                                <Tag className={tagClass(wo.priority)}>
-                                  {formatWords(wo.priority)}
-                                </Tag>
+                                <Tag className={tagClass(wo.priority)}>{formatWords(wo.priority)}</Tag>
                               </div>
                             </div>
                           ))}
                       </div>
                     ) : (
                       <div className="create-new-wo">
-                        <img
-                          src={createWorkOrderImg}
-                          alt="Create New Work Order"
-                        />
+                        <img src={createWorkOrderImg} alt="Create New Work Order" />
                         <p>You don't have any work orders</p>
                         <StyledButton
                           icon={<i className="fi fi-rr-plus"></i>}
                           text={"Create Work Order"}
                           btnClassName={"new-wo-btn"}
-                          onClick={() =>
-                            actionDispatch(toggleShowCreateWorkOrder(true))
-                          }
+                          onClick={() => actionDispatch(toggleShowCreateWorkOrder(true))}
                         />
                       </div>
                     )}
@@ -231,24 +207,15 @@ const WorkOrder = () => {
                     {workOrders.length ? (
                       <div className="work-order-flat-list">
                         {workOrders
-                          .filter((wo) => wo.status === "done")
+                          .filter((wo) => wo.wo_status === "done")
                           .map((wo, ind) => (
-                            <div
-                              key={ind}
-                              className="work-order-card"
-                              onClick={() => handleWOClick(wo)}
-                            >
+                            <div key={ind} className="work-order-card" onClick={() => handleWOClick(wo)}>
                               <div className="wo-details">
                                 <h4>{wo.wo_title}</h4>
                                 <p>Requested by {wo?.requester?.name}</p>
                                 <p>Work ID : #{wo?.id}</p>
                                 <div className="assignee-name">
-                                  <Avatar
-                                    size={"small"}
-                                    icon={
-                                      <i className="fi fi-ts-circle-user"></i>
-                                    }
-                                  />
+                                  <Avatar size={"small"} icon={<i className="fi fi-ts-circle-user"></i>} />
                                   {/* <p>
                                     Assigned To <span>{wo?.assignees[0]?.name}</span>
                                   </p> */}
@@ -258,31 +225,22 @@ const WorkOrder = () => {
                                 <Avatar
                                   shape="circle"
                                   size={"large"}
-                                  icon={
-                                    <i className="fi fi-ss-user-headset"></i>
-                                  }
+                                  icon={<i className="fi fi-ss-user-headset"></i>}
                                 />
-                                <Tag className={tagClass(wo.priority)}>
-                                  {formatWords(wo.priority)}
-                                </Tag>
+                                <Tag className={tagClass(wo.priority)}>{formatWords(wo.priority)}</Tag>
                               </div>
                             </div>
                           ))}
                       </div>
                     ) : (
                       <div className="create-new-wo">
-                        <img
-                          src={createWorkOrderImg}
-                          alt="Create New Work Order"
-                        />
+                        <img src={createWorkOrderImg} alt="Create New Work Order" />
                         <p>You don't have any work orders</p>
                         <StyledButton
                           icon={<i className="fi fi-rr-plus"></i>}
                           text={"Create Work Order"}
                           btnClassName={"new-wo-btn"}
-                          onClick={() =>
-                            dispatch(toggleShowCreateWorkOrder(true))
-                          }
+                          onClick={() => dispatch(toggleShowCreateWorkOrder(true))}
                         />
                       </div>
                     )}
@@ -295,11 +253,7 @@ const WorkOrder = () => {
         <div className="create-view-work-order">
           {showWorkOrderForm ? (
             <div className="create-wo" ref={setContainer}>
-              {woEditForm.id ? (
-                <h2>Update Work Order</h2>
-              ) : (
-                <h2>New Work Order</h2>
-              )}
+              {woEditForm.id ? <h2>Update Work Order</h2> : <h2>New Work Order</h2>}
               <CreateWorkOrder
                 {...{
                   ...{
@@ -315,9 +269,7 @@ const WorkOrder = () => {
               <StyledButton
                 key="create-wo-btn"
                 icon={<i className="fi fi-rr-plus"></i>}
-                text={
-                  woEditForm.id ? "Update Work Order " : "Create Work Order"
-                }
+                text={woEditForm.id ? "Update Work Order " : "Create Work Order"}
                 btnClassName={"create-wo-finish-btn"}
                 onClick={() => submitWoRef.current?.click()}
               />

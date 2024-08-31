@@ -7,9 +7,9 @@ export const PRIMARY_SIDEBAR_OPTIONS = [
     link: "/work_order_management",
   },
   {
-    key: "preventive_maintanence",
+    key: "preventive_maintenance",
     icon: <i class="fi fi-rs-time-quarter-past"></i>,
-    link: "/preventive_maintanence",
+    link: "/preventive_maintenance",
   },
 ];
 

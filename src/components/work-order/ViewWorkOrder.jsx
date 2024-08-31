@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import StyledButton from "../common/StyledButton";
 import { formatEmptyData, formatWords, getOrdinalSuffix } from "../../helpers";
 import { Avatar, Button, Checkbox, Dropdown, Input, Menu, message, Space } from "antd";
@@ -7,6 +7,7 @@ import TextArea from "antd/es/input/TextArea";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteWorkOrder, updateWorkOrder } from "../../redux/slice/workOrderSlice";
 import { toggleShowCreateWorkOrder } from "../../redux/slice/userActionSlice";
+import { deletePreventiveMaintenance, updatePreventiveMaintenance } from "../../redux/slice/preventiveMaintenanceSlice";
 
 let workOrderStatus = [
   {
@@ -40,11 +41,21 @@ const ViewWorkOrder = ({ wo, setWoEditForm }) => {
   const [woStatus, setWoStatus] = useState(wo?.wo_status);
   const { procedures } = useSelector((state) => state.procedure);
 
+  useEffect(() => {
+    setWoStatus(wo?.wo_status);
+  }, [wo]);
+
   function handleWoStatus(changedStatus) {
     dispatch(updateWorkOrder({
-      id : wo?.id,
-      status : changedStatus
+      ...wo,
+      wo_status: changedStatus
     }))
+    dispatch(
+      updatePreventiveMaintenance({
+        ...wo,
+        wo_status: changedStatus,
+      })
+    );
     setWoStatus(changedStatus);
     message.open({
       type: "success",
@@ -112,6 +123,11 @@ const ViewWorkOrder = ({ wo, setWoEditForm }) => {
         id: wo?.id,
       })
     );
+    dispatch(
+      deletePreventiveMaintenance({
+        id: wo?.id,
+      })
+    );
     dispatch(toggleShowCreateWorkOrder(true))
   }
 
@@ -147,7 +163,7 @@ const ViewWorkOrder = ({ wo, setWoEditForm }) => {
     }
   }
 
-  console.log(procedures[0].fields ,"asdas")
+  console.log(woStatus ,"asdas")
 
   return (
     <section className="view-wo-container">

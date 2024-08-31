@@ -2,6 +2,7 @@ import { Select } from "antd";
 import React from "react";
 
 const CustomSelect = ({
+  value,
   mode,
   dropdownRender,
   options,
@@ -12,6 +13,7 @@ const CustomSelect = ({
     option.label.toLowerCase().includes(input.toLowerCase());
   return (
     <Select
+      value={value}
       showSearch
       mode={mode}
       placeholder={placeholder}
