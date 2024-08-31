@@ -162,6 +162,7 @@
                     display: flex;
                     flex-direction: column;
                     gap: 15px;
+
                     .procedure-form-card {
                         display: flex;
                         align-items: center;
@@ -170,8 +171,8 @@
                         border: 1px solid #dadfe3;
                         border-radius: 4px;
                         height: 40px;
-                        
-                        .title{
+
+                        .title {
                             font-size: 15px;
                             display: flex;
                             gap: 10px;
@@ -179,7 +180,7 @@
                             color: #888888;
                             cursor: pointer;
                         }
-                        
+
                         .icons {
                             font-size: 16px;
                             display: flex;
@@ -383,20 +384,23 @@
                 flex-direction: column;
                 gap: 10px;
 
-                .procedure-container{
+                .procedure-container {
                     box-sizing: border-box;
                     padding: 30px;
-                    .input-container{
+
+                    .input-container {
                         display: flex;
                         flex-direction: column;
                         margin-top: 10px;
                         box-sizing: border-box;
                         padding: 15px;
-                        & > h4{
+
+                        &>h4 {
                             margin: 0px;
                             margin-bottom: 10px;
                         }
-                        & > ul{
+
+                        &>ul {
                             margin-left: 0px;
                             padding: 0px;
                             padding-left: 10px;
@@ -404,7 +408,8 @@
                             flex-direction: column;
                             gap: 10px;
                         }
-                        &:not(:last-child){
+
+                        &:not(:last-child) {
                             border-bottom: 1px solid $secondary-border-color;
                         }
                     }
@@ -476,7 +481,7 @@
                 }
 
                 .wo-info {
-                    background:$details-card-bg;
+                    background: $details-card-bg;
                     box-sizing: border-box;
                     padding: 15px;
                     border-radius: 10px;
@@ -496,6 +501,7 @@
                     p:nth-child(2) {
                         font-size: 14px;
                         color: $secondary-text-color;
+                        line-break: anywhere;
                     }
 
                     .d-flex {
@@ -521,12 +527,19 @@
                     }
                 }
 
-                .wo-type {
+                .pm-status {
                     display: flex;
                     flex-direction: column;
                     gap: 15px;
                     box-sizing: border-box;
                     padding: 25px;
+
+                    .pm-status-btns {
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: start;
+                        gap: 20px;
+                    }
 
                     &>div {
                         display: flex;
@@ -655,6 +668,38 @@
                         flex-direction: column;
                         gap: 5px;
 
+                        .status {
+                            font-size: 16px !important;
+                        }
+
+                        .wo-card-bottom {
+                            display: flex;
+                            gap: 15px;
+
+                            .location {
+                                display: flex;
+                                gap: 5px;
+                                font-weight: 500;
+                                align-items: center;
+                                font-size: 14px;
+
+                                .location-text {
+                                    max-width: 175px;
+                                    text-overflow: ellipsis;
+                                    width: 100%;
+                                    overflow: hidden;
+                                }
+                            }
+
+                            .location>i {
+                                color: skyblue;
+                                font-size: 20px;
+                                border: 2px solid skyblue;
+                                border-radius: 50px;
+                                padding: 5px;
+                            }
+                        }
+
                         &>h4 {
                             margin: 0px;
                             font-size: 18px;
@@ -710,112 +755,62 @@
     }
 }
 
-.extra-options-icon {
-    height: 40px;
-    width: 40px;
-    border-radius: 50px;
-    border: 1px solid;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #000;
-    border: 1px solid $secondary-border-color;
-}
-
-.extra-options-dropdown {
+.wo-cost-tracking {
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    background: #fff;
-    box-sizing: border-box;
-    padding: 10px;
-}
+    gap: 20px;
+    padding: 15px;
 
-
-.quick-actions-container {
-    background: $light-bg-color;
-    box-sizing: border-box;
-    padding: 10px;
-    display: flex;
-
-    .sort-by,
-    .calendar,
-    .mark-as-read {
-        width: 50%;
-        color: #000;
-        text-align: center;
-    }
-
-    .sort-by,.calendar {
+    .section-1 {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 5px;
-        cursor: pointer;
+        flex-wrap: wrap;
+        gap: 20px;
+
+        &>h4 {
+            margin: 0px;
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            
+
+            .inputs {
+                width: 350px;
+                border: 2px solid rgb(209, 209, 209);
+
+            .suffix, .prefix {
+                display: flex;
+                gap: 15px;
+                font-size: 18px;
+                margin: 10px;
+                color: #a5a5a5;
+                }
+            }
+
+            .input-child {
+                display: flex;
+                gap: 10px;
+
+                &>.ant-input {
+                    width: 170px;
+                    min-height: 50px;
+                    border: 2px solid rgb(209, 209, 209);
+                }
+            }
+        }
     }
-}
-
-.low-priority {
-    background: lighten($color: $low-priority-color, $amount: 55%);
-    border: 1px solid $low-priority-color;
-    color: $low-priority-color;
-}
-
-.medium-priority {
-    background: lighten($color: $medium-priority-color, $amount: 55%);
-    border: 1px solid $medium-priority-color;
-    color: $medium-priority-color;
-}
-
-.high-priority {
-    background: lighten($color: $high-priority-color, $amount: 55%);
-    border: 1px solid $high-priority-color;
-    color: $high-priority-color;
-}
-
-.openStatusActive {
-    background: lighten($color: $open-status, $amount: 45%);
-    color: $open-status;
-    border: 1px solid $open-status;
-}
-
-.onHoldStatusActive {
-    background: lighten($color: $onhold-status, $amount: 45%);
-    color: $onhold-status;
-    border: 1px solid $onhold-status;
-}
-
-.inProgressStatusActive {
-    background: lighten($color: $inprogress-status, $amount: 45%);
-    color: $inprogress-status;
-    border: 1px solid $inprogress-status;
-}
-
-.doneStatusActive {
-    background: lighten($color: $done-status, $amount: 45%);
-    color: $done-status;
-    border: 1px solid $done-status;
-}
-
-.create-view-work-order::-webkit-scrollbar,
-.create-wo::-webkit-scrollbar {
-    width: 0px;
-}
-
-.dynamic-input-container {
-    width: 100% !important;
-    padding: 0 8px 4px;
-
-    .ant-space-item:nth-child(1) {
-        width: 65%;
+    .section-2{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        &>h4 {
+            margin: 0px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        &>.ant-input {
+        border: 2px solid rgb(209, 209, 209);
+        }
     }
-
-    .ant-space-item:nth-child(2) {
-        width: 25%;
-    }
-}
-
-.menu-dropdown {
-    margin-bottom: 10px;
-    width: 100%;
 }

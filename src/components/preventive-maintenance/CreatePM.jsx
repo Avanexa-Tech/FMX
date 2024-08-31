@@ -6,13 +6,13 @@ import StyledButton from '../common/StyledButton';
 import { formatWords, getOrdinalSuffix } from '../../helpers';
 import CustomSelect from '../common/CustomSelect';
 import { useDispatch, useSelector } from 'react-redux';
-import { createWorkOrder, updateWorkOrder } from '../../redux/slice/workOrderSlice';
 import { DAY_OPTIONS, days } from '../../constant';
 import { toggleShowCreatePreventiveMaintenance, toggleShowCreateWorkOrder } from '../../redux/slice/userActionSlice';
 import { Link } from 'react-router-dom';
 import { deleteProcedure } from '../../redux/slice/procedureSlice';
 import { addAsset } from '../../redux/slice/sharedDataSlice';
 import { createPreventiveMaintenance, updatePreventiveMaintenance } from '../../redux/slice/preventiveMaintenanceSlice';
+import { createWorkOrder, updateWorkOrder } from '../../redux/slice/workOrderSlice';
 
 let priorityBtn = [
   {
@@ -29,12 +29,12 @@ let priorityBtn = [
   },
 ];
 
-const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, setWoEditForm = () => { } }) => {
-  const { workOrders } = useSelector((state) => state?.work_order);
+const CreatePreventiveMaintance = ({ submitWoRef, state, dispatch, tagClass, pmEditForm, setPmEditForm = () => { } }) => {
+  const { preventiveMaintenance } = useSelector((state) => state?.preventive_maintenance);
   const { procedures } = useSelector((state) => state?.procedure);
   const { assets } = useSelector((state) => state?.assets);
   const initialState = {
-    id: workOrders.length + 1,
+    id: preventiveMaintenance.length + 1,
     wo_title: "",
     wo_description: "",
     wo_attachment: "",
@@ -65,36 +65,30 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
   };
 
   const actionDispatch = useDispatch();
-  const [workOrderFormData, setWorkOrderFormData] = useState(initialState);
+  const [pmFormData, setPMFormData] = useState(initialState);
 
   const [form] = Form.useForm();
 
   useEffect(() => {
-    if (woEditForm && woEditForm.id) {
-      form.setFieldsValue(woEditForm);
-      setWorkOrderFormData({ ...woEditForm });
+    if (pmEditForm && pmEditForm.id) {
+      form.setFieldsValue(pmEditForm);
+      setPMFormData({ ...pmEditForm });
     }
-  }, [form, woEditForm]);
-console.log(workOrderFormData.recurrence.frequency);
+  }, [pmEditForm]);
 
-  function handleCreateWO() {
-    if (workOrderFormData.recurrence.frequency !== "does_not_repeat") {
-      if (woEditForm && woEditForm.id) {
-        actionDispatch(updatePreventiveMaintenance(workOrderFormData));
-        actionDispatch(toggleShowCreatePreventiveMaintenance(false));
-      } else {
-        actionDispatch(createPreventiveMaintenance(workOrderFormData));
-    }
-    } 
-    if (woEditForm && woEditForm.id) {
-      actionDispatch(updateWorkOrder(workOrderFormData));
+  function handleCreatePM() {
+    if (pmEditForm && pmEditForm.id) {
+      actionDispatch(updatePreventiveMaintenance(pmFormData));
+      actionDispatch(toggleShowCreatePreventiveMaintenance(false));
+      actionDispatch(updateWorkOrder(pmFormData));
       actionDispatch(toggleShowCreateWorkOrder(false));
-      setWorkOrderFormData(initialState);
-      setWoEditForm({});
+      setPMFormData(initialState);
+      setPmEditForm({});
     } else {
-      actionDispatch(createWorkOrder(workOrderFormData));
+      actionDispatch(createPreventiveMaintenance(pmFormData));
+      actionDispatch(createWorkOrder(pmFormData));
+      setPMFormData(initialState);
     }
-    
   }
 
   function handleAddition(field, enteredField) {
@@ -128,14 +122,14 @@ console.log(workOrderFormData.recurrence.frequency);
   console.log(state, "vstate")
 
   function handleDataChange(e) {
-    setWorkOrderFormData({
-      ...workOrderFormData,
+    setPMFormData({
+      ...pmFormData,
       [e.target.name]: e.target.value,
     });
   }
 
   function handleChange(name, value) {
-    setWorkOrderFormData({ ...workOrderFormData, [name]: value });
+    setPMFormData({ ...pmFormData, [name]: value });
   }
 
   const handleLocationAddition = () =>
@@ -150,39 +144,39 @@ console.log(workOrderFormData.recurrence.frequency);
     handleAddition("assignees", "enteredAssignee");
 
   function handleWoPriority(woPriority) {
-    setWorkOrderFormData({ ...workOrderFormData, priority: woPriority });
+    setPMFormData({ ...pmFormData, priority: woPriority });
   }
 
   function handleWoDate(dateKey, dateString) {
-    setWorkOrderFormData({ ...workOrderFormData, [dateKey]: dateString });
+    setPMFormData({ ...pmFormData, [dateKey]: dateString });
   }
 
   function recurrenceComponent() {
 
     function handleFrequencyDays(e) {
-      let selectedDays = [...workOrderFormData.recurrence.days];
+      let selectedDays = [...pmFormData.recurrence.days];
       if (selectedDays.includes(e.target.id)) {
         selectedDays = selectedDays.filter((d) => d !== e.target.id);
       } else {
         selectedDays.push(e.target.id);
       }
-      setWorkOrderFormData((prev) => ({
+      setPMFormData((prev) => ({
         ...prev,
-        recurrence: { ...workOrderFormData.recurrence, days: [...selectedDays] },
+        recurrence: { ...pmFormData.recurrence, days: [...selectedDays] },
       }));
       if (selectedDays.length === 7) {
-        setWorkOrderFormData({
-          ...workOrderFormData,
-          recurrence: { ...workOrderFormData.recurrence, frequency: "daily" },
+        setPMFormData({
+          ...pmFormData,
+          recurrence: { ...pmFormData.recurrence, frequency: "daily" },
         });
       }
     }
 
     function handleChangeFrequencyToWeek(day) {
-      setWorkOrderFormData({
-        ...workOrderFormData,
+      setPMFormData({
+        ...pmFormData,
         recurrence: {
-          ...workOrderFormData.recurrence,
+          ...pmFormData.recurrence,
           frequency: "weekly",
           week: 1,
           days: days.filter((d) => d !== day)
@@ -190,7 +184,7 @@ console.log(workOrderFormData.recurrence.frequency);
       });
     }
 
-    switch (workOrderFormData.recurrence.frequency) {
+    switch (pmFormData.recurrence.frequency) {
       case "daily":
         return (
           <row>
@@ -212,10 +206,10 @@ console.log(workOrderFormData.recurrence.frequency);
               <Select
                 defaultValue={1}
                 onChange={(value) =>
-                  setWorkOrderFormData({
-                    ...workOrderFormData,
+                  setPMFormData({
+                    ...pmFormData,
                     recurrence: {
-                      ...workOrderFormData.recurrence,
+                      ...pmFormData.recurrence,
                       week: value,
                     },
                   })
@@ -236,10 +230,10 @@ console.log(workOrderFormData.recurrence.frequency);
                   onClick={handleFrequencyDays}
                   id={day}
                   style={{
-                    background: workOrderFormData.recurrence.days.includes(day)
+                    background: pmFormData.recurrence.days.includes(day)
                       ? "#4085f6"
                       : "",
-                    color: workOrderFormData.recurrence.days.includes(day)
+                    color: pmFormData.recurrence.days.includes(day)
                       ? "white"
                       : "",
                   }}
@@ -249,10 +243,10 @@ console.log(workOrderFormData.recurrence.frequency);
               ))}
             </dayrow>
             <p>
-              Repeats every {workOrderFormData.recurrence.week > 1 ? workOrderFormData.recurrence.week : ""} week on{" "}
-              {workOrderFormData.recurrence.days.map(
+              Repeats every {pmFormData.recurrence.week > 1 ? pmFormData.recurrence.week : ""} week on{" "}
+              {pmFormData.recurrence.days.map(
                 (day, index) =>
-                  `${DAY_OPTIONS[day]}${workOrderFormData?.recurrence?.days.length - 1 !== index
+                  `${DAY_OPTIONS[day]}${pmFormData?.recurrence?.days.length - 1 !== index
                     ? ","
                     : ""
                   } `
@@ -268,10 +262,10 @@ console.log(workOrderFormData.recurrence.frequency);
               <p>Every</p>
               <Select
                 onChange={(value) => {
-                  setWorkOrderFormData({
-                    ...workOrderFormData,
+                  setPMFormData({
+                    ...pmFormData,
                     recurrence: {
-                      ...workOrderFormData.recurrence,
+                      ...pmFormData.recurrence,
                       month_no: value,
                     },
                   });
@@ -285,13 +279,13 @@ console.log(workOrderFormData.recurrence.frequency);
                   )
                 )}
               </Select>
-              month {workOrderFormData.recurrence.month > 1 ? "s" : ""} on the
+              month {pmFormData.recurrence.month > 1 ? "s" : ""} on the
               <Select
                 onChange={(value) => {
-                  setWorkOrderFormData({
-                    ...workOrderFormData,
+                  setPMFormData({
+                    ...pmFormData,
                     recurrence: {
-                      ...workOrderFormData.recurrence,
+                      ...pmFormData.recurrence,
                       day_of_month: value,
                     },
                   });
@@ -307,10 +301,10 @@ console.log(workOrderFormData.recurrence.frequency);
               </Select>
             </monthlyrow>
             <p>
-              Repeats every {workOrderFormData?.recurrence?.month_no} month
-              {workOrderFormData?.recurrence?.month_no ? `s` : ""} on the{" "}
+              Repeats every {pmFormData?.recurrence?.month_no} month
+              {pmFormData?.recurrence?.month_no ? `s` : ""} on the{" "}
               {getOrdinalSuffix(
-                workOrderFormData?.recurrence?.day_of_month ?? undefined
+                pmFormData?.recurrence?.day_of_month ?? undefined
               )}{" "}
               day of the month after completion of this Work Order.
             </p>
@@ -323,10 +317,10 @@ console.log(workOrderFormData.recurrence.frequency);
               <p>Every</p>
               <Select
                 onChange={(value) => {
-                  setWorkOrderFormData({
-                    ...workOrderFormData,
+                  setPMFormData({
+                    ...pmFormData,
                     recurrence: {
-                      ...workOrderFormData.recurrence,
+                      ...pmFormData.recurrence,
                       year: value,
                     },
                   });
@@ -338,14 +332,14 @@ console.log(workOrderFormData.recurrence.frequency);
                   )
                 )}
               </Select>
-              <p>year{workOrderFormData.recurrence.year > 1 ? "s" : ""}</p>
+              <p>year{pmFormData.recurrence.year > 1 ? "s" : ""}</p>
             </div>
             <p>
               Repeats every{" "}
-              {workOrderFormData.recurrence.year > 1
-                ? workOrderFormData.recurrence.year
+              {pmFormData.recurrence.year > 1
+                ? pmFormData.recurrence.year
                 : null}{" "}
-              year{workOrderFormData.recurrence.year > 1 ? "s" : ""} on 08/20
+              year{pmFormData.recurrence.year > 1 ? "s" : ""} on 08/20
               after completion of this Work Order.
             </p>
           </yearly>
@@ -356,8 +350,8 @@ console.log(workOrderFormData.recurrence.frequency);
   }
 
   function handleAttachmentUpload({ fileList: newFileList }) {
-    setWorkOrderFormData({
-      ...workOrderFormData, attachments: {
+    setPMFormData({
+      ...pmFormData, attachments: {
         ...newFileList,
         status: "done",
       }
@@ -369,8 +363,8 @@ console.log(workOrderFormData.recurrence.frequency);
         form={form}
         layout="vertical"
         className="work-order-form"
-        initialValues={workOrderFormData}
-        onFinish={handleCreateWO}
+        initialValues={pmFormData}
+        onFinish={handleCreatePM}
         scrollToFirstError={true}
       >
         <Form.Item
@@ -386,7 +380,7 @@ console.log(workOrderFormData.recurrence.frequency);
           <Input
             name="wo_title"
             onChange={handleDataChange}
-            value={workOrderFormData.wo_title}
+            value={pmFormData.wo_title}
           />
         </Form.Item>
         <Form.Item rules={[{}]} label="Description" name="wo_description">
@@ -394,7 +388,7 @@ console.log(workOrderFormData.recurrence.frequency);
             rows={4}
             name="wo_description"
             onChange={handleDataChange}
-            value={workOrderFormData.wo_description}
+            value={pmFormData.wo_description}
           />
         </Form.Item>
         <Form.Item label="Images">
@@ -413,8 +407,8 @@ console.log(workOrderFormData.recurrence.frequency);
                 icon={null}
                 text={formatWords(type.key)}
                 btnClassName={
-                  workOrderFormData.priority === type.key
-                    ? tagClass(workOrderFormData.priority)
+                  pmFormData.priority === type.key
+                    ? tagClass(pmFormData.priority)
                     : ""
                 }
                 onClick={() => handleWoPriority(type.key)}
@@ -447,7 +441,7 @@ console.log(workOrderFormData.recurrence.frequency);
                 name={"estimated_hours"}
                 min={1}
                 max={24}
-                value={workOrderFormData?.estimated_hours}
+                value={pmFormData?.estimated_hours}
                 onChange={(value) => handleChange("estimated_hours", value)}
               />
             </Form.Item>
@@ -456,7 +450,7 @@ console.log(workOrderFormData.recurrence.frequency);
                 name={"estimated_minutes"}
                 min={0}
                 max={59}
-                value={workOrderFormData?.estimated_minutes}
+                value={pmFormData?.estimated_minutes}
                 onChange={(value) => handleChange("estimated_hours", value)}
               />
             </Form.Item>
@@ -490,6 +484,7 @@ console.log(workOrderFormData.recurrence.frequency);
         </Form.Item>
         <Form.Item label="Assign To" name={"assignees"}>
           <CustomSelect
+            value={!pmFormData.assignees.name ? undefined : pmFormData.assignees.name}
             mode={"multiple"}
             onChange={(value) => handleChange("assignees", value)}
             placeholder="Type Name, Email Or Phone Number"
@@ -538,12 +533,12 @@ console.log(workOrderFormData.recurrence.frequency);
           </Form.Item>
           <Form.Item label={"Recurrence"}>
             <Select
-              value={workOrderFormData.recurrence.frequency}
+              value={pmFormData.recurrence.frequency}
               onChange={(value) =>
-                setWorkOrderFormData({
-                  ...workOrderFormData,
+                setPMFormData({
+                  ...pmFormData,
                   recurrence: {
-                    ...workOrderFormData.recurrence,
+                    ...pmFormData.recurrence,
                     frequency: value,
                   },
                 })
@@ -570,6 +565,7 @@ console.log(workOrderFormData.recurrence.frequency);
         <div className="recurrent-area">{recurrenceComponent()}</div>
         <Form.Item label="Location" className="location">
           <CustomSelect
+            value={pmFormData.location}
             placeholder={"Start Typing"}
             onChange={(value) => handleChange("location", value)}
             options={state?.locations?.map((item) => ({
@@ -604,6 +600,7 @@ console.log(workOrderFormData.recurrence.frequency);
         </Form.Item>
         <Form.Item label="Asset">
           <CustomSelect
+            value={pmFormData.asset}
             placeholder="Start Typing"
             onChange={(value) => handleChange("asset", value)}
             dropdownRender={(menu) => (
@@ -638,6 +635,7 @@ console.log(workOrderFormData.recurrence.frequency);
         </Form.Item>
         <Form.Item label="Categories" name={"category"}>
           <CustomSelect
+            value={pmFormData.category}
             placeholder="Start Typing"
             onChange={(value) => handleChange("category", value)}
             dropdownRender={(menu) => (
@@ -671,6 +669,7 @@ console.log(workOrderFormData.recurrence.frequency);
         </Form.Item>
         <Form.Item label="Vendors" name={"vendors"}>
           <CustomSelect
+            value={pmFormData.vendor}
             placeholder="Start Typing"
             onChange={(value) => handleChange("vendors", value)}
             dropdownRender={(menu) => (
@@ -712,4 +711,4 @@ console.log(workOrderFormData.recurrence.frequency);
   );
 };
 
-export default CreateWorkOrder;
+export default CreatePreventiveMaintance;

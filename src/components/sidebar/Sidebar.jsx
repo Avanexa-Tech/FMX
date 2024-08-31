@@ -7,7 +7,7 @@ import {
 import { formatWords } from "../../helpers";
 
 export default function Sidebar() {
-  const [selectedTab, setSelectedTab] = useState("work_order");
+  const [selectedTab, setSelectedTab] = useState("");
 
   function handleTabClick(option) {
     setSelectedTab(option.key);
