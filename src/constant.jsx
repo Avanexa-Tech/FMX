@@ -1,5 +1,6 @@
 import { formatWords } from "./helpers";
 
+
 export const PRIMARY_SIDEBAR_OPTIONS = [
   {
     key: "work_order",
