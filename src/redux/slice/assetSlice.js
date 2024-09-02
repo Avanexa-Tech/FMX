@@ -18,7 +18,6 @@ const assetSlice = createSlice({
     },
     updateAsset: (state, action) => {
       const assetIndex = state.assets.findIndex((wo) => wo.id === action.payload.id);
-      console.log(assetIndex,"assetIndex1212", action.payload)
       state.assets.splice(assetIndex, 1, action.payload);
     }
   },

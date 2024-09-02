@@ -12,7 +12,6 @@ const sharedDataSlice = createSlice({
   initialState,
   reducers: {
       addAsset: (state, action) => {
-          console.log(action.payload , "1231231213");
       state.asset.push(action.payload);
     },
     addLocation: (state, action) => {

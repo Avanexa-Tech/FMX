@@ -9,7 +9,6 @@ const CustomSelect = ({
   placeholder = null,
   onChange
 }) => {
-  console.log(value, 'qwerq21faxZ')
   const filterOption = (input, option) => 
     option.label.toLowerCase().includes(input.toLowerCase());
   return (

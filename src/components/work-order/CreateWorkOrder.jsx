@@ -77,7 +77,6 @@ const CreateWorkOrder = ({ submitWoRef, state, dispatch, tagClass, woEditForm, s
       setWorkOrderFormData({ ...woEditForm });
     }
   }, [form, woEditForm]);
-console.log(workOrderFormData.recurrence.frequency);
 
   function handleCreateWO() {
     if (workOrderFormData.recurrence.frequency !== "does_not_repeat") {
@@ -160,7 +159,6 @@ console.log(workOrderFormData.recurrence.frequency);
 
 
   function handleFixProdcedure(item){
-    console.log(item,"12323434")
     setSelectedProcedure(item.id)
     setWorkOrderFormData({...workOrderFormData , procedure_id : item.id});
   }
@@ -602,7 +600,6 @@ console.log(workOrderFormData.recurrence.frequency);
             }))}
             dropdownRender={(menu) => (
               <>
-                {console.log(menu, "menu1212")}
                 <div className="menu-dropdown">{menu}</div>
                 <Space className="dynamic-input-container">
                   <Input

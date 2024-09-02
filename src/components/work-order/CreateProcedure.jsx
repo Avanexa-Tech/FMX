@@ -27,7 +27,6 @@ const CreateProcedure = () => {
 
   function handleAddProcedure() {
     const copyFields = procedureForm;
-    console.log(copyFields, "copyFields")
     copyFields.fields = copyFields.fields.map(item => (
       {
         ...item,

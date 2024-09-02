@@ -33,6 +33,7 @@ const ViewPreventiveMaintance = ({ pm, setPmEditForm }) => {
     if (pm?.assigneeData) {
         setAssigneeData(pm?.assigneeData);
     }
+    setPMStatus(pm?.wo_status);
   }, []);
 
   function handleWoStatus(changedStatus) {
@@ -225,18 +226,6 @@ const ViewPreventiveMaintance = ({ pm, setPmEditForm }) => {
             <div className="pm-status-btns">
               <StyledButton
                 style={{
-                  background: pmStatus === "in_progress" ? "#4085f6" : "",
-                  color: pmStatus === "in_progress" ? "#fff" : "#000",
-                  height: "50px",
-                  maxWidth: "150px",
-                  width: "100%",
-                }}
-                icon={<i className="fi fi-rr-rotate-right"></i>}
-                text={"In Progress"}
-                onClick={() => handleWoStatus("in_progress")}
-              />
-              <StyledButton
-                style={{
                   background: pmStatus === "on_hold" ? "#ff4136" : "",
                   color: pmStatus === "on_hold" ? "#fff" : "#000",
                   height: "50px",
@@ -246,6 +235,18 @@ const ViewPreventiveMaintance = ({ pm, setPmEditForm }) => {
                 icon={<i className="fi fi-rs-pause-circle"></i>}
                 text={"On Hold"}
                 onClick={() => handleWoStatus("on_hold")}
+              />
+              <StyledButton
+                style={{
+                  background: pmStatus === "in_progress" ? "#4085f6" : "",
+                  color: pmStatus === "in_progress" ? "#fff" : "#000",
+                  height: "50px",
+                  maxWidth: "150px",
+                  width: "100%",
+                }}
+                icon={<i className="fi fi-rr-rotate-right"></i>}
+                text={"In Progress"}
+                onClick={() => handleWoStatus("in_progress")}
               />
               <StyledButton
                 style={{
@@ -294,6 +295,7 @@ const ViewPreventiveMaintance = ({ pm, setPmEditForm }) => {
             <h4>
               Start Date & Time
               <DateAndTimePicker
+                showModal={showCostModal}
                 data={{ date: assigneeData.startDate, time: assigneeData.startTime }}
                 setData={(value) => {
                   if (value.date) {
@@ -307,6 +309,7 @@ const ViewPreventiveMaintance = ({ pm, setPmEditForm }) => {
             <h4>
               End Date & Time
               <DateAndTimePicker
+                showModal={showCostModal}
                 data={{ date: assigneeData.endDate, time: assigneeData.endTime }}
                 setData={(value) => {
                   if (value.date) {

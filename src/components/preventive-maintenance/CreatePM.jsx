@@ -121,8 +121,6 @@ const CreatePreventiveMaintance = ({ submitWoRef, state, dispatch, tagClass, pmE
     }
   }
 
-  console.log(state, "vstate")
-
   function handleDataChange(e) {
     setPMFormData({
       ...pmFormData,
@@ -135,7 +133,6 @@ const CreatePreventiveMaintance = ({ submitWoRef, state, dispatch, tagClass, pmE
   }
 
   function handleFixProdcedure(item){
-    console.log(item,"12323434")
     setSelectedProcedure(item.id)
     setWorkOrderFormData({...workOrderFormData , procedure_id : item.id});
   }
@@ -597,7 +594,6 @@ const CreatePreventiveMaintance = ({ submitWoRef, state, dispatch, tagClass, pmE
             }))}
             dropdownRender={(menu) => (
               <>
-                {console.log(menu, 'menu1212')}
                 <div className="menu-dropdown">{menu}</div>
                 <Space className="dynamic-input-container">
                   <Input

@@ -2,36 +2,22 @@ import React, { useState, useRef, useEffect } from "react";
 import { Input, DatePicker, TimePicker } from "antd";
 import dayjs from "dayjs";
 
-const DateAndTimePicker = ({ data, setData }) => {
-  console.log(data);
-  
+const DateAndTimePicker = ({ data, setData, showModal }) => {
   const [showPicker, setShowPicker] = useState({});
+
+  useEffect(() => {
+    if (showModal) {
+      setShowPicker({});
+    }
+  },[showModal]);
 
   const datePickerRef = useRef(null);
   const timePickerRef = useRef(null);
 
   const handleChange = (value, name) => {
-    console.log(value,"ssss");
-    setData({[name]: value });
+    setData({ [name]: value });
     setShowPicker((prev) => ({ ...prev, [name]: false }));
   };
-
-  // const handleClickOutside = (e) => {
-    // if(!data.date || !data.time)
-    // if (datePickerRef.current && !datePickerRef.current.contains(e.target)) {
-    //   setShowPicker((prev) => ({ ...prev, date: false }));
-    // }
-    // if (timePickerRef.current && !timePickerRef.current.contains(e.target)) {
-    //   setShowPicker((prev) => ({ ...prev, time: false }));
-    // }
-  // };
-
-  // useEffect(() => {
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, []);
 
   return (
     <div className="input-container" style={{ position: "relative" }}>
@@ -60,17 +46,20 @@ const DateAndTimePicker = ({ data, setData }) => {
         suffix={
           <div className="suffix">
             <span
-              onClick={() => setShowPicker((prev) => ({ ...prev, date: true }))}
+              onClick={() => setShowPicker((prev) => ({ ...prev, date: !prev.date }))}
               style={{ marginRight: 8, cursor: "pointer" }}
             >
-              <i className="fi fi-rr-calendar" />
+              <i className={showPicker.date ? "fi fi-rr-cross-circle" : "fi fi-rr-calendar"} />
             </span>
-            <span onClick={() => setShowPicker((prev) => ({ ...prev, time: true }))} style={{ cursor: "pointer" }}>
+            <span
+              onClick={() => setShowPicker((prev) => ({ ...prev, time: !prev.time }))}
+              style={{ cursor: "pointer" }}
+            >
               {/* {
                 datePickerRef.current.contains(e.target) ? 
                   <i className="fi fi-rr-cross-circle"></i> :
                 } */}
-              <i className="fi fi-rr-clock-three" />
+              <i className={showPicker.time ? "fi fi-rr-cross-circle" : "fi fi-rr-clock-three"} />
             </span>
           </div>
         }
@@ -83,6 +72,7 @@ const DateAndTimePicker = ({ data, setData }) => {
           onClick={(e) => e.stopPropagation()}
         >
           <DatePicker
+            getPopupContainer={(triggerNode) => triggerNode.parentNode}
             onChange={(value) => handleChange(dayjs(value).format("YYYY-MM-DD"), "date")}
             open
             style={{ position: "absolute", visibility: "hidden", bottom: 0, left: 0 }}
@@ -97,6 +87,7 @@ const DateAndTimePicker = ({ data, setData }) => {
           onClick={(e) => e.stopPropagation()}
         >
           <TimePicker
+            getPopupContainer={(triggerNode) => triggerNode.parentNode}
             onChange={(value) => handleChange(dayjs(value).format("HH:mm A"), "time")}
             format="HH:mm"
             use12Hours

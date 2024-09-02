@@ -11,10 +11,7 @@ export default function Sidebar() {
 
   function handleTabClick(option) {
     setSelectedTab(option.key);
-    console.log(selectedTab, option);
   }
-
-  console.log(selectedTab , "asdasd")
 
   return (
     <aside className="fmx-sidebar">

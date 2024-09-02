@@ -37,7 +37,6 @@ let workOrderStatus = [
 ];
 
 const ViewWorkOrder = ({ wo, setWoEditForm }) => {
-  console.log(wo , "wo5491")
   const dispatch = useDispatch()
   const [woStatus, setWoStatus] = useState(wo?.wo_status);
   const { procedures } = useSelector((state) => state.procedure);
@@ -163,8 +162,6 @@ const ViewWorkOrder = ({ wo, setWoEditForm }) => {
         break;
     }
   }
-
-  console.log(woStatus ,"asdas")
 
   return (
     <section className="view-wo-container">
