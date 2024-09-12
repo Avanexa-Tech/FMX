@@ -759,7 +759,7 @@
 .none-priority{
     border: 1px solid $theme-color;
     color: $theme-color;
-    background: lighten($color: $theme-color, $amount: 40%);
+    background: lighten($color: $theme-color, $amount: 35%);
 }
 
 .low-priority {
@@ -775,7 +775,7 @@
 }
 
 .high-priority {
-    background: lighten($color: $high-priority-color, $amount: 40%);
+    background: lighten($color: $high-priority-color, $amount: 35%);
     border: 1px solid $high-priority-color;
     color: $high-priority-color;
 }
