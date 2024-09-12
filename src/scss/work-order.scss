@@ -756,6 +756,12 @@
     }
 }
 
+.none-priority{
+    border: 1px solid $theme-color;
+    color: $theme-color;
+    background: rgba($color: $theme-color, $alpha: 0.1);
+}
+
 .low-priority {
     background: lighten($color: $low-priority-color, $amount: 55%);
     border: 1px solid $low-priority-color;
