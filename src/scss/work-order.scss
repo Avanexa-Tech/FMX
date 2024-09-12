@@ -759,23 +759,23 @@
 .none-priority{
     border: 1px solid $theme-color;
     color: $theme-color;
-    background: lighten($color: $theme-color, $amount: 35%);
+    background: lighten($color: $theme-color, $amount: 40%);
 }
 
 .low-priority {
-    background: lighten($color: $low-priority-color, $amount: 35%);
+    background: lighten($color: $low-priority-color, $amount: 40%);
     border: 1px solid $low-priority-color;
     color: $low-priority-color;
 }
 
 .medium-priority {
-    background: lighten($color: $medium-priority-color, $amount: 35%);
+    background: lighten($color: $medium-priority-color, $amount: 40%);
     border: 1px solid $medium-priority-color;
     color: $medium-priority-color;
 }
 
 .high-priority {
-    background: lighten($color: $high-priority-color, $amount: 35%);
+    background: lighten($color: $high-priority-color, $amount: 40%);
     border: 1px solid $high-priority-color;
     color: $high-priority-color;
 }
