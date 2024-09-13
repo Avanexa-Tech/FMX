@@ -2,11 +2,13 @@ import { Avatar, Badge, Dropdown, Input, Menu, message } from "antd";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/slice/userAuthSlice";
+import { useNavigate } from "react-router-dom";
 
 function FMXHeader() {
   const dispatch = useDispatch();
   const [messageApi, contextHolder] = message.useMessage();
   const { user } = useSelector(({ user_auth }) => user_auth);
+  const navigate = useNavigate();
   
   const success = (content) => {
     messageApi.open({
@@ -48,6 +50,7 @@ function FMXHeader() {
                 onClick={() => {
                   success("Logged out successfully");
                   dispatch(logout());
+                  navigate("/login");
                 }}
               >
                 <Menu.Item>Logout</Menu.Item>

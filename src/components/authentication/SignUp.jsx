@@ -83,10 +83,10 @@ const SignUp = () => {
               error={signUp?.phone_number && !/^\+?\d{10,15}$/.test(signUp?.phone_number)}
               errorMessage={"Enter Valid Phone Number"}
               selectPlaceholder={"select"}
-              selectOptions={[{ value: 91, label: "India" }]}
+              selectOptions={[{ value: 1, label: "Canada" }]}
               onSelectChange={onChange}
               selectName={"code"}
-              selectValue={91}
+              selectValue={1}
             />
           </div>
           <Button
